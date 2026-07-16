@@ -1307,14 +1307,23 @@ p {
   margin: 3rem 0 0;
   padding: 0;
   border-top: 1px solid var(--line);
+  width: 100%;
 }
 
 .alliance-timeline li {
   display: grid;
-  grid-template-columns: 9rem 1fr;
-  gap: 1.5rem 2rem;
+  grid-template-columns: minmax(7.5rem, 10rem) minmax(0, 1fr);
+  gap: 1.25rem clamp(1.5rem, 3vw, 2.75rem);
+  align-items: start;
   padding: 1.75rem 0;
   border-bottom: 1px solid var(--line);
+  width: 100%;
+}
+
+.alliance-timeline li > div {
+  min-width: 0;
+  width: 100%;
+  max-width: none;
 }
 
 .alliance-timeline time {
@@ -1324,6 +1333,7 @@ p {
   text-transform: uppercase;
   color: var(--teal);
   padding-top: 0.35rem;
+  white-space: nowrap;
 }
 
 .alliance-timeline h3 {
@@ -1333,6 +1343,7 @@ p {
 
 .alliance-section {
   margin-top: 2.5rem;
+  width: 100%;
 }
 
 .alliance-section-title {
@@ -1350,13 +1361,16 @@ p {
   padding: 0;
   display: grid;
   gap: 0.55rem;
+  width: 100%;
+  max-width: none;
 }
 
 .alliance-bullets li {
   position: relative;
   padding-left: 1rem;
   color: var(--ink-soft);
-  max-width: 62ch;
+  max-width: none;
+  width: 100%;
   line-height: 1.65;
 }
 
@@ -1372,7 +1386,7 @@ p {
 
 .alliance-timeline p {
   color: var(--ink-soft);
-  max-width: 58ch;
+  max-width: none;
   margin-bottom: 0.65rem;
 }
 
