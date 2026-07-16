@@ -1297,11 +1297,111 @@ p {
   background: var(--paper);
 }
 
-.alliances-head h2 {
-  font-size: clamp(1.85rem, 3.8vw, 3rem);
-  max-width: 16ch;
+.alliances-wrap {
+  width: min(1180px, calc(100% - 2 * var(--gutter)));
+  max-width: 100%;
 }
 
+.alliances-head h2 {
+  font-size: clamp(1.85rem, 3.8vw, 3rem);
+  max-width: 18ch;
+}
+
+.alliance-section {
+  margin-top: 2.75rem;
+  width: 100%;
+}
+
+.alliance-section-title {
+  margin: 0 0 1.25rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.partner-list {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  border-top: 1px solid var(--line);
+}
+
+.partner-card {
+  display: block;
+  width: 100%;
+  max-width: none;
+  padding: 1.6rem 0 1.75rem;
+  border-bottom: 1px solid var(--line);
+}
+
+.partner-card-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.65rem 1.5rem;
+  margin-bottom: 0.85rem;
+  width: 100%;
+}
+
+.partner-card-head time {
+  flex: 0 0 auto;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.partner-card-head h3 {
+  flex: 1 1 12rem;
+  margin: 0;
+  font-size: clamp(1.15rem, 2.4vw, 1.4rem);
+}
+
+.partner-card-bullets {
+  list-style: none;
+  margin: 0 0 0.9rem;
+  padding: 0;
+  display: grid;
+  gap: 0.55rem;
+  width: 100%;
+  max-width: none;
+}
+
+.partner-card-bullets li {
+  position: relative;
+  width: 100%;
+  max-width: none;
+  padding-left: 1rem;
+  color: var(--ink-soft);
+  line-height: 1.7;
+  overflow-wrap: break-word;
+}
+
+.partner-card-bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.7em;
+  width: 0.4rem;
+  height: 0.4rem;
+  background: var(--teal);
+}
+
+.partner-card-link {
+  color: var(--teal);
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-underline-offset: 0.2em;
+}
+
+.partner-card-link:hover {
+  color: var(--teal-deep);
+}
+
+/* Legacy timeline selectors kept for safety if old markup is cached */
 .alliance-timeline {
   list-style: none;
   margin: 3rem 0 0;
@@ -1311,48 +1411,30 @@ p {
 }
 
 .alliance-timeline li {
-  display: grid;
-  grid-template-columns: minmax(7.5rem, 10rem) minmax(0, 1fr);
-  gap: 1.25rem clamp(1.5rem, 3vw, 2.75rem);
-  align-items: start;
+  display: block;
+  width: 100%;
   padding: 1.75rem 0;
   border-bottom: 1px solid var(--line);
-  width: 100%;
 }
 
 .alliance-timeline li > div {
-  min-width: 0;
   width: 100%;
   max-width: none;
 }
 
 .alliance-timeline time {
+  display: inline-block;
+  margin-bottom: 0.35rem;
   font-size: 0.78rem;
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--teal);
-  padding-top: 0.35rem;
-  white-space: nowrap;
 }
 
 .alliance-timeline h3 {
   font-size: 1.25rem;
   margin-bottom: 0.5rem;
-}
-
-.alliance-section {
-  margin-top: 2.5rem;
-  width: 100%;
-}
-
-.alliance-section-title {
-  margin: 0 0 1rem;
-  font-size: 0.82rem;
-  font-weight: 700;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--teal);
 }
 
 .alliance-bullets {
@@ -2327,7 +2409,6 @@ p {
   }
 
   .founder-layout,
-  .alliance-timeline li,
   .service-detail-grid,
   .contact-grid,
   .statement-layout,

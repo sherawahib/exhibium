@@ -6,54 +6,70 @@ export function Alliances() {
 
   return (
     <section className="alliances">
-      <div className="wrap">
+      <div className="wrap alliances-wrap">
         <div className="alliances-head">
-          <p className="kicker">Exhibium Advisory partners / long-term clients</p>
+          <p className="kicker">
+            Exhibium Advisory partners / long-term clients
+          </p>
           <h2>Relationships measured in decades, not decks.</h2>
         </div>
 
         <div className="alliance-section">
-          <h3 className="alliance-section-title">Advisory Partner Relationships</h3>
-          <ol className="alliance-timeline">
+          <h3 className="alliance-section-title">
+            Advisory Partner Relationships
+          </h3>
+          <div className="partner-list">
             {advisory.map((p) => (
-              <li key={p.name}>
-                <time>{p.term}</time>
-                <div>
+              <article key={p.name} className="partner-card">
+                <header className="partner-card-head">
+                  <time dateTime={p.term}>{p.term}</time>
                   <h3>{p.name}</h3>
-                  <ul className="alliance-bullets">
-                    {p.bullets.map((b) => (
-                      <li key={b}>{b}</li>
-                    ))}
-                  </ul>
-                  <a href={p.href} target="_blank" rel="noopener noreferrer">
-                    {p.linkLabel}
-                  </a>
-                </div>
-              </li>
+                </header>
+                <ul className="partner-card-bullets">
+                  {p.bullets.map((b) => (
+                    <li key={b}>{b}</li>
+                  ))}
+                </ul>
+                <a
+                  className="partner-card-link"
+                  href={p.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {p.linkLabel}
+                </a>
+              </article>
             ))}
-          </ol>
+          </div>
         </div>
 
         <div className="alliance-section">
-          <h3 className="alliance-section-title">Long Term Client Consultancies</h3>
-          <ol className="alliance-timeline">
+          <h3 className="alliance-section-title">
+            Long Term Client Consultancies
+          </h3>
+          <div className="partner-list">
             {clients.map((p) => (
-              <li key={p.name}>
-                <time>{p.term}</time>
-                <div>
+              <article key={p.name} className="partner-card">
+                <header className="partner-card-head">
+                  <time dateTime={p.term}>{p.term}</time>
                   <h3>{p.name}</h3>
-                  <ul className="alliance-bullets">
-                    {p.bullets.map((b) => (
-                      <li key={b}>{b}</li>
-                    ))}
-                  </ul>
-                  <a href={p.href} target="_blank" rel="noopener noreferrer">
-                    {p.linkLabel}
-                  </a>
-                </div>
-              </li>
+                </header>
+                <ul className="partner-card-bullets">
+                  {p.bullets.map((b) => (
+                    <li key={b}>{b}</li>
+                  ))}
+                </ul>
+                <a
+                  className="partner-card-link"
+                  href={p.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {p.linkLabel}
+                </a>
+              </article>
             ))}
-          </ol>
+          </div>
         </div>
       </div>
     </section>
