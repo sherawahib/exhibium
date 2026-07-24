@@ -38,7 +38,10 @@ export function Hero() {
         <div className="splash-shade" aria-hidden="true" />
       </div>
       <div className="splash-copy">
-        <TypewriterText text="EXHIBIUM" className="splash-brand" />
+        <TypewriterText
+          text="EXHIBIUM Advisory services"
+          className="splash-brand"
+        />
         <h1 className="splash-line">
           Branding · BIM modeling · Modular construction · ROI advisory · Market
           entry · Strategy and Execution.

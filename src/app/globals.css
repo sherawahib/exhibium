@@ -290,7 +290,7 @@ p {
 .splash-copy {
   position: relative;
   z-index: 1;
-  max-width: 40rem;
+  max-width: min(58rem, 100%);
   animation: enter 0.9s var(--ease) both;
 }
 
@@ -298,18 +298,18 @@ p {
   margin: 0 0 0.75rem;
   font-family: var(--display);
   font-weight: 800;
-  font-size: clamp(2.75rem, 15vw, 8.25rem);
-  line-height: 0.88;
-  letter-spacing: -0.045em;
+  font-size: clamp(1.05rem, 4.6vw, 2.85rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
   text-transform: uppercase;
   color: #fff;
   text-shadow: 0 12px 40px rgba(0, 0, 0, 0.35);
   min-height: 1em;
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: baseline;
   max-width: 100%;
-  overflow-wrap: anywhere;
+  white-space: nowrap;
 }
 
 .typewriter-text {
@@ -2537,7 +2537,7 @@ p {
   }
 
   .splash-brand {
-    font-size: clamp(2.55rem, 14vw, 4.1rem);
+    font-size: clamp(0.95rem, 4.4vw, 1.65rem);
   }
 
   .splash-line {
@@ -2667,7 +2667,7 @@ p {
   }
 
   .splash-brand {
-    font-size: clamp(2.25rem, 13vw, 3.1rem);
+    font-size: clamp(0.85rem, 4.1vw, 1.35rem);
   }
 
   .kicker {
