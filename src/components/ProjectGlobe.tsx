@@ -9,12 +9,11 @@ import {
   getAllHighlightCountries,
   getAllHighlightStates,
   getMarketHighlight,
-  getPinHighlightCountries,
-  getPinHighlightStates,
   getRegionHighlightCountries,
   getRegionHighlightStates,
   getWorkStateLabels,
   regionFocus,
+  type StateLabel,
 } from "@/lib/globeHighlights";
 
 type GlobeFeature = Feature<Geometry> & {
@@ -23,13 +22,19 @@ type GlobeFeature = Feature<Geometry> & {
   __key: string;
 };
 
+type HighlightSets = {
+  pinCountries: Set<string>;
+  pinStates: Set<string>;
+  regionCountries: Set<string>;
+  regionStates: Set<string>;
+};
+
 type GlobeInstance = {
   (el: HTMLElement): GlobeInstance;
   width: (n: number) => GlobeInstance;
   height: (n: number) => GlobeInstance;
   backgroundColor: (c: string) => GlobeInstance;
   globeImageUrl: (u: string) => GlobeInstance;
-  bumpImageUrl: (u: string) => GlobeInstance;
   atmosphereColor: (c: string) => GlobeInstance;
   atmosphereAltitude: (n: number) => GlobeInstance;
   showGraticules: (v: boolean) => GlobeInstance;
@@ -38,8 +43,6 @@ type GlobeInstance = {
   polygonSideColor: (fn: (d: object) => string) => GlobeInstance;
   polygonStrokeColor: (fn: (d: object) => string) => GlobeInstance;
   polygonAltitude: (fn: (d: object) => number) => GlobeInstance;
-  polygonLabel: (fn: (d: object) => string) => GlobeInstance;
-  onPolygonHover: (fn: (d: object | null) => void) => GlobeInstance;
   polygonsTransitionDuration: (n: number) => GlobeInstance;
   labelsData: (d: object[]) => GlobeInstance;
   labelLat: (v: string | ((d: object) => number)) => GlobeInstance;
@@ -52,13 +55,6 @@ type GlobeInstance = {
   labelResolution: (n: number) => GlobeInstance;
   labelIncludeDot: (v: boolean | ((d: object) => boolean)) => GlobeInstance;
   htmlElementsData: (d: object[]) => GlobeInstance;
-  htmlLat: (v: string | ((d: object) => number)) => GlobeInstance;
-  htmlLng: (v: string | ((d: object) => number)) => GlobeInstance;
-  htmlAltitude: (v: number | ((d: object) => number)) => GlobeInstance;
-  htmlElement: (fn: (d: object) => HTMLElement) => GlobeInstance;
-  htmlElementVisibilityModifier: (
-    fn: (el: HTMLElement, visible: boolean) => void
-  ) => GlobeInstance;
   pointOfView: (
     view: { lat: number; lng: number; altitude: number },
     ms?: number
@@ -70,9 +66,11 @@ type GlobeInstance = {
     dampingFactor: number;
     minDistance: number;
     maxDistance: number;
+    enableZoom: boolean;
     addEventListener: (type: string, fn: () => void) => void;
     removeEventListener: (type: string, fn: () => void) => void;
   };
+  renderer?: () => { setPixelRatio: (n: number) => void };
   _destructor?: () => void;
 };
 
@@ -84,12 +82,11 @@ type Props = {
 };
 
 const COLOR = {
-  dim: "rgba(55, 72, 98, 0.22)",
-  work: "rgba(196, 112, 48, 0.55)",
-  region: "rgba(224, 120, 40, 0.82)",
-  selected: "rgba(255, 196, 120, 0.95)",
-  side: "rgba(8, 16, 32, 0.35)",
-  stroke: "rgba(12, 22, 40, 0.55)",
+  work: "rgba(196, 112, 48, 0.62)",
+  region: "rgba(224, 120, 40, 0.88)",
+  selected: "rgba(255, 196, 120, 0.96)",
+  side: "rgba(8, 16, 32, 0.28)",
+  stroke: "rgba(12, 22, 40, 0.4)",
 };
 
 const ISO_BY_NUMERIC: Record<number, string> = {
@@ -108,7 +105,6 @@ const ISO_BY_NUMERIC: Record<number, string> = {
   634: "QAT",
   784: "ARE",
   643: "RUS",
-  840: "USA",
 };
 
 function loadScript(src: string): Promise<void> {
@@ -134,6 +130,46 @@ function loadScript(src: string): Promise<void> {
   });
 }
 
+function toneOf(d: GlobeFeature, h: HighlightSets) {
+  if (d.__kind === "country") {
+    if (h.pinCountries.has(d.__key)) return "selected" as const;
+    if (h.regionCountries.has(d.__key)) return "region" as const;
+    return "work" as const;
+  }
+  if (h.pinStates.has(d.__key)) return "selected" as const;
+  if (h.regionStates.has(d.__key)) return "region" as const;
+  return "work" as const;
+}
+
+function applyHighlightStyle(globe: GlobeInstance, h: HighlightSets) {
+  globe
+    .polygonCapColor((d) => COLOR[toneOf(d as GlobeFeature, h)])
+    .polygonAltitude((d) => {
+      const tone = toneOf(d as GlobeFeature, h);
+      if (tone === "selected") return 0.04;
+      if (tone === "region") return 0.028;
+      return 0.016;
+    })
+    .labelSize((d) => {
+      const name = String((d as StateLabel).name);
+      if (h.pinStates.has(name)) return 1.35;
+      if (h.regionStates.has(name)) return 1.15;
+      return 0.9;
+    })
+    .labelColor((d) => {
+      const name = String((d as StateLabel).name);
+      if (h.pinStates.has(name)) return "#fff8ef";
+      if (h.regionStates.has(name)) return "#ffe2b8";
+      return "rgba(255, 232, 200, 0.88)";
+    })
+    .labelAltitude((d) => {
+      const name = String((d as StateLabel).name);
+      if (h.pinStates.has(name)) return 0.09;
+      if (h.regionStates.has(name)) return 0.075;
+      return 0.06;
+    });
+}
+
 declare global {
   interface Window {
     Globe?: () => GlobeInstance;
@@ -143,44 +179,33 @@ declare global {
 export function ProjectGlobe({ region, activePin, width, height }: Props) {
   const mountRef = useRef<HTMLDivElement>(null);
   const globeRef = useRef<GlobeInstance | null>(null);
-  const hoverRef = useRef<GlobeFeature | null>(null);
-  const interactingRef = useRef(false);
+  const highlightRef = useRef<HighlightSets>({
+    pinCountries: new Set(),
+    pinStates: new Set(),
+    regionCountries: new Set(),
+    regionStates: new Set(),
+  });
+  const polygonsReadyRef = useRef(false);
   const [ready, setReady] = useState(false);
   const [polygons, setPolygons] = useState<GlobeFeature[]>([]);
-
-  const allCountries = useMemo(() => getAllHighlightCountries(), []);
-  const allStates = useMemo(() => getAllHighlightStates(), []);
-  const regionCountries = useMemo(
-    () => getRegionHighlightCountries(region),
-    [region]
-  );
-  const regionStates = useMemo(
-    () => getRegionHighlightStates(region),
-    [region]
-  );
-  const pinCountries = useMemo(
-    () => (activePin ? getPinHighlightCountries(activePin) : new Set<string>()),
-    [activePin]
-  );
-  const pinStates = useMemo(
-    () => (activePin ? getPinHighlightStates(activePin) : new Set<string>()),
-    [activePin]
-  );
-
   const stateLabels = useMemo(() => getWorkStateLabels(), []);
 
-  const toneOf = (d: GlobeFeature) => {
-    if (d.__kind === "country") {
-      if (pinCountries.has(d.__key)) return "selected" as const;
-      if (regionCountries.has(d.__key)) return "region" as const;
-      if (allCountries.has(d.__key)) return "work" as const;
-      return "dim" as const;
+  useEffect(() => {
+    const market = activePin ? getMarketHighlight(activePin) : null;
+    highlightRef.current = {
+      pinCountries: new Set(market?.countries ?? []),
+      pinStates: new Set(market?.states ?? []),
+      regionCountries: getRegionHighlightCountries(region),
+      regionStates: getRegionHighlightStates(region),
+    };
+
+    const globe = globeRef.current;
+    if (globe && polygonsReadyRef.current) {
+      // Labels only when viewing USA — fewer meshes elsewhere.
+      globe.labelsData(region === "usa" ? stateLabels : []);
+      applyHighlightStyle(globe, highlightRef.current);
     }
-    if (pinStates.has(d.__key)) return "selected" as const;
-    if (regionStates.has(d.__key)) return "region" as const;
-    if (allStates.has(d.__key)) return "work" as const;
-    return "dim" as const;
-  };
+  }, [region, activePin, stateLabels]);
 
   useEffect(() => {
     let cancelled = false;
@@ -190,6 +215,10 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
         fetch("/geo/countries-110m.json").then((r) => r.json()) as Promise<Topology>,
         fetch("/geo/states-10m.json").then((r) => r.json()) as Promise<Topology>,
       ]);
+      if (cancelled) return;
+
+      const workCountries = getAllHighlightCountries();
+      const workStates = getAllHighlightStates();
 
       const countriesFc = feature(
         countriesTopo,
@@ -204,9 +233,7 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
       const countryFeatures: GlobeFeature[] = countriesFc.features
         .map((f) => {
           const n = typeof f.id === "string" ? Number(f.id) : Number(f.id);
-          const iso =
-            ISO_BY_NUMERIC[n] ??
-            String((f.properties as { name?: string })?.name ?? "");
+          const iso = ISO_BY_NUMERIC[n] ?? "";
           return {
             ...f,
             __kind: "country" as const,
@@ -214,19 +241,21 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
             properties: { ...(f.properties ?? {}), ISO_A3: iso },
           };
         })
-        .filter((f) => f.__key !== "USA");
+        .filter((f) => workCountries.has(f.__key));
 
-      const stateFeatures: GlobeFeature[] = statesFc.features.map((f) => {
-        const name = String(
-          (f.properties as { name?: string })?.name ?? f.id ?? ""
-        );
-        return {
-          ...f,
-          __kind: "state" as const,
-          __key: name,
-          properties: { ...(f.properties ?? {}), name },
-        };
-      });
+      const stateFeatures: GlobeFeature[] = statesFc.features
+        .map((f) => {
+          const name = String(
+            (f.properties as { name?: string })?.name ?? f.id ?? ""
+          );
+          return {
+            ...f,
+            __kind: "state" as const,
+            __key: name,
+            properties: { ...(f.properties ?? {}), name },
+          };
+        })
+        .filter((f) => workStates.has(f.__key));
 
       if (!cancelled) setPolygons([...countryFeatures, ...stateFeatures]);
     }
@@ -245,6 +274,7 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
     let onStart: (() => void) | null = null;
     let onEnd: (() => void) | null = null;
     let endTimer: number | undefined;
+    let visibilityObserver: IntersectionObserver | null = null;
 
     async function boot() {
       await loadScript("/vendor/globe.gl.min.js");
@@ -258,35 +288,49 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
         .globeImageUrl(
           "//cdn.jsdelivr.net/npm/three-globe/example/img/earth-dark.jpg"
         )
-        .bumpImageUrl(
-          "//cdn.jsdelivr.net/npm/three-globe/example/img/earth-topology.png"
-        )
         .atmosphereColor("#e07828")
-        .atmosphereAltitude(0.18)
+        .atmosphereAltitude(0.12)
         .showGraticules(false)
-        .polygonsTransitionDuration(280);
+        .polygonsTransitionDuration(0)
+        .htmlElementsData([]);
+
+      try {
+        globe
+          .renderer?.()
+          .setPixelRatio(Math.min(window.devicePixelRatio || 1, 1.25));
+      } catch {
+        /* ignore */
+      }
 
       const controls = globe.controls();
       controls.autoRotate = true;
-      controls.autoRotateSpeed = 0.55;
+      controls.autoRotateSpeed = 0.35;
       controls.enableDamping = true;
-      controls.dampingFactor = 0.08;
-      controls.minDistance = 140;
-      controls.maxDistance = 450;
+      controls.dampingFactor = 0.12;
+      controls.minDistance = 160;
+      controls.maxDistance = 420;
+      controls.enableZoom = true;
 
       onStart = () => {
-        interactingRef.current = true;
         controls.autoRotate = false;
         if (endTimer) window.clearTimeout(endTimer);
       };
       onEnd = () => {
-        interactingRef.current = false;
         endTimer = window.setTimeout(() => {
-          if (!interactingRef.current) controls.autoRotate = true;
-        }, 2200);
+          controls.autoRotate = true;
+        }, 1800);
       };
       controls.addEventListener("start", onStart);
       controls.addEventListener("end", onEnd);
+
+      visibilityObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (!entry) return;
+          controls.autoRotate = entry.isIntersecting;
+        },
+        { threshold: 0.12 }
+      );
+      visibilityObserver.observe(mountRef.current);
 
       globeRef.current = globe;
       setReady(true);
@@ -297,6 +341,7 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
     return () => {
       cancelled = true;
       if (endTimer) window.clearTimeout(endTimer);
+      visibilityObserver?.disconnect();
       const globe = globeRef.current;
       if (globe && onStart && onEnd) {
         try {
@@ -309,10 +354,10 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
       }
       if (globe?._destructor) globe._destructor();
       globeRef.current = null;
+      polygonsReadyRef.current = false;
       setReady(false);
       if (mountRef.current) mountRef.current.innerHTML = "";
     };
-    // Recreate only when mount is first ready; size updates handled below
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -324,93 +369,32 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
 
   useEffect(() => {
     const globe = globeRef.current;
-    if (!globe || !ready) return;
-
-    const paint = () => {
-      globe
-        .polygonCapColor((d) => {
-          const feat = d as GlobeFeature;
-          const tone = toneOf(feat);
-          if (hoverRef.current === feat) {
-            return tone === "dim"
-              ? "rgba(90, 110, 140, 0.45)"
-              : COLOR.selected;
-          }
-          return COLOR[tone];
-        })
-        .polygonSideColor(() => COLOR.side)
-        .polygonStrokeColor(() => COLOR.stroke)
-        .polygonAltitude((d) => {
-          const feat = d as GlobeFeature;
-          const tone = toneOf(feat);
-          if (hoverRef.current === feat) return 0.07;
-          if (tone === "selected") return 0.055;
-          if (tone === "region") return 0.04;
-          if (tone === "work") return 0.025;
-          return 0.006;
-        });
-    };
+    if (!globe || !ready || polygons.length === 0) return;
 
     globe
       .polygonsData(polygons)
-      .polygonLabel((d) => {
-        const feat = d as GlobeFeature;
-        const name =
-          feat.__kind === "state"
-            ? String(feat.properties.name ?? feat.__key)
-            : String((feat.properties as { name?: string }).name ?? feat.__key);
-        const tone = toneOf(feat);
-        if (tone === "dim") return name;
-        return `${name}<br/><span style="opacity:.75">Exhibium project market</span>`;
-      })
-      .onPolygonHover((d) => {
-        hoverRef.current = (d as GlobeFeature) || null;
-        paint();
-      });
+      .polygonSideColor(() => COLOR.side)
+      .polygonStrokeColor(() => COLOR.stroke)
+      .labelsData(highlightRef.current.regionStates.size ? stateLabels : [])
+      .labelLat("lat")
+      .labelLng("lng")
+      .labelText("name")
+      .labelIncludeDot(false)
+      .labelDotRadius(0)
+      .labelResolution(2);
 
-    paint();
-
-    // Float name chips above polygon fills so they stay readable.
-    globe
-      .labelsData([])
-      .htmlElementsData(stateLabels)
-      .htmlLat("lat")
-      .htmlLng("lng")
-      .htmlAltitude((d) => {
-        const name = String((d as { name: string }).name);
-        if (pinStates.has(name)) return 0.12;
-        if (regionStates.has(name)) return 0.1;
-        return 0.085;
-      })
-      .htmlElement((d) => {
-        const name = String((d as { name: string }).name);
-        const el = document.createElement("div");
-        el.className = "globe-state-label";
-        if (pinStates.has(name)) el.classList.add("is-selected");
-        else if (regionStates.has(name)) el.classList.add("is-region");
-        el.textContent = name;
-        return el;
-      });
-  }, [
-    polygons,
-    ready,
-    region,
-    activePin,
-    pinCountries,
-    pinStates,
-    regionCountries,
-    regionStates,
-    allCountries,
-    allStates,
-    stateLabels,
-  ]);
+    applyHighlightStyle(globe, highlightRef.current);
+    polygonsReadyRef.current = true;
+    // region handled via highlight effect — avoid rebuilding meshes
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [polygons, ready, stateLabels]);
 
   useEffect(() => {
     const globe = globeRef.current;
     if (!globe || !ready) return;
     const market = activePin ? getMarketHighlight(activePin) : null;
     const view = market?.focus ?? regionFocus[region];
-    globe.pointOfView(view, 1100);
+    globe.pointOfView(view, 800);
   }, [region, activePin, ready]);
 
   return <div className="atlas-globe-canvas" ref={mountRef} />;

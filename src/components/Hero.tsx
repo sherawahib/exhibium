@@ -12,15 +12,22 @@ export function Hero() {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     if (reduce) return;
 
+    let raf = 0;
     const onScroll = () => {
-      const img = imgRef.current;
-      if (!img) return;
-      const y = window.scrollY || 0;
-      img.style.transform = `scale(1.04) translate3d(0, ${y * 0.14}px, 0)`;
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(() => {
+        const img = imgRef.current;
+        if (!img) return;
+        const y = window.scrollY || 0;
+        img.style.transform = `scale(1.04) translate3d(0, ${y * 0.14}px, 0)`;
+      });
     };
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener("scroll", onScroll);
+    };
   }, []);
 
   return (

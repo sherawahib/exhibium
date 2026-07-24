@@ -6,16 +6,13 @@ type Props = {
   text: string;
   className?: string;
   typeSpeed?: number;
-  deleteSpeed?: number;
-  pauseMs?: number;
 };
 
+/** Types once, then stops — avoids endless setState loops that hang the page. */
 export function TypewriterText({
   text,
   className,
-  typeSpeed = 90,
-  deleteSpeed = 55,
-  pauseMs = 2200,
+  typeSpeed = 55,
 }: Props) {
   const [display, setDisplay] = useState("");
   const [showCursor, setShowCursor] = useState(true);
@@ -29,49 +26,29 @@ export function TypewriterText({
     }
 
     let index = 0;
-    let deleting = false;
     let timeoutId: ReturnType<typeof setTimeout>;
+    let cursorTimer: ReturnType<typeof setInterval> | undefined;
 
     const tick = () => {
-      if (!deleting) {
-        index += 1;
-        setDisplay(text.slice(0, index));
-
-        if (index >= text.length) {
-          timeoutId = setTimeout(() => {
-            deleting = true;
-            tick();
-          }, pauseMs);
-          return;
-        }
-
-        timeoutId = setTimeout(tick, typeSpeed);
-        return;
-      }
-
-      index -= 1;
+      index += 1;
       setDisplay(text.slice(0, index));
-
-      if (index <= 0) {
-        deleting = false;
-        timeoutId = setTimeout(tick, 420);
+      if (index >= text.length) {
+        setShowCursor(false);
         return;
       }
-
-      timeoutId = setTimeout(tick, deleteSpeed);
+      timeoutId = setTimeout(tick, typeSpeed);
     };
 
-    timeoutId = setTimeout(tick, 500);
-
-    const cursorTimer = setInterval(() => {
+    timeoutId = setTimeout(tick, 400);
+    cursorTimer = setInterval(() => {
       setShowCursor((v) => !v);
     }, 530);
 
     return () => {
       clearTimeout(timeoutId);
-      clearInterval(cursorTimer);
+      if (cursorTimer) clearInterval(cursorTimer);
     };
-  }, [text, typeSpeed, deleteSpeed, pauseMs]);
+  }, [text, typeSpeed]);
 
   return (
     <p className={className} aria-label={text}>
