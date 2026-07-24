@@ -313,7 +313,7 @@ p {
   margin: 0 0 0.75rem;
   font-family: var(--display);
   font-weight: 800;
-  font-size: clamp(2.1rem, 9.2vw, 5.7rem);
+  font-size: clamp(2.1rem, 6.5vw, 3.85rem);
   line-height: 1.05;
   letter-spacing: -0.03em;
   text-transform: uppercase;
@@ -347,7 +347,7 @@ p {
   margin: 1.1rem 0 0;
   max-width: 28ch;
   font-family: var(--display);
-  font-size: clamp(1.55rem, 4.2vw, 2.65rem);
+  font-size: clamp(1.45rem, 3.2vw, 2.1rem);
   font-weight: 700;
   letter-spacing: -0.03em;
   line-height: 1.25;
@@ -423,7 +423,7 @@ p {
 }
 
 .statement h2 {
-  font-size: clamp(1.75rem, 3.6vw, 2.85rem);
+  font-size: clamp(1.55rem, 2.8vw, 2.25rem);
   max-width: 22ch;
   font-weight: 700;
 }
@@ -447,7 +447,7 @@ p {
 }
 
 .brief-pillars-head h2 {
-  font-size: clamp(1.75rem, 3.5vw, 2.6rem);
+  font-size: clamp(1.55rem, 2.7vw, 2.15rem);
   max-width: 22ch;
 }
 
@@ -507,7 +507,7 @@ p {
 }
 
 .practice-head h2 {
-  font-size: clamp(2.05rem, 4.2vw, 3.25rem);
+  font-size: clamp(1.7rem, 3vw, 2.45rem);
   max-width: 16ch;
 }
 
@@ -635,7 +635,7 @@ p {
 }
 
 .founder h2 {
-  font-size: clamp(2.2rem, 4.5vw, 3.4rem);
+  font-size: clamp(1.75rem, 3.1vw, 2.55rem);
   color: #fff;
 }
 
@@ -691,7 +691,7 @@ p {
 }
 
 .atlas-head h2 {
-  font-size: clamp(1.85rem, 3.8vw, 3rem);
+  font-size: clamp(1.6rem, 2.8vw, 2.35rem);
   max-width: 14ch;
   color: #fff;
 }
@@ -1437,7 +1437,7 @@ p {
 }
 
 .alliances-head h2 {
-  font-size: clamp(1.85rem, 3.8vw, 3rem);
+  font-size: clamp(1.6rem, 2.8vw, 2.35rem);
   max-width: 18ch;
 }
 
@@ -1664,7 +1664,7 @@ p {
 }
 
 .engage-box h2 {
-  font-size: clamp(1.85rem, 3.6vw, 2.75rem);
+  font-size: clamp(1.55rem, 2.7vw, 2.2rem);
   max-width: 18ch;
   color: #fff;
   margin-bottom: 1rem;
@@ -1922,7 +1922,7 @@ p {
 }
 
 .page-banner h1 {
-  font-size: clamp(2.7rem, 6.5vw, 4.4rem);
+  font-size: clamp(2.1rem, 4.5vw, 3.15rem);
   color: #fff;
   max-width: 14ch;
 }
@@ -1964,7 +1964,7 @@ p {
 }
 
 .approach-head h2 {
-  font-size: clamp(1.85rem, 3.8vw, 3rem);
+  font-size: clamp(1.6rem, 2.8vw, 2.35rem);
   max-width: 18ch;
 }
 
@@ -2271,7 +2271,7 @@ p {
 }
 
 .appt-copy h2 {
-  font-size: clamp(1.6rem, 3vw, 2.25rem);
+  font-size: clamp(1.45rem, 2.4vw, 1.9rem);
   margin-bottom: 1rem;
 }
 
@@ -2425,7 +2425,7 @@ p {
 }
 
 .contact-grid h2 {
-  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-size: clamp(1.45rem, 2.4vw, 1.9rem);
   margin-bottom: 1.25rem;
 }
 
