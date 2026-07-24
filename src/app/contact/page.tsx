@@ -7,7 +7,7 @@ import { pageImages } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Contact Exhibium Group for market entry, modular retail, BIM oversight, or branding advisory. Email info@exhibium.com.",
+    "Contact Exhibium Group for market entry, BIM oversight, modular development, or branding advisory. Email info@exhibium.com.",
 };
 
 export default function ContactPage() {
@@ -16,7 +16,7 @@ export default function ContactPage() {
       <PageBanner
         kicker="Engage"
         title="Contact"
-        description="Start a conversation about your next market, store program, or build model."
+        description="Start a conversation about your next market entry or development program."
         image={pageImages.contact.src}
         imageAlt={pageImages.contact.alt}
       />
@@ -37,7 +37,7 @@ export default function ContactPage() {
               <li>Market entry strategy for international expansion</li>
               <li>Retail branding, store roll-outs & Emotional Commerce</li>
               <li>BIM management and A/E/C process advisory</li>
-              <li>Modular retail development programs</li>
+              <li>Modular development programs</li>
               <li>ROI advisory for commercial performance</li>
             </ul>
           </div>

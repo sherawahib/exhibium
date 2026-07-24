@@ -54,12 +54,12 @@ export const services = [
     label: "Modular Development",
     title: "Modular Development Group",
     image: "/modular.jpg",
-    imageAlt: "Row of modern modular retail units with orange-framed storefronts",
+    imageAlt: "Row of modern modular development units with orange-framed storefronts",
     summary:
-      "Modular Retail — The new way to build……. Construction pathways built for speed, cost control, and repeatable expansion into new markets.",
-    body: "Modular Retail — The new way to build……. The Modular Development Group designs scalable retail build models for faster deployment and controlled capital cost. We help clients enter markets with modular concepts engineered for repeatability and ROI-led program design—alongside branding, process management, and development project advisory.",
+      "Construction pathways built for speed, cost control, and repeatable expansion into new markets.",
+    body: "The Modular Development Group designs scalable build models for faster deployment and controlled capital cost. We help clients enter markets with modular concepts engineered for repeatability and ROI-led program design—alongside branding, process management, and development project advisory.",
     items: [
-      "Modular retail concepts",
+      "Modular development concepts",
       "Process management & development projects",
       "Scalable build models",
       "Market-ready deployment",
@@ -99,7 +99,7 @@ export const pageImages = {
   },
   services: {
     src: "/modular.jpg",
-    alt: "Modular retail development units",
+    alt: "Modular development units",
   },
 } as const;
 

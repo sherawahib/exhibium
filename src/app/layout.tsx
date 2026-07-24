@@ -24,11 +24,11 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Exhibium Group — Modular Retail · Strategy · BIM",
+    default: "Exhibium Group — Market Entry · Strategy · BIM",
     template: "%s | Exhibium Group",
   },
   description:
-    "Exhibium Group: branding, BIM, modular construction, and ROI advisory for international retail and A/E/C market entry. Led by Fernando Williams.",
+    "Exhibium Group: branding, BIM, modular development, and ROI advisory for international market entry. Led by Fernando Williams.",
   metadataBase: new URL("http://exhibium.com"),
 };
 

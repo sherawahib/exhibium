@@ -12,8 +12,6 @@ export const briefGroups = [
   "Modular Development Group",
 ] as const;
 
-export const briefModularLine = "Modular Retail — The new way to build…….";
-
 export const briefCapabilities = [
   "Branding",
   "Process Management",
