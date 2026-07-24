@@ -2,12 +2,7 @@
 
 import Image from "next/image";
 import { useMemo, useState } from "react";
-import {
-  americasView,
-  atlasTransform,
-  regionViews,
-  viewForPin,
-} from "@/lib/atlasView";
+import { AtlasGlobe } from "@/components/AtlasGlobe";
 import {
   countProjects,
   getAllProjectCount,
@@ -16,7 +11,6 @@ import {
   getProjectsByRegion,
   mapPins,
   projectRegions,
-  projectToPercent,
   type RegionId,
 } from "@/lib/projects";
 import { getProjectImage } from "@/lib/projectMedia";
@@ -49,22 +43,6 @@ export function Atlas() {
   const selectedImage = selectedProject
     ? getProjectImage(selectedProject.id)
     : null;
-
-  const mapView = useMemo(() => {
-    // Prefer pinned project zoom; otherwise region frame (Americas-first for USA/LatAm).
-    if (selectedPin) {
-      return viewForPin(selectedPin.lat, selectedPin.lon, 3.4);
-    }
-    if (active === "mena") return regionViews.mena;
-    if (active === "latam") return regionViews.latam;
-    if (active === "usa") return regionViews.usa;
-    return americasView;
-  }, [active, selectedPin]);
-
-  const stageStyle = {
-    ...atlasTransform(mapView),
-    ["--map-zoom" as string]: String(mapView.zoom),
-  };
 
   const selectRegion = (regionId: RegionId) => {
     setActive(regionId);
@@ -122,57 +100,23 @@ export function Atlas() {
         <div className="atlas-map-layout">
           <div className="atlas-map-shell">
             <div className="atlas-map-chrome">
-              <span>Zoomed regional map</span>
+              <span>Interactive globe</span>
               <span>
                 Focus · {current.label} · {regionCount} projects
               </span>
             </div>
 
-            <div className="atlas-geo">
-              <div className="atlas-geo-stage" style={stageStyle}>
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src="/world-map.svg"
-                  alt="World map focused on Exhibium project regions"
-                  className={`atlas-geo-img is-${active}`}
-                />
-                <div
-                  className={`atlas-geo-tint is-${active}`}
-                  aria-hidden="true"
-                />
-
-                {mapPins.map((pin) => {
-                  const { left, top } = projectToPercent(pin.lat, pin.lon);
-                  const hot = pin.region === active;
-                  const selected = activePin === pin.id;
-                  return (
-                    <button
-                      key={pin.id}
-                      type="button"
-                      className={`geo-pin${hot ? " is-hot" : ""}${selected ? " is-selected" : ""}`}
-                      style={{ left: `${left}%`, top: `${top}%` }}
-                      aria-label={`${pin.label}, ${pin.place}`}
-                      onClick={() => selectPin(pin.id, pin.region)}
-                    >
-                      <span className="geo-pin-pulse" />
-                      <span className="geo-pin-core" />
-                      {selected ? (
-                        <span className="geo-pin-tip">
-                          {selectedProject?.name ?? pin.place}
-                        </span>
-                      ) : null}
-                    </button>
-                  );
-                })}
-              </div>
-            </div>
+            <AtlasGlobe region={active} activePin={activePin} />
 
             <div className="atlas-map-legend">
+              <span>
+                <i className="dot pulse" /> Selected market
+              </span>
               <span>
                 <i className="dot" /> Active region
               </span>
               <span>
-                <i className="dot pulse" /> Selected project
+                <i className="dot work" /> Other project markets
               </span>
             </div>
           </div>
@@ -248,7 +192,7 @@ export function Atlas() {
 
             <div className="atlas-catalog">
               <p className="atlas-more-label">
-                Click a project to zoom &amp; view its photo
+                Click a market or project to focus the globe
               </p>
               {countryGroups.map((group) => (
                 <div key={group.country} className="atlas-group">
