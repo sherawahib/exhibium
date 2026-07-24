@@ -35,9 +35,7 @@ export default function ContactPage() {
             <h2>How we can help</h2>
             <ul className="contact-list">
               <li>Market entry strategy for international expansion</li>
-              <li>Retail branding, store roll-outs & Emotional Commerce</li>
               <li>BIM management and A/E/C process advisory</li>
-              <li>Modular development programs</li>
               <li>ROI advisory for commercial performance</li>
             </ul>
           </div>
