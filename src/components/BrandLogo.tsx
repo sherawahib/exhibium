@@ -4,15 +4,11 @@ import Link from "next/link";
 type Props = {
   className?: string;
   priority?: boolean;
-  /** Use reverse (white mark) wordmark for dark backgrounds */
+  /** Kept for call-site compatibility; original blue logo is used everywhere */
   onDark?: boolean;
 };
 
-export function BrandLogo({
-  className = "",
-  priority = false,
-  onDark = false,
-}: Props) {
+export function BrandLogo({ className = "", priority = false }: Props) {
   return (
     <Link
       href="/"
@@ -20,7 +16,7 @@ export function BrandLogo({
       aria-label="Grupo Exhibium home"
     >
       <Image
-        src={onDark ? "/exhibium-logo-reverse.png" : "/exhibium-logo-color.png"}
+        src="/exhibium-logo-color.png"
         alt="Grupo Exhibium"
         width={500}
         height={86}
