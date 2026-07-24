@@ -62,13 +62,11 @@ export function Engage({
 
       <div className="wrap engage-box">
         <p className="kicker">Next step</p>
-        <h2>
-          Bring Exhibium into your next market, store program, or build model.
-        </h2>
+        <h2>Bring Exhibium into your next market entry strategy.</h2>
         <p>
-          Market entry. Modular retail. BIM oversight. Branding for commercial
-          performance. Talk with the team that has delivered across the Americas
-          and the Middle East.
+          Market entry. BIM oversight. Branding for commercial performance. Talk
+          with the team that has delivered across the Americas and the Middle
+          East.
         </p>
         <div className="engage-actions">
           <Link className="cta cta-fill cta-lg" href="/appointment">
