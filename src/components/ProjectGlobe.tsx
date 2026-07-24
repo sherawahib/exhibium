@@ -51,6 +51,14 @@ type GlobeInstance = {
   labelDotRadius: (v: number | ((d: object) => number)) => GlobeInstance;
   labelResolution: (n: number) => GlobeInstance;
   labelIncludeDot: (v: boolean | ((d: object) => boolean)) => GlobeInstance;
+  htmlElementsData: (d: object[]) => GlobeInstance;
+  htmlLat: (v: string | ((d: object) => number)) => GlobeInstance;
+  htmlLng: (v: string | ((d: object) => number)) => GlobeInstance;
+  htmlAltitude: (v: number | ((d: object) => number)) => GlobeInstance;
+  htmlElement: (fn: (d: object) => HTMLElement) => GlobeInstance;
+  htmlElementVisibilityModifier: (
+    fn: (el: HTMLElement, visible: boolean) => void
+  ) => GlobeInstance;
   pointOfView: (
     view: { lat: number; lng: number; altitude: number },
     ms?: number
@@ -362,26 +370,26 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
 
     paint();
 
+    // Float name chips above polygon fills so they stay readable.
     globe
-      .labelsData(stateLabels)
-      .labelLat("lat")
-      .labelLng("lng")
-      .labelText("name")
-      .labelIncludeDot(false)
-      .labelDotRadius(0)
-      .labelAltitude(0.018)
-      .labelResolution(3)
-      .labelSize((d) => {
+      .labelsData([])
+      .htmlElementsData(stateLabels)
+      .htmlLat("lat")
+      .htmlLng("lng")
+      .htmlAltitude((d) => {
         const name = String((d as { name: string }).name);
-        if (pinStates.has(name)) return 1.55;
-        if (regionStates.has(name)) return 1.35;
-        return 1.05;
+        if (pinStates.has(name)) return 0.12;
+        if (regionStates.has(name)) return 0.1;
+        return 0.085;
       })
-      .labelColor((d) => {
+      .htmlElement((d) => {
         const name = String((d as { name: string }).name);
-        if (pinStates.has(name)) return "rgba(255, 244, 220, 0.98)";
-        if (regionStates.has(name)) return "rgba(255, 220, 170, 0.95)";
-        return "rgba(255, 210, 150, 0.78)";
+        const el = document.createElement("div");
+        el.className = "globe-state-label";
+        if (pinStates.has(name)) el.classList.add("is-selected");
+        else if (regionStates.has(name)) el.classList.add("is-region");
+        el.textContent = name;
+        return el;
       });
   }, [
     polygons,
