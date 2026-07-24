@@ -32,6 +32,8 @@
 
 html {
   scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
 }
 
 body {
@@ -42,6 +44,7 @@ body {
   line-height: 1.65;
   background: var(--paper);
   overflow-x: hidden;
+  max-width: 100vw;
 }
 
 img {
@@ -230,6 +233,18 @@ p {
   max-height: calc(100svh - var(--header-h) - var(--safe-top));
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+}
+
+.drawer-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 98;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  background: rgba(6, 16, 34, 0.45);
+  backdrop-filter: blur(2px);
+  cursor: pointer;
 }
 
 .drawer[hidden] {
@@ -786,6 +801,7 @@ p {
   width: 100% !important;
   height: 100% !important;
   cursor: grab;
+  touch-action: none;
 }
 
 .atlas-globe-canvas canvas:active {
@@ -2536,7 +2552,9 @@ p {
   .atlas-map-layout,
   .appt-layout,
   .appt-grid,
-  .foot-main {
+  .foot-main,
+  .service-detail-grid,
+  .approach-split {
     grid-template-columns: 1fr;
   }
 
@@ -2546,7 +2564,9 @@ p {
 
   .service-grid,
   .approach-showcase,
-  .media-strip-grid {
+  .media-strip-grid,
+  .alliance-grid,
+  .partner-grid {
     grid-template-columns: 1fr 1fr;
   }
 
@@ -2573,13 +2593,23 @@ p {
   }
 
   .atlas-globe {
-    min-height: 300px;
-    max-height: none;
+    min-height: min(52vw, 420px);
+    max-height: 520px;
+    aspect-ratio: 1 / 1;
   }
 
   .atlas-panel {
-    max-height: none;
+    max-height: min(420px, 55vh);
     border-radius: 14px;
+  }
+
+  .atlas-panel-names {
+    max-height: min(380px, 50vh);
+  }
+
+  .atlas-name-list button {
+    min-height: 44px;
+    padding: 0.55rem 0.65rem;
   }
 
   .contact-email {
@@ -2590,8 +2620,30 @@ p {
     padding: calc(var(--header-h) + 2.25rem + var(--safe-top)) 0 2.25rem;
   }
 
+  .page-banner-inner {
+    max-width: 100%;
+  }
+
   .engage-box {
     padding: clamp(1.5rem, 4vw, 2.5rem);
+  }
+
+  .engage-box h2 {
+    max-width: 18ch;
+  }
+
+  .service-detail-nav {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+  }
+
+  .splash-copy {
+    max-width: 100%;
+  }
+
+  .splash-brand {
+    font-size: clamp(1.35rem, 6.2vw, 3.4rem);
   }
 }
 
@@ -2600,6 +2652,8 @@ p {
   .service-grid,
   .approach-showcase,
   .media-strip-grid,
+  .alliance-grid,
+  .partner-grid,
   .foot-cols {
     grid-template-columns: 1fr;
   }
@@ -2609,18 +2663,25 @@ p {
     align-items: flex-start;
     font-size: 0.62rem;
     letter-spacing: 0.1em;
+    gap: 0.25rem;
   }
 
   .atlas-map-legend {
-    border-radius: 10px;
-    width: auto;
-    max-width: calc(100% - 1.5rem);
-    left: 0.75rem;
+    position: static;
+    border-radius: 0;
+    width: 100%;
+    max-width: none;
+    margin: 0;
+    left: auto;
     right: auto;
-    bottom: 0.75rem;
-    gap: 0.5rem 0.85rem;
-    padding: 0.45rem 0.7rem;
-    font-size: 0.64rem;
+    bottom: auto;
+    gap: 0.45rem 0.75rem;
+    padding: 0.55rem 0.85rem;
+    font-size: 0.62rem;
+    background: rgba(6, 16, 34, 0.92);
+    border: 0;
+    border-top: 1px solid rgba(255, 179, 102, 0.18);
+    backdrop-filter: none;
   }
 
   .atlas-switch {
@@ -2630,6 +2691,8 @@ p {
   .atlas-switch button {
     flex: 1 1 calc(50% - 0.5rem);
     justify-content: space-between;
+    min-height: 48px;
+    padding: 0.7rem 0.85rem;
   }
 
   .capability-rail,
@@ -2637,13 +2700,31 @@ p {
   .foot-badges {
     gap: 0.45rem;
   }
+
+  .founder-portrait {
+    max-width: 280px;
+    margin-inline: auto;
+  }
+
+  .globe-state-label {
+    font-size: 0.58rem;
+    padding: 0.15rem 0.35rem;
+  }
+
+  .globe-state-label.is-region {
+    font-size: 0.62rem;
+  }
+
+  .globe-state-label.is-selected {
+    font-size: 0.68rem;
+  }
 }
 
 /* ——— Phone ——— */
 @media (max-width: 560px) {
   :root {
-    --gutter: clamp(0.9rem, 4.5vw, 1.25rem);
-    --header-h: 4.25rem;
+    --gutter: clamp(0.85rem, 4.2vw, 1.15rem);
+    --header-h: 4.1rem;
   }
 
   body {
@@ -2652,35 +2733,43 @@ p {
 
   .brand-logo-img,
   .foot-brand-block .brand-logo-img {
-    width: 200px;
-    max-width: min(200px, 48vw);
+    width: 168px;
+    max-width: min(168px, 46vw);
   }
 
   .splash {
-    padding: calc(5rem + var(--safe-top)) var(--gutter)
-      calc(2.5rem + var(--safe-bottom));
+    padding: calc(4.75rem + var(--safe-top)) var(--gutter)
+      calc(2.25rem + var(--safe-bottom));
     min-height: 100svh;
     align-content: end;
   }
 
   .splash-brand {
-    font-size: clamp(1.9rem, 8.8vw, 3.3rem);
+    white-space: normal;
+    flex-wrap: wrap;
+    font-size: clamp(1.2rem, 6.5vw, 2.15rem);
+    line-height: 1.08;
+    letter-spacing: -0.02em;
   }
 
   .splash-line {
-    font-size: clamp(1.35rem, 5.5vw, 1.85rem);
-    max-width: 22ch;
+    font-size: clamp(1.2rem, 5.2vw, 1.7rem);
+    max-width: none;
   }
 
   .splash-cta,
   .engage-actions {
     flex-direction: column;
     align-items: stretch;
+    width: 100%;
   }
 
   .splash-cta .cta,
   .engage-actions .cta {
     width: 100%;
+    justify-content: center;
+    text-align: center;
+    min-height: 48px;
   }
 
   .cta:hover,
@@ -2689,30 +2778,35 @@ p {
   }
 
   .page-banner {
-    padding: calc(var(--header-h) + 1.5rem + var(--safe-top)) 0 1.75rem;
+    padding: calc(var(--header-h) + 1.35rem + var(--safe-top)) 0 1.5rem;
   }
 
   .page-banner h1 {
-    font-size: clamp(2.1rem, 9.5vw, 2.9rem);
-    max-width: 16ch;
+    font-size: clamp(1.85rem, 8.5vw, 2.6rem);
+    max-width: none;
   }
 
   .page-banner-media {
-    min-height: clamp(200px, 56vw, 280px);
+    min-height: clamp(180px, 52vw, 260px);
   }
 
   .page-banner-desc {
-    font-size: 1.05rem;
+    font-size: 1rem;
+    max-width: none;
   }
 
-  .atlas-geo {
-    min-height: 200px;
-    aspect-ratio: 16 / 11;
+  .atlas-head h2,
+  .practice-head h2,
+  .founder h2,
+  .engage-box h2 {
+    font-size: clamp(1.55rem, 7vw, 2.2rem);
+    max-width: none;
   }
 
   .atlas-globe {
-    min-height: 280px;
-    aspect-ratio: 1 / 1.1;
+    min-height: 300px;
+    max-height: none;
+    aspect-ratio: 1 / 1.05;
   }
 
   .atlas-map-chrome span:last-child {
@@ -2723,7 +2817,12 @@ p {
   .atlas-panel,
   .contact-panel,
   .appt-card {
-    padding: 1.1rem;
+    padding: 1.05rem;
+  }
+
+  .atlas-panel,
+  .atlas-panel-names {
+    max-height: min(360px, 48vh);
   }
 
   .atlas-pin-list {
@@ -2744,7 +2843,9 @@ p {
     gap: 0.65rem;
   }
 
-  .foot-email {
+  .foot-email,
+  .contact-email,
+  .appt-direct a {
     overflow-wrap: anywhere;
     word-break: break-word;
   }
@@ -2752,8 +2853,8 @@ p {
   .foot-badges span,
   .capability-rail span,
   .brief-group-row span {
-    font-size: 0.72rem;
-    padding: 0.4rem 0.65rem;
+    font-size: 0.7rem;
+    padding: 0.38rem 0.6rem;
   }
 
   .name-cloud.dense {
@@ -2784,14 +2885,54 @@ p {
   .atlas-lightbox-img {
     max-height: min(50vh, 360px);
   }
+
+  /* Prevent iOS zoom on form focus */
+  .appt-field input,
+  .appt-field select,
+  .appt-field textarea,
+  input,
+  select,
+  textarea {
+    font-size: 16px;
+  }
+
+  .appt-submit,
+  .cta-fill,
+  .cta-line,
+  .foot-cta,
+  .topnav-cta {
+    min-height: 48px;
+  }
+
+  .statement-layout,
+  .media-strip,
+  .brief-pillars,
+  .alliances {
+    padding-inline: 0;
+  }
+
+  .engage-box p {
+    font-size: 0.98rem;
+  }
+
+  .contact-grid h2,
+  .appt-copy h2 {
+    font-size: clamp(1.4rem, 6vw, 1.85rem);
+  }
+
+  .service-detail-list li,
+  .contact-list li,
+  .appt-points li {
+    padding-left: 1.15rem;
+  }
 }
 
 /* ——— Small phone ——— */
 @media (max-width: 390px) {
   .brand-logo-img,
   .foot-brand-block .brand-logo-img {
-    width: 168px;
-    max-width: min(168px, 46vw);
+    width: 148px;
+    max-width: min(148px, 44vw);
   }
 
   .atlas-switch button {
@@ -2799,7 +2940,7 @@ p {
   }
 
   .splash-brand {
-    font-size: clamp(1.7rem, 8.2vw, 2.7rem);
+    font-size: clamp(1.05rem, 6vw, 1.65rem);
   }
 
   .kicker {
@@ -2809,6 +2950,14 @@ p {
 
   .geo-pin-tip {
     display: none;
+  }
+
+  .atlas-globe {
+    min-height: 260px;
+  }
+
+  .wrap {
+    width: min(var(--max), calc(100% - 2 * var(--gutter)));
   }
 }
 

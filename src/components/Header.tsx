@@ -38,7 +38,9 @@ export function Header() {
   }, [open]);
 
   const isActive = (href: string) =>
-    href === "/" ? pathname === "/" : pathname === href || pathname.startsWith(`${href}/`);
+    href === "/"
+      ? pathname === "/"
+      : pathname === href || pathname.startsWith(`${href}/`);
 
   return (
     <>
@@ -71,6 +73,15 @@ export function Header() {
           </Link>
         </nav>
       </header>
+
+      {open ? (
+        <button
+          type="button"
+          className="drawer-backdrop"
+          aria-label="Close menu"
+          onClick={() => setOpen(false)}
+        />
+      ) : null}
 
       <aside className="drawer" id="drawer" hidden={!open}>
         <nav aria-label="Mobile">
