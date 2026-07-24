@@ -508,7 +508,7 @@ p {
 
 .practice-head h2 {
   font-size: clamp(1.7rem, 3vw, 2.45rem);
-  max-width: 16ch;
+  max-width: min(20ch, 100%);
 }
 
 .service-grid {
@@ -692,7 +692,7 @@ p {
 
 .atlas-head h2 {
   font-size: clamp(1.6rem, 2.8vw, 2.35rem);
-  max-width: 14ch;
+  max-width: min(18ch, 100%);
   color: #fff;
 }
 
@@ -745,7 +745,7 @@ p {
 
 .atlas-map-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(280px, 0.8fr);
+  grid-template-columns: minmax(0, 1.35fr) minmax(min(100%, 280px), 0.8fr);
   gap: clamp(1.25rem, 3vw, 2rem);
   align-items: stretch;
 }
@@ -1924,7 +1924,7 @@ p {
 .page-banner h1 {
   font-size: clamp(2.1rem, 4.5vw, 3.15rem);
   color: #fff;
-  max-width: 14ch;
+  max-width: min(18ch, 100%);
 }
 
 .page-banner-desc {
@@ -2536,8 +2536,46 @@ p {
   outline-offset: 3px;
 }
 
-/* ——— Tablet ——— */
-@media (max-width: 900px) {
+/* ——— Large laptop / small desktop ——— */
+@media (max-width: 1200px) {
+  :root {
+    --gutter: clamp(1rem, 3.2vw, 2.25rem);
+  }
+
+  .brand-logo-img {
+    width: 210px;
+    max-width: min(210px, 42vw);
+  }
+
+  .topnav {
+    gap: clamp(0.65rem, 1.4vw, 1.25rem);
+  }
+
+  .topnav a {
+    font-size: 0.72rem;
+  }
+
+  .service-grid,
+  .approach-showcase {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .approach-steps {
+    grid-template-columns: 1fr;
+  }
+
+  .approach-steps li:not(:last-child) {
+    border-right: 0;
+    padding-right: 0;
+    margin-right: 0;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 1.15rem;
+    margin-bottom: 1.15rem;
+  }
+}
+
+/* ——— Tablet & condensed nav ——— */
+@media (max-width: 1100px) {
   .topnav {
     display: none;
   }
@@ -2546,10 +2584,27 @@ p {
     display: grid;
   }
 
+  .atlas-map-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .atlas-globe {
+    min-height: min(58vw, 460px);
+    max-height: 520px;
+    aspect-ratio: 1 / 1;
+  }
+
+  .atlas-panel,
+  .atlas-panel-names {
+    max-height: min(400px, 48vh);
+  }
+}
+
+/* ——— Tablet ——— */
+@media (max-width: 900px) {
   .founder-layout,
   .contact-grid,
   .statement-layout,
-  .atlas-map-layout,
   .appt-layout,
   .appt-grid,
   .foot-main,
@@ -2564,23 +2619,8 @@ p {
 
   .service-grid,
   .approach-showcase,
-  .media-strip-grid,
-  .alliance-grid,
-  .partner-grid {
+  .media-strip-grid {
     grid-template-columns: 1fr 1fr;
-  }
-
-  .approach-steps {
-    grid-template-columns: 1fr;
-  }
-
-  .approach-steps li:not(:last-child) {
-    border-right: 0;
-    padding-right: 0;
-    margin-right: 0;
-    border-bottom: 1px solid var(--line);
-    padding-bottom: 1.25rem;
-    margin-bottom: 1.25rem;
   }
 
   .atlas-map-shell {
@@ -2592,44 +2632,42 @@ p {
     min-height: 240px;
   }
 
-  .atlas-globe {
-    min-height: min(52vw, 420px);
-    max-height: 520px;
-    aspect-ratio: 1 / 1;
-  }
-
-  .atlas-panel {
-    max-height: min(420px, 55vh);
-    border-radius: 14px;
-  }
-
-  .atlas-panel-names {
-    max-height: min(380px, 50vh);
-  }
-
   .atlas-name-list button {
     min-height: 44px;
     padding: 0.55rem 0.65rem;
   }
 
-  .contact-email {
+  .contact-email,
+  .foot-email {
     overflow-wrap: anywhere;
   }
 
   .page-banner {
-    padding: calc(var(--header-h) + 2.25rem + var(--safe-top)) 0 2.25rem;
+    padding: calc(var(--header-h) + 2rem + var(--safe-top)) 0 2rem;
   }
 
-  .page-banner-inner {
+  .page-banner-inner,
+  .splash-copy {
     max-width: 100%;
+  }
+
+  .page-banner h1,
+  .statement h2,
+  .practice-head h2,
+  .founder h2,
+  .atlas-head h2,
+  .alliances-head h2,
+  .approach-head h2,
+  .engage-box h2 {
+    max-width: none;
   }
 
   .engage-box {
     padding: clamp(1.5rem, 4vw, 2.5rem);
   }
 
-  .engage-box h2 {
-    max-width: 18ch;
+  .engage-actions {
+    flex-wrap: wrap;
   }
 
   .service-detail-nav {
@@ -2638,12 +2676,15 @@ p {
     gap: 0.85rem;
   }
 
-  .splash-copy {
-    max-width: 100%;
+  .splash-brand {
+    font-size: clamp(1.35rem, 5vw, 2.85rem);
+    white-space: normal;
+    flex-wrap: wrap;
   }
 
-  .splash-brand {
-    font-size: clamp(1.35rem, 6.2vw, 3.4rem);
+  .statement-layout,
+  .founder-layout {
+    gap: 1.75rem;
   }
 }
 
@@ -2652,8 +2693,6 @@ p {
   .service-grid,
   .approach-showcase,
   .media-strip-grid,
-  .alliance-grid,
-  .partner-grid,
   .foot-cols {
     grid-template-columns: 1fr;
   }
@@ -2685,6 +2724,8 @@ p {
   }
 
   .atlas-switch {
+    display: flex;
+    flex-wrap: wrap;
     gap: 0.5rem;
   }
 
@@ -2703,6 +2744,7 @@ p {
 
   .founder-portrait {
     max-width: 280px;
+    width: 100%;
     margin-inline: auto;
   }
 
@@ -2718,6 +2760,16 @@ p {
   .globe-state-label.is-selected {
     font-size: 0.68rem;
   }
+
+  .partner-card-head {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.35rem;
+  }
+
+  .foot-brand-block p {
+    max-width: none;
+  }
 }
 
 /* ——— Phone ——— */
@@ -2731,6 +2783,10 @@ p {
     font-size: 1rem;
   }
 
+  main {
+    overflow-x: clip;
+  }
+
   .brand-logo-img,
   .foot-brand-block .brand-logo-img {
     width: 168px;
@@ -2741,19 +2797,20 @@ p {
     padding: calc(4.75rem + var(--safe-top)) var(--gutter)
       calc(2.25rem + var(--safe-bottom));
     min-height: 100svh;
+    min-height: 100dvh;
     align-content: end;
   }
 
   .splash-brand {
     white-space: normal;
     flex-wrap: wrap;
-    font-size: clamp(1.2rem, 6.5vw, 2.15rem);
+    font-size: clamp(1.15rem, 6.2vw, 2rem);
     line-height: 1.08;
     letter-spacing: -0.02em;
   }
 
   .splash-line {
-    font-size: clamp(1.2rem, 5.2vw, 1.7rem);
+    font-size: clamp(1.15rem, 4.8vw, 1.55rem);
     max-width: none;
   }
 
@@ -2782,7 +2839,7 @@ p {
   }
 
   .page-banner h1 {
-    font-size: clamp(1.85rem, 8.5vw, 2.6rem);
+    font-size: clamp(1.75rem, 7.5vw, 2.35rem);
     max-width: none;
   }
 
@@ -2798,8 +2855,11 @@ p {
   .atlas-head h2,
   .practice-head h2,
   .founder h2,
-  .engage-box h2 {
-    font-size: clamp(1.55rem, 7vw, 2.2rem);
+  .engage-box h2,
+  .statement h2,
+  .alliances-head h2,
+  .approach-head h2 {
+    font-size: clamp(1.45rem, 6.2vw, 2rem);
     max-width: none;
   }
 
@@ -2825,14 +2885,6 @@ p {
     max-height: min(360px, 48vh);
   }
 
-  .atlas-pin-list {
-    max-height: 140px;
-  }
-
-  .project-chip {
-    font-size: 0.78rem;
-  }
-
   .foot-cols {
     grid-template-columns: 1fr;
   }
@@ -2841,6 +2893,7 @@ p {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.65rem;
+    text-align: left;
   }
 
   .foot-email,
@@ -2857,10 +2910,6 @@ p {
     padding: 0.38rem 0.6rem;
   }
 
-  .name-cloud.dense {
-    gap: 0.4rem;
-  }
-
   .service-card-body,
   .approach-card-body {
     padding: 1rem;
@@ -2871,22 +2920,6 @@ p {
     padding: 0.85rem 0;
   }
 
-  .atlas-lightbox {
-    padding: max(0.75rem, var(--safe-top)) max(0.75rem, var(--safe-right))
-      max(0.75rem, var(--safe-bottom)) max(0.75rem, var(--safe-left));
-    align-items: end;
-  }
-
-  .atlas-lightbox-figure {
-    max-height: calc(100svh - 2rem);
-    overflow: auto;
-  }
-
-  .atlas-lightbox-img {
-    max-height: min(50vh, 360px);
-  }
-
-  /* Prevent iOS zoom on form focus */
   .appt-field input,
   .appt-field select,
   .appt-field textarea,
@@ -2894,6 +2927,7 @@ p {
   select,
   textarea {
     font-size: 16px;
+    max-width: 100%;
   }
 
   .appt-submit,
@@ -2904,20 +2938,15 @@ p {
     min-height: 48px;
   }
 
-  .statement-layout,
-  .media-strip,
-  .brief-pillars,
-  .alliances {
-    padding-inline: 0;
-  }
-
-  .engage-box p {
-    font-size: 0.98rem;
+  .engage-box p,
+  .statement p,
+  .founder-main p {
+    max-width: none;
   }
 
   .contact-grid h2,
   .appt-copy h2 {
-    font-size: clamp(1.4rem, 6vw, 1.85rem);
+    font-size: clamp(1.35rem, 5.5vw, 1.75rem);
   }
 
   .service-detail-list li,
@@ -2925,10 +2954,19 @@ p {
   .appt-points li {
     padding-left: 1.15rem;
   }
+
+  .service-detail-hero,
+  .contact-photo {
+    border-radius: 12px;
+  }
 }
 
 /* ——— Small phone ——— */
 @media (max-width: 390px) {
+  :root {
+    --gutter: 0.8rem;
+  }
+
   .brand-logo-img,
   .foot-brand-block .brand-logo-img {
     width: 148px;
@@ -2940,7 +2978,7 @@ p {
   }
 
   .splash-brand {
-    font-size: clamp(1.05rem, 6vw, 1.65rem);
+    font-size: clamp(1rem, 5.8vw, 1.55rem);
   }
 
   .kicker {
@@ -2953,11 +2991,32 @@ p {
   }
 
   .atlas-globe {
-    min-height: 260px;
+    min-height: 250px;
+  }
+}
+
+/* ——— Short landscape phones / tablets ——— */
+@media (max-height: 480px) and (orientation: landscape) {
+  .splash {
+    min-height: auto;
+    padding-top: calc(4.5rem + var(--safe-top));
+    padding-bottom: 1.5rem;
   }
 
-  .wrap {
-    width: min(var(--max), calc(100% - 2 * var(--gutter)));
+  .atlas-globe {
+    min-height: 220px;
+    max-height: 70vh;
+  }
+
+  .drawer {
+    max-height: calc(100svh - var(--header-h) - var(--safe-top));
+  }
+}
+
+/* ——— Very wide desktops ——— */
+@media (min-width: 1440px) {
+  :root {
+    --gutter: clamp(2rem, 5vw, 4rem);
   }
 }
 
