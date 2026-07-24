@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { PageBanner } from "@/components/PageBanner";
-import { Engage } from "@/components/Engage";
 import { pageImages, contactEmail, contactMailto } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -56,7 +55,6 @@ export default function ContactPage() {
           </div>
         </div>
       </section>
-      <Engage compact image="/bim.jpg" />
     </>
   );
 }
