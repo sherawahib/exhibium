@@ -2,12 +2,12 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import { PageBanner } from "@/components/PageBanner";
 import { Engage } from "@/components/Engage";
-import { pageImages } from "@/lib/site";
+import { pageImages, contactEmail, contactMailto } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
   description:
-    "Contact Exhibium Group for market entry, BIM oversight, modular development, or branding advisory. Email info@exhibium.com.",
+    "Contact Exhibium Group for market entry, BIM oversight, modular development, or branding advisory. Email fwilliams@exhibium.com.",
 };
 
 export default function ContactPage() {
@@ -41,8 +41,8 @@ export default function ContactPage() {
           </div>
           <div className="contact-panel">
             <p className="kicker">Direct</p>
-            <a className="contact-email" href="mailto:info@exhibium.com">
-              info@exhibium.com
+            <a className="contact-email" href={contactMailto}>
+              {contactEmail}
             </a>
             <p className="contact-note">
               Domain ·{" "}

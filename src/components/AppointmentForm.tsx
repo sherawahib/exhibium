@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
+import { contactEmail, contactMailto } from "@/lib/site";
 
 const meetingTypes = [
   "Strategy consultation",
@@ -37,7 +38,7 @@ export function AppointmentForm() {
         .join("\n")
     );
 
-    window.location.href = `mailto:info@exhibium.com?subject=${subject}&body=${body}`;
+    window.location.href = `${contactMailto}?subject=${subject}&body=${body}`;
     setStatus("sent");
   };
 
@@ -48,7 +49,7 @@ export function AppointmentForm() {
         <p>
           Your email app should open with the appointment details. If it doesn’t,
           write to{" "}
-          <a href="mailto:info@exhibium.com">info@exhibium.com</a>.
+          <a href={contactMailto}>{contactEmail}</a>.
         </p>
         <button
           type="button"

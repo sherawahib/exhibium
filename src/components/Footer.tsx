@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
-import { navLinks, services } from "@/lib/site";
+import { contactEmail, contactMailto, navLinks, services } from "@/lib/site";
 
 export function Footer() {
   const year = new Date().getFullYear();
@@ -58,8 +58,8 @@ export function Footer() {
 
           <div className="foot-col foot-contact">
             <h3>Book Appointment</h3>
-            <a className="foot-email" href="mailto:info@exhibium.com">
-              info@exhibium.com
+            <a className="foot-email" href={contactMailto}>
+              {contactEmail}
             </a>
             <p>
               United States · Latin America · Middle East

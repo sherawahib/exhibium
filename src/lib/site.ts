@@ -1,3 +1,6 @@
+export const contactEmail = "fwilliams@exhibium.com";
+export const contactMailto = `mailto:${contactEmail}`;
+
 export const navLinks = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },

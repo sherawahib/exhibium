@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef } from "react";
+import { contactEmail, contactMailto } from "@/lib/site";
 
 export function Engage({
   compact = false,
@@ -77,8 +78,8 @@ export function Engage({
               Contact page
             </Link>
           ) : (
-            <a className="cta cta-ghost" href="mailto:info@exhibium.com">
-              info@exhibium.com
+            <a className="cta cta-ghost" href={contactMailto}>
+              {contactEmail}
             </a>
           )}
         </div>
