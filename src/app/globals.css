@@ -1019,6 +1019,48 @@ p {
   margin-bottom: 0.65rem;
 }
 
+.atlas-panel-names h3 {
+  margin-bottom: 1rem;
+}
+
+.atlas-name-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.atlas-name-list button {
+  width: 100%;
+  text-align: left;
+  border: 0;
+  background: transparent;
+  color: rgba(232, 247, 250, 0.88);
+  font: inherit;
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.35;
+  padding: 0.45rem 0.55rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease;
+}
+
+.atlas-name-list button:hover,
+.atlas-name-list button:focus-visible {
+  background: rgba(224, 120, 40, 0.14);
+  color: #fff;
+  outline: none;
+}
+
+.atlas-name-list button.is-on {
+  background: rgba(224, 120, 40, 0.22);
+  color: #fff4e8;
+  box-shadow: inset 3px 0 0 var(--region-accent, #e07828);
+}
+
 .atlas-blurb {
   color: rgba(232, 247, 250, 0.7);
   font-size: 0.98rem;
