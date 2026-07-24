@@ -16,7 +16,7 @@ export default function ContactPage() {
       <PageBanner
         kicker="Engage"
         title="Contact"
-        description="Start a conversation about your next market entry or development program."
+        description="Start a conversation about your next project."
         image={pageImages.contact.src}
         imageAlt={pageImages.contact.alt}
       />
