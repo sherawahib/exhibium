@@ -16,7 +16,7 @@ export function Footer() {
           <p>
             Exhibium Group is a multi-faceted consultancy providing Branding, BIM
             management services, and Modular Construction development
-            solutions—with enhanced ROI-based solutions as the primary offering.
+            solutions, with enhanced ROI-based solutions as the primary offering.
             Led by Fernando Williams across the United States, Latin America, and
             the Middle East.
           </p>

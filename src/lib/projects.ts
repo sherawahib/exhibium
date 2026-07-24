@@ -98,16 +98,16 @@ export const allProjects: Project[] = [
   p("Xcaret", "Mexico", "latam", "mexico", "Destination retail and experiential environment consulting tied to tourism brand immersion."),
 
   // Central America
-  p("Siman — El Salvador", "Central America", "latam", "central", "Department store consulting for Siman’s El Salvador expansion and store experience standards."),
-  p("Ben Betsh — Panama", "Central America", "latam", "central", "Panama retail advisory for specialty store planning and brand presentation."),
-  p("La Gloria — Costa Rica", "Central America", "latam", "central", "Costa Rican retail consultancy focused on store roll-out clarity and merchandising systems."),
-  p("AutoMercados — Costa Rica", "Central America", "latam", "central", "Supermarket format advisory covering aisle logic, brand zones, and shopper convenience."),
-  p("Farmaplace — Costa Rica", "Central America", "latam", "central", "Pharmacy retail concept support for service flow, category clarity, and trust cues."),
+  p("Siman, El Salvador", "Central America", "latam", "central", "Department store consulting for Siman’s El Salvador expansion and store experience standards."),
+  p("Ben Betsh, Panama", "Central America", "latam", "central", "Panama retail advisory for specialty store planning and brand presentation."),
+  p("La Gloria, Costa Rica", "Central America", "latam", "central", "Costa Rican retail consultancy focused on store roll-out clarity and merchandising systems."),
+  p("AutoMercados, Costa Rica", "Central America", "latam", "central", "Supermarket format advisory covering aisle logic, brand zones, and shopper convenience."),
+  p("Farmaplace, Costa Rica", "Central America", "latam", "central", "Pharmacy retail concept support for service flow, category clarity, and trust cues."),
 
   // Caribbean
-  p("Corte Fiel — Dominican Republic", "Caribbean", "latam", "caribbean", "Dominican fashion retail consulting for store identity and selling-floor presentation."),
-  p("Plaza Lama — Dominican Republic", "Caribbean", "latam", "caribbean", "Department store strategic planning and visual merchandising for Plaza Lama."),
-  p("Farmaconal — Dominican Republic", "Caribbean", "latam", "caribbean", "Pharmacy chain advisory spanning store prototypes and customer service environments."),
+  p("Corte Fiel, Dominican Republic", "Caribbean", "latam", "caribbean", "Dominican fashion retail consulting for store identity and selling-floor presentation."),
+  p("Plaza Lama, Dominican Republic", "Caribbean", "latam", "caribbean", "Department store strategic planning and visual merchandising for Plaza Lama."),
+  p("Farmaconal, Dominican Republic", "Caribbean", "latam", "caribbean", "Pharmacy chain advisory spanning store prototypes and customer service environments."),
 
   // Colombia
   p("La Polar", "Colombia", "latam", "colombia", "Market-entry and retail design support for La Polar’s Colombia expansion program."),
@@ -140,10 +140,10 @@ export const allProjects: Project[] = [
   p("Falabella", "Chile", "latam", "chile", "Major retail group engagement spanning store planning and commercial experience standards."),
 
   // MENA
-  p("Giant Stores — KSA", "Saudi Arabia", "mena", "ksa", "Retail re-branding and visual merchandising for a ten-store Giant Stores roll-out with Al Muhaidib."),
-  p("Qatar Market — Doha", "Qatar", "mena", "doha", "Doha retail market consultancy focused on store presentation and shopper experience."),
-  p("Hyatt Plaza Mall — Doha", "Qatar", "mena", "doha", "Mall retail planning collaboration supporting tenant mix experience and presentation strategy."),
-  p("Korath International — UAE", "United Arab Emirates", "mena", "uae", "UAE retail consulting for international brand presentation and market-ready store concepts."),
+  p("Giant Stores, KSA", "Saudi Arabia", "mena", "ksa", "Retail re-branding and visual merchandising for a ten-store Giant Stores roll-out with Al Muhaidib."),
+  p("Qatar Market, Doha", "Qatar", "mena", "doha", "Doha retail market consultancy focused on store presentation and shopper experience."),
+  p("Hyatt Plaza Mall, Doha", "Qatar", "mena", "doha", "Mall retail planning collaboration supporting tenant mix experience and presentation strategy."),
+  p("Korath International, UAE", "United Arab Emirates", "mena", "uae", "UAE retail consulting for international brand presentation and market-ready store concepts."),
   p("KMZ Stores", "Russia", "mena", "russia", "Russian retail store program advisory covering store identity and merchandising systems."),
 ];
 

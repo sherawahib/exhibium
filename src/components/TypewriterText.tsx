@@ -8,7 +8,7 @@ type Props = {
   typeSpeed?: number;
 };
 
-/** Types once, then stops — avoids endless setState loops that hang the page. */
+/** Types once, then stops, avoids endless setState loops that hang the page. */
 export function TypewriterText({
   text,
   className,

@@ -26,7 +26,7 @@ export const viewport: Viewport = {
 
 export const metadata: Metadata = {
   title: {
-    default: "Exhibium Group — Market Entry · Strategy · BIM",
+    default: "Exhibium Group · Market Entry · Strategy · BIM",
     template: "%s | Exhibium Group",
   },
   description:

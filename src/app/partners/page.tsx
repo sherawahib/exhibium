@@ -17,7 +17,7 @@ export default function PartnersPage() {
       <PageBanner
         kicker="Exhibium Advisory partners / long-term clients"
         title="Partners and Long Term Client"
-        description="Advisory Partner Relationships and Long Term Client Consultancies from the Exhibium brief—complete engagement details and terms."
+        description="Advisory Partner Relationships and Long Term Client Consultancies from the Exhibium brief, complete engagement details and terms."
         image={pageImages.partners.src}
         imageAlt={pageImages.partners.alt}
       />

@@ -219,7 +219,7 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
 
     const globe = globeRef.current;
     if (globe && polygonsReadyRef.current) {
-      // Labels only when viewing USA — fewer meshes elsewhere.
+      // Labels only when viewing USA, fewer meshes elsewhere.
       globe.labelsData(region === "usa" ? stateLabels : []);
       applyHighlightStyle(globe, highlightRef.current, hoverKeyRef.current);
     }
@@ -415,7 +415,7 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
 
     applyHighlightStyle(globe, highlightRef.current, hoverKeyRef.current);
     polygonsReadyRef.current = true;
-    // region handled via highlight effect — avoid rebuilding meshes
+    // region handled via highlight effect, avoid rebuilding meshes
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [polygons, ready, stateLabels]);
 

@@ -54,19 +54,19 @@ export type PartnerRecord = {
 export const partnersFromBrief: PartnerRecord[] = [
   {
     section: "advisory",
-    term: "2016 – 2020",
+    term: "2016-2020",
     name: "Alex Partners LLC",
     href: "https://www.alexpartners.com",
     linkLabel: "alexpartners.com",
     bullets: [
       "USA based international strategic consultant.",
       "Exhibium is an on-call contributing collaborative consultant for retail planning and design expertise.",
-      "Past project collaboration: Hyatt Plaza Mall—Qatar, Panda Stores—Saudi Arabia.",
+      "Past project collaboration: Hyatt Plaza Mall, Qatar, Panda Stores, Saudi Arabia.",
     ],
   },
   {
     section: "advisory",
-    term: "2010 – 2020",
+    term: "2010-2020",
     name: "Diversified Retail Solutions LLC",
     href: "https://www.drsllc.com",
     linkLabel: "drsllc.com",
@@ -77,7 +77,7 @@ export const partnersFromBrief: PartnerRecord[] = [
   },
   {
     section: "client",
-    term: "2005 – Current",
+    term: "2005-Current",
     name: "La Polar S.A.",
     href: "https://www.lapolar.cl",
     linkLabel: "lapolar.cl",
@@ -89,24 +89,24 @@ export const partnersFromBrief: PartnerRecord[] = [
   },
   {
     section: "client",
-    term: "2010 – Current",
+    term: "2010-Current",
     name: "Almuhadib Development Group",
     href: "https://www.muhaidib.com",
     linkLabel: "muhaidib.com",
     bullets: [
       "Al Muhaidib Group is a leading Saudi conglomerate.",
-      "Past project collaborations: Giant Stores retail re-branding and Visual merchandising services—10 store roll-out.",
+      "Past project collaborations: Giant Stores retail re-branding and Visual merchandising services for a 10 store roll-out.",
     ],
   },
   {
     section: "client",
-    term: "2005 – Current",
+    term: "2005-Current",
     name: "Corporación Wong",
     href: "https://www.corporacionwong.pe",
     linkLabel: "corporacionwong.pe",
     bullets: [
       "Peru based shopping center / retail operator developer.",
-      "Long-term consultancy relationship—Exhibium acted as the primary retail design consultant covering new store prototypes and shopping center strategic planning.",
+      "Long-term consultancy relationship. Exhibium acted as the primary retail design consultant covering new store prototypes and shopping center strategic planning.",
     ],
   },
 ];

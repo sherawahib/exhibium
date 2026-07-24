@@ -24,7 +24,7 @@ export function AppointmentForm() {
     const type = String(data.get("type") || "").trim();
     const notes = String(data.get("notes") || "").trim();
 
-    const subject = encodeURIComponent(`Appointment request — ${name}`);
+    const subject = encodeURIComponent(`Appointment request: ${name}`);
     const body = encodeURIComponent(
       [
         `Name: ${name}`,
