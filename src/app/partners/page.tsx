@@ -6,7 +6,7 @@ import { Engage } from "@/components/Engage";
 import { pageImages } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Partners",
+  title: "Partners and Long Term Client",
   description:
     "Exhibium advisory partners and long-term clients including Alex Partners, Diversified Retail Solutions, La Polar, Al Muhaidib, and Corporación Wong.",
 };
@@ -16,7 +16,7 @@ export default function PartnersPage() {
     <>
       <PageBanner
         kicker="Exhibium Advisory partners / long-term clients"
-        title="Partners & clients"
+        title="Partners and Long Term Client"
         description="Advisory Partner Relationships and Long Term Client Consultancies from the Exhibium brief—complete engagement details and terms."
         image={pageImages.partners.src}
         imageAlt={pageImages.partners.alt}
