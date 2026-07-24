@@ -31,9 +31,6 @@ export function Founder() {
           <p>{founderProfile.emotional}</p>
           <p>{founderProfile.background}</p>
           <p>{founderProfile.expansion}</p>
-          <figure className="pullquote">
-            <blockquote>{founderProfile.quote}</blockquote>
-          </figure>
         </div>
       </div>
     </section>

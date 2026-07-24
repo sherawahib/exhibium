@@ -40,8 +40,6 @@ export const founderProfile = {
     "Mr. Williams received his education and training in architecture. Over the years he has expanded his base to include store design, visual merchandising, Branding/Marketing services, and in-store marketing and communications. In the last five years Mr. Williams has partnered with leading management advisory consultants in order to provide fully integrated consulting services. He is an accomplished retail consultant, speaker and trainer with international experience in many different retail formats.",
   expansion:
     "Mr. Williams has expanded his personal consulting services to include Business Development services within the A/E/C sectors with a major focus on market entry services for companies wishing to expand their services internationally.",
-  quote:
-    "The customer in-store experience can be positively influenced via visual motivational factors—to generate more time spent in the store and increased spending.",
 };
 
 export type PartnerRecord = {
