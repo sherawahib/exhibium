@@ -39,11 +39,10 @@ export function Hero() {
       </div>
       <div className="splash-copy">
         <TypewriterText text="EXHIBIUM" className="splash-brand" />
-        <h1>Modular Retail — The new way to build…….</h1>
-        <p className="splash-line">
+        <h1 className="splash-line">
           Branding · BIM modeling · Modular construction · ROI advisory · Market
           entry · Strategy and Execution.
-        </p>
+        </h1>
         <div className="splash-cta">
           <Link className="cta cta-fill" href="/appointment">
             Book Appointment

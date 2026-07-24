@@ -29,13 +29,8 @@ export default function AppointmentPage() {
             </p>
             <ul className="appt-points">
               <li>Senior-level strategy discussion</li>
-              <li>Retail, BIM, or modular focus</li>
               <li>Confirmation by email after you submit</li>
             </ul>
-            <p className="appt-direct">
-              Prefer email?{" "}
-              <a href="mailto:info@exhibium.com">info@exhibium.com</a>
-            </p>
           </div>
           <div className="appt-card">
             <AppointmentForm />
