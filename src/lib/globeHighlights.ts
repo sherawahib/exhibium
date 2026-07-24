@@ -203,3 +203,40 @@ export function getPinHighlightStates(pinId: string): Set<string> {
   const m = getMarketHighlight(pinId);
   return new Set(m?.states ?? []);
 }
+
+/** Approximate centroids for project US states (labels on the globe). */
+export const stateLabelCenters: Record<
+  string,
+  { lat: number; lng: number }
+> = {
+  California: { lat: 36.8, lng: -119.4 },
+  Oregon: { lat: 43.9, lng: -120.6 },
+  Washington: { lat: 47.4, lng: -120.5 },
+  Nevada: { lat: 39.3, lng: -116.6 },
+  Arizona: { lat: 34.3, lng: -111.7 },
+  Illinois: { lat: 40.0, lng: -89.2 },
+  Indiana: { lat: 39.9, lng: -86.3 },
+  Ohio: { lat: 40.3, lng: -82.8 },
+  Michigan: { lat: 44.3, lng: -85.4 },
+  Wisconsin: { lat: 44.5, lng: -89.7 },
+  Minnesota: { lat: 46.0, lng: -94.3 },
+  "New York": { lat: 42.9, lng: -75.5 },
+  "New Jersey": { lat: 40.1, lng: -74.6 },
+  Florida: { lat: 28.1, lng: -81.7 },
+};
+
+export type StateLabel = {
+  name: string;
+  lat: number;
+  lng: number;
+};
+
+export function getWorkStateLabels(): StateLabel[] {
+  return [...getAllHighlightStates()]
+    .map((name) => {
+      const center = stateLabelCenters[name];
+      if (!center) return null;
+      return { name, lat: center.lat, lng: center.lng };
+    })
+    .filter((x): x is StateLabel => x !== null);
+}

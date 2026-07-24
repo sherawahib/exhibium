@@ -13,6 +13,7 @@ import {
   getPinHighlightStates,
   getRegionHighlightCountries,
   getRegionHighlightStates,
+  getWorkStateLabels,
   regionFocus,
 } from "@/lib/globeHighlights";
 
@@ -40,6 +41,16 @@ type GlobeInstance = {
   polygonLabel: (fn: (d: object) => string) => GlobeInstance;
   onPolygonHover: (fn: (d: object | null) => void) => GlobeInstance;
   polygonsTransitionDuration: (n: number) => GlobeInstance;
+  labelsData: (d: object[]) => GlobeInstance;
+  labelLat: (v: string | ((d: object) => number)) => GlobeInstance;
+  labelLng: (v: string | ((d: object) => number)) => GlobeInstance;
+  labelText: (v: string | ((d: object) => string)) => GlobeInstance;
+  labelSize: (v: number | ((d: object) => number)) => GlobeInstance;
+  labelColor: (v: string | ((d: object) => string)) => GlobeInstance;
+  labelAltitude: (v: number | ((d: object) => number)) => GlobeInstance;
+  labelDotRadius: (v: number | ((d: object) => number)) => GlobeInstance;
+  labelResolution: (n: number) => GlobeInstance;
+  labelIncludeDot: (v: boolean | ((d: object) => boolean)) => GlobeInstance;
   pointOfView: (
     view: { lat: number; lng: number; altitude: number },
     ms?: number
@@ -147,6 +158,8 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
     () => (activePin ? getPinHighlightStates(activePin) : new Set<string>()),
     [activePin]
   );
+
+  const stateLabels = useMemo(() => getWorkStateLabels(), []);
 
   const toneOf = (d: GlobeFeature) => {
     if (d.__kind === "country") {
@@ -348,6 +361,28 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
       });
 
     paint();
+
+    globe
+      .labelsData(stateLabels)
+      .labelLat("lat")
+      .labelLng("lng")
+      .labelText("name")
+      .labelIncludeDot(false)
+      .labelDotRadius(0)
+      .labelAltitude(0.018)
+      .labelResolution(3)
+      .labelSize((d) => {
+        const name = String((d as { name: string }).name);
+        if (pinStates.has(name)) return 1.55;
+        if (regionStates.has(name)) return 1.35;
+        return 1.05;
+      })
+      .labelColor((d) => {
+        const name = String((d as { name: string }).name);
+        if (pinStates.has(name)) return "rgba(255, 244, 220, 0.98)";
+        if (regionStates.has(name)) return "rgba(255, 220, 170, 0.95)";
+        return "rgba(255, 210, 150, 0.78)";
+      });
   }, [
     polygons,
     ready,
@@ -359,6 +394,7 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
     regionStates,
     allCountries,
     allStates,
+    stateLabels,
   ]);
 
   useEffect(() => {
