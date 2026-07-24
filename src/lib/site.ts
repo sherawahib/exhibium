@@ -59,9 +59,7 @@ export const services = [
       "Construction pathways built for speed, cost control, and repeatable expansion into new markets.",
     body: "The Modular Development Group designs scalable build models for faster deployment and controlled capital cost. We help clients enter markets with modular concepts engineered for repeatability and ROI-led program design—alongside branding, process management, and development project advisory.",
     items: [
-      "Modular development concepts",
       "Process management & development projects",
-      "Scalable build models",
       "Market-ready deployment",
       "ROI advisory services",
       "Strategy and execution",
