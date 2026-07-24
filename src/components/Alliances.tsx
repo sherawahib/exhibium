@@ -30,14 +30,6 @@ export function Alliances() {
                     <li key={b}>{b}</li>
                   ))}
                 </ul>
-                <a
-                  className="partner-card-link"
-                  href={p.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {p.linkLabel}
-                </a>
               </article>
             ))}
           </div>
@@ -59,14 +51,6 @@ export function Alliances() {
                     <li key={b}>{b}</li>
                   ))}
                 </ul>
-                <a
-                  className="partner-card-link"
-                  href={p.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  {p.linkLabel}
-                </a>
               </article>
             ))}
           </div>
