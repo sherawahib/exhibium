@@ -9,15 +9,15 @@ export const navLinks = [
 
 export const services = [
   {
-    slug: "retail",
+    slug: "market-entry",
     num: "01",
-    label: "Retail Consulting",
-    title: "Retail Consulting Group",
+    label: "Market Entry Strategy",
+    title: "Market Entry Strategy",
     image: "/retail.jpg",
     imageAlt: "Premium retail boutique interior with suits and merchandise displays",
     summary:
       "Store design, visual merchandising, branding, and Emotional Commerce—shaping the in-store experience so customers stay longer and spend more.",
-    body: "Exhibium’s Retail Consulting Group advises department stores, specialty retail, and international roll-outs. We connect Branding, Process Management, Development Projects, and visual systems—including Emotional Commerce—so the customer experience drives measurable commercial performance and enhanced ROI.",
+    body: "Exhibium’s Market Entry Strategy practice advises department stores, specialty retail, and international roll-outs. We connect Branding, Process Management, Development Projects, and visual systems—including Emotional Commerce—so the customer experience drives measurable commercial performance and enhanced ROI as brands enter and scale in new markets.",
     items: [
       "Branding",
       "Process Management",
