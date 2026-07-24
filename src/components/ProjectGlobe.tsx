@@ -43,6 +43,8 @@ type GlobeInstance = {
   polygonSideColor: (fn: (d: object) => string) => GlobeInstance;
   polygonStrokeColor: (fn: (d: object) => string) => GlobeInstance;
   polygonAltitude: (fn: (d: object) => number) => GlobeInstance;
+  polygonLabel: (fn: (d: object) => string) => GlobeInstance;
+  onPolygonHover: (fn: (d: object | null) => void) => GlobeInstance;
   polygonsTransitionDuration: (n: number) => GlobeInstance;
   labelsData: (d: object[]) => GlobeInstance;
   labelLat: (v: string | ((d: object) => number)) => GlobeInstance;
@@ -85,6 +87,7 @@ const COLOR = {
   work: "rgba(196, 112, 48, 0.62)",
   region: "rgba(224, 120, 40, 0.88)",
   selected: "rgba(255, 196, 120, 0.96)",
+  hover: "rgba(255, 230, 180, 1)",
   side: "rgba(8, 16, 32, 0.28)",
   stroke: "rgba(12, 22, 40, 0.4)",
 };
@@ -141,29 +144,43 @@ function toneOf(d: GlobeFeature, h: HighlightSets) {
   return "work" as const;
 }
 
-function applyHighlightStyle(globe: GlobeInstance, h: HighlightSets) {
+function applyHighlightStyle(
+  globe: GlobeInstance,
+  h: HighlightSets,
+  hoverKey: string | null
+) {
   globe
-    .polygonCapColor((d) => COLOR[toneOf(d as GlobeFeature, h)])
+    .polygonCapColor((d) => {
+      const feat = d as GlobeFeature;
+      if (hoverKey && feat.__key === hoverKey) return COLOR.hover;
+      return COLOR[toneOf(feat, h)];
+    })
     .polygonAltitude((d) => {
-      const tone = toneOf(d as GlobeFeature, h);
-      if (tone === "selected") return 0.04;
-      if (tone === "region") return 0.028;
+      const feat = d as GlobeFeature;
+      // Hover pops the state/country clearly above the rest.
+      if (hoverKey && feat.__key === hoverKey) return 0.095;
+      const tone = toneOf(feat, h);
+      if (tone === "selected") return 0.045;
+      if (tone === "region") return 0.03;
       return 0.016;
     })
     .labelSize((d) => {
       const name = String((d as StateLabel).name);
+      if (hoverKey === name) return 1.55;
       if (h.pinStates.has(name)) return 1.35;
       if (h.regionStates.has(name)) return 1.15;
       return 0.9;
     })
     .labelColor((d) => {
       const name = String((d as StateLabel).name);
+      if (hoverKey === name) return "#ffffff";
       if (h.pinStates.has(name)) return "#fff8ef";
       if (h.regionStates.has(name)) return "#ffe2b8";
       return "rgba(255, 232, 200, 0.88)";
     })
     .labelAltitude((d) => {
       const name = String((d as StateLabel).name);
+      if (hoverKey === name) return 0.13;
       if (h.pinStates.has(name)) return 0.09;
       if (h.regionStates.has(name)) return 0.075;
       return 0.06;
@@ -185,6 +202,7 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
     regionCountries: new Set(),
     regionStates: new Set(),
   });
+  const hoverKeyRef = useRef<string | null>(null);
   const polygonsReadyRef = useRef(false);
   const [ready, setReady] = useState(false);
   const [polygons, setPolygons] = useState<GlobeFeature[]>([]);
@@ -203,7 +221,7 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
     if (globe && polygonsReadyRef.current) {
       // Labels only when viewing USA — fewer meshes elsewhere.
       globe.labelsData(region === "usa" ? stateLabels : []);
-      applyHighlightStyle(globe, highlightRef.current);
+      applyHighlightStyle(globe, highlightRef.current, hoverKeyRef.current);
     }
   }, [region, activePin, stateLabels]);
 
@@ -291,7 +309,7 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
         .atmosphereColor("#e07828")
         .atmosphereAltitude(0.12)
         .showGraticules(false)
-        .polygonsTransitionDuration(0)
+        .polygonsTransitionDuration(220)
         .htmlElementsData([]);
 
       try {
@@ -375,6 +393,18 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
       .polygonsData(polygons)
       .polygonSideColor(() => COLOR.side)
       .polygonStrokeColor(() => COLOR.stroke)
+      .polygonLabel((d) => {
+        const feat = d as GlobeFeature;
+        return feat.__kind === "state"
+          ? String(feat.properties.name ?? feat.__key)
+          : String(feat.__key);
+      })
+      .onPolygonHover((d) => {
+        const next = d ? (d as GlobeFeature).__key : null;
+        if (hoverKeyRef.current === next) return;
+        hoverKeyRef.current = next;
+        applyHighlightStyle(globe, highlightRef.current, next);
+      })
       .labelsData(highlightRef.current.regionStates.size ? stateLabels : [])
       .labelLat("lat")
       .labelLng("lng")
@@ -383,7 +413,7 @@ export function ProjectGlobe({ region, activePin, width, height }: Props) {
       .labelDotRadius(0)
       .labelResolution(2);
 
-    applyHighlightStyle(globe, highlightRef.current);
+    applyHighlightStyle(globe, highlightRef.current, hoverKeyRef.current);
     polygonsReadyRef.current = true;
     // region handled via highlight effect — avoid rebuilding meshes
     // eslint-disable-next-line react-hooks/exhaustive-deps
