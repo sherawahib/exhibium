@@ -29,7 +29,7 @@ export function Approach() {
           <h2>Strategy reviewed at the top. Execution owned on the ground.</h2>
           <p className="approach-lede">
             Branding, Process Management, and Development Projects—delivered
-            through the Retail Consulting Group, BIM Management Group, and
+            through the Advisory Consulting Group, BIM Management Group, and
             Modular Development Group. Strategy and Execution, Market Entry
             Services, and ROI Advisory Services sit at the center of every
             engagement.
