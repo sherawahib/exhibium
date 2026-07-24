@@ -25,7 +25,7 @@ export default function AppointmentPage() {
             <h2>Meet with Exhibium</h2>
             <p>
               Use this form for a focused consultation on branding, BIM, market
-              entry and ROI advisory.
+              entry, and ROI advisory.
             </p>
             <ul className="appt-points">
               <li>Senior-level strategy discussion</li>

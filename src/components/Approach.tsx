@@ -28,11 +28,10 @@ export function Approach() {
           <p className="kicker">How we work</p>
           <h2>Strategy reviewed at the top. Execution owned on the ground.</h2>
           <p className="approach-lede">
-            Branding, Process Management, and Development Projects, delivered
+            Branding, process management, and development projects are delivered
             through the Advisory Consulting Group, BIM Management Group, and
-            Modular Development Group. Strategy and Execution, Market Entry
-            Services, and ROI Advisory Services sit at the center of every
-            engagement.
+            Modular Development Group. Strategy and execution, market entry
+            services, and ROI advisory sit at the center of every engagement.
           </p>
         </div>
 

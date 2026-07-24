@@ -65,8 +65,8 @@ export function Engage({
         <p className="kicker">Next step</p>
         <h2>Bring Exhibium into your next market entry strategy.</h2>
         <p>
-          Market entry BIM oversight. Branding for commercial performance. Talk
-          with the team that has delivered across the Americas and the Middle
+          Market entry and BIM oversight. Branding for commercial performance.
+          Talk with the team that has delivered across the Americas and the Middle
           East.
         </p>
         <div className="engage-actions">

@@ -171,7 +171,7 @@ export const projectRegions: {
     id: "mena",
     label: "Middle East & Europe",
     accent: "#ffb366",
-    blurb: "Mall, retail rebrand, and market-entry work across the Gulf and Russia.",
+    blurb: "Mall planning, retail rebranding, and market-entry work across the Gulf and Russia.",
   },
 ];
 

@@ -16,7 +16,7 @@ export function Founder() {
               sizes="(max-width: 900px) 100vw, 36vw"
             />
           </figure>
-          <p className="kicker">Fernando Williams Profile</p>
+          <p className="kicker">Fernando Williams profile</p>
           <h2>Fernando Williams</h2>
           <p className="founder-meta">
             Founder &amp; Director · Chief Strategist · 25+ years

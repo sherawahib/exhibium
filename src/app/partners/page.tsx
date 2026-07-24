@@ -6,18 +6,18 @@ import { Engage } from "@/components/Engage";
 import { pageImages } from "@/lib/site";
 
 export const metadata: Metadata = {
-  title: "Partners and Long Term Client",
+  title: "Partners and Long-Term Clients",
   description:
-    "Exhibium advisory partners and long-term clients including Alex Partners, Diversified Retail Solutions, La Polar, Al Muhaidib, and Corporación Wong.",
+    "Exhibium advisory partners and long-term clients, including Alex Partners, Diversified Retail Solutions, La Polar, Al Muhaidib, and Corporación Wong.",
 };
 
 export default function PartnersPage() {
   return (
     <>
       <PageBanner
-        kicker="Exhibium Advisory partners / long-term clients"
-        title="Partners and Long Term Client"
-        description="Advisory Partner Relationships and Long Term Client Consultancies from the Exhibium brief, complete engagement details and terms."
+        kicker="Exhibium advisory partners and long-term clients"
+        title="Partners and Long-Term Clients"
+        description="Advisory partner relationships and long-term client consultancies from the Exhibium brief, with complete engagement details and terms."
         image={pageImages.partners.src}
         imageAlt={pageImages.partners.alt}
       />

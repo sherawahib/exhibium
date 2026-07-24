@@ -19,8 +19,8 @@ export const services = [
     image: "/retail.jpg",
     imageAlt: "Premium retail boutique interior with suits and merchandise displays",
     summary:
-      "Store design, visual merchandising, branding, and Emotional Commerce, shaping the in-store experience so customers stay longer and spend more.",
-    body: "Exhibium’s Market Entry Strategy practice advises department stores, specialty retail, and international roll-outs. We connect Branding, Process Management, Development Projects, and visual systems, including Emotional Commerce, so the customer experience drives measurable commercial performance and enhanced ROI as brands enter and scale in new markets.",
+      "Store design, visual merchandising, branding, and Emotional Commerce that shape the in-store experience so customers stay longer and spend more.",
+    body: "Exhibium’s Market Entry Strategy practice advises department stores, specialty retailers, and international roll-outs. We connect branding, process management, development projects, and visual systems, including Emotional Commerce, so the customer experience drives measurable commercial performance and stronger ROI as brands enter and scale in new markets.",
     items: [
       "Branding",
       "Process Management",
@@ -60,7 +60,7 @@ export const services = [
     imageAlt: "Row of modern modular development units with orange-framed storefronts",
     summary:
       "Construction pathways built for speed, cost control, and repeatable expansion into new markets.",
-    body: "The Modular Development Group designs scalable build models for faster deployment and controlled capital cost. We help clients enter markets with modular concepts engineered for repeatability and ROI-led program design, alongside branding, process management, and development project advisory.",
+    body: "The Modular Development Group designs scalable build models for faster deployment and controlled capital costs. We help clients enter markets with modular concepts engineered for repeatability and ROI-led program design, alongside branding, process management, and development project advisory.",
     items: [
       "Process management & development projects",
       "Market-ready deployment",

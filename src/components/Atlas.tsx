@@ -49,7 +49,7 @@ export function Atlas() {
         <div className="atlas-head">
           <p className="kicker">Project atlas</p>
           <h2>Selected work across continents.</h2>
-          <p className="atlas-total">{total} projects mapped worldwide</p>
+          <p className="atlas-total">{total} projects mapped worldwide.</p>
         </div>
 
         <div className="atlas-switch" role="tablist" aria-label="Regions">

@@ -46,12 +46,12 @@ export function Hero() {
       </div>
       <div className="splash-copy">
         <TypewriterText
-          text="EXHIBIUM Advisory services"
+          text="EXHIBIUM Advisory Services"
           className="splash-brand"
         />
         <h1 className="splash-line">
           Branding · BIM modeling · Modular construction · ROI advisory · Market
-          entry · Strategy and Execution.
+          entry · Strategy and execution
         </h1>
         <div className="splash-cta">
           <Link className="cta cta-fill" href="/appointment">

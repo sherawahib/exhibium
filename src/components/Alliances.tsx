@@ -9,14 +9,14 @@ export function Alliances() {
       <div className="wrap alliances-wrap">
         <div className="alliances-head">
           <p className="kicker">
-            Exhibium Advisory partners / long-term clients
+            Exhibium advisory partners and long-term clients
           </p>
           <h2>Relationships measured in decades, not decks.</h2>
         </div>
 
         <div className="alliance-section">
           <h3 className="alliance-section-title">
-            Advisory Partner Relationships
+            Advisory partner relationships
           </h3>
           <div className="partner-list">
             {advisory.map((p) => (
@@ -37,7 +37,7 @@ export function Alliances() {
 
         <div className="alliance-section">
           <h3 className="alliance-section-title">
-            Long Term Client Consultancies
+            Long-term client consultancies
           </h3>
           <div className="partner-list">
             {clients.map((p) => (

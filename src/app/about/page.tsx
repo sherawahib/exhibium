@@ -17,7 +17,7 @@ export default function AboutPage() {
       <PageBanner
         kicker="Executive summary"
         title="About Exhibium"
-        description="Branding, BIM modeling, Modular Construction, and enhanced ROI-based solutions, led by Fernando Williams for over 25 years."
+        description="Branding, BIM modeling, modular construction, and enhanced ROI-based solutions, led by Fernando Williams for over 25 years."
         image={pageImages.about.src}
         imageAlt={pageImages.about.alt}
       />
