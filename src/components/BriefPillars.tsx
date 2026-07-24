@@ -1,4 +1,4 @@
-import { briefGroups, briefModularLine, briefTaglines } from "@/lib/brief";
+import { briefGroups, briefTaglines } from "@/lib/brief";
 
 export function BriefPillars() {
   return (
@@ -6,7 +6,7 @@ export function BriefPillars() {
       <div className="wrap">
         <div className="brief-pillars-head">
           <p className="kicker">From the brief</p>
-          <h2>{briefModularLine}</h2>
+          <h2>Branding · BIM · Modular · ROI advisory.</h2>
         </div>
 
         <ul className="brief-tag-stack">
