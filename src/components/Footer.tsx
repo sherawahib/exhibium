@@ -57,16 +57,13 @@ export function Footer() {
           </nav>
 
           <div className="foot-col foot-contact">
-            <h3>Book Appointment</h3>
+            <h3>Contact</h3>
             <a className="foot-email" href={contactMailto}>
               {contactEmail}
             </a>
             <p>
               United States · Latin America · Middle East
             </p>
-            <Link className="foot-cta" href="/appointment">
-              Book Appointment
-            </Link>
             <div className="foot-thumb">
               <Image
                 src="/boardroom.png"
