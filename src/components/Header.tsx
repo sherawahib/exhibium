@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { navLinks } from "@/lib/site";
+import { headerNavLinks } from "@/lib/site";
 
 export function Header() {
   const pathname = usePathname();
@@ -58,7 +58,7 @@ export function Header() {
           <span />
         </button>
         <nav className="topnav" aria-label="Primary">
-          {navLinks.map((l) => (
+          {headerNavLinks.map((l) => (
             <Link
               key={l.href}
               href={l.href}
@@ -85,7 +85,7 @@ export function Header() {
 
       <aside className="drawer" id="drawer" hidden={!open}>
         <nav aria-label="Mobile">
-          {navLinks.map((l) => (
+          {headerNavLinks.map((l) => (
             <Link
               key={l.href}
               href={l.href}
