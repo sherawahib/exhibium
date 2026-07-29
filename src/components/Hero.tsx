@@ -49,10 +49,24 @@ export function Hero() {
           text="EXHIBIUM Advisory Services"
           className="splash-brand"
         />
-        <h1 className="splash-line">
-          Branding · BIM modeling · Modular construction · ROI advisory · Market
-          entry · Strategy and execution
-        </h1>
+        <div className="splash-intro">
+          <p>
+            Exhibium Group is a multi-faceted consultancy providing advisory
+            services to the Architecture, Engineering, and Construction (A/E/C)
+            commercial sectors and Real Estate developers.
+          </p>
+          <p>
+            We advise executives, investors, developers, and growing
+            organizations on expansion, market entry, commercial performance, and
+            transformation. We provide independent senior-level advice with
+            executable deliverables.
+          </p>
+          <p>
+            With over 30 years&apos; development experience in the A/E/C sector,
+            Exhibium is now focused on providing enhanced growth, market
+            expansion, commercial strategy, and execution.
+          </p>
+        </div>
         <div className="splash-cta">
           <Link className="cta cta-fill" href="/appointment">
             Book Appointment

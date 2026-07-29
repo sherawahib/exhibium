@@ -305,7 +305,7 @@ p {
 .splash-copy {
   position: relative;
   z-index: 1;
-  max-width: min(72rem, 100%);
+  max-width: min(44rem, 100%);
   animation: enter 0.9s var(--ease) both;
 }
 
@@ -343,15 +343,22 @@ p {
   transform: translateY(0.06em);
 }
 
-.splash-line {
+.splash-intro {
   margin: 0.95rem 0 0;
-  max-width: 36ch;
-  font-family: var(--display);
-  font-size: clamp(1.2rem, 2.3vw, 1.65rem);
-  font-weight: 700;
-  letter-spacing: -0.025em;
-  line-height: 1.35;
-  color: #f3fcfd;
+  max-width: 42rem;
+  display: grid;
+  gap: 0.85rem;
+  font-family: var(--body);
+  font-size: clamp(0.98rem, 1.35vw, 1.12rem);
+  font-weight: 400;
+  letter-spacing: 0;
+  line-height: 1.55;
+  color: rgba(243, 252, 253, 0.9);
+}
+
+.splash-intro p {
+  margin: 0;
+  font-weight: 400;
 }
 
 .splash-cta {
@@ -2809,9 +2816,10 @@ p {
     letter-spacing: -0.02em;
   }
 
-  .splash-line {
-    font-size: clamp(1.05rem, 4vw, 1.35rem);
+  .splash-intro {
+    font-size: clamp(0.95rem, 3.4vw, 1.05rem);
     max-width: none;
+    gap: 0.75rem;
   }
 
   .splash-cta,
