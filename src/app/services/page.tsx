@@ -7,7 +7,7 @@ import { pageImages } from "@/lib/site";
 export const metadata: Metadata = {
   title: "Services",
   description:
-    "Exhibium practice groups: Market Entry Group, BIM Advisory Group, and Modular Construction Group, plus strategy, market entry, and ROI advisory services.",
+    "Over the years Exhibium has focused on a technology-driven advisory service for the A/E/C sectors via its BIM and Modular Groups. Our Market Entry group primarily serves architecture, real estate developers, and retail sectors wishing to expand into the USA, Latin America, and the Middle East.",
 };
 
 export default function ServicesPage() {
@@ -16,7 +16,7 @@ export default function ServicesPage() {
       <PageBanner
         kicker="Service divisions"
         title="Services"
-        description="Market Entry Group, BIM Advisory Group, and Modular Construction Group, plus branding, process management, development projects, strategy and execution, market entry services, and ROI advisory services."
+        description="Over the years Exhibium has focused on a technology-driven advisory service for the A/E/C sectors via its BIM and Modular Groups. Our Market Entry group primarily serves the architecture, real estate developers, and retail sectors wishing to expand into the USA, Latin America, and the Middle East."
         image={pageImages.services.src}
         imageAlt={pageImages.services.alt}
       />

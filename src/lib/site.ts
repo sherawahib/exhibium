@@ -1,5 +1,8 @@
 export const contactEmail = "fwilliams@exhibium.com";
 export const contactMailto = `mailto:${contactEmail}`;
+export const contactAddress = "1200 Brickell Avenue, Suite 800, Miami, FL 33131";
+export const contactPhone = "+1 (305) 555-0198";
+export const contactTel = "tel:+13055550198";
 
 export const headerNavLinks = [
   { href: "/", label: "Home" },
@@ -18,60 +21,77 @@ export const navLinks = [
 
 export const services = [
   {
-    slug: "market-entry",
-    num: "01",
-    label: "Market Entry Group",
-    title: "Market Entry Group",
-    image: "/retail.jpg",
-    imageAlt: "Premium retail boutique interior with suits and merchandise displays",
-    summary:
-      "Store design, visual merchandising, branding, and Emotional Commerce that shape the in-store experience so customers stay longer and spend more.",
-    body: "Exhibium’s Market Entry Group advises department stores, specialty retailers, and international roll-outs. We connect branding, process management, development projects, and visual systems, including Emotional Commerce, so the customer experience drives measurable commercial performance and stronger ROI as brands enter and scale in new markets.",
-    items: [
-      "Branding",
-      "Process Management",
-      "Development Projects",
-      "Visual merchandising systems",
-      "In-store marketing & communications",
-      "Emotional Commerce strategy",
-      "Market Entry Services",
-      "ROI Advisory Services",
-    ],
-  },
-  {
     slug: "bim",
-    num: "02",
-    label: "BIM Advisory Group",
-    title: "BIM Advisory Group",
-    image: "/bim.jpg",
-    imageAlt: "Modern glass corporate building facade with architectural grid lines",
+    num: "01",
+    label: "BIM / VDC Services",
+    title: "BIM/VDC-Driven Project Management Services",
+    subtitle:
+      "Servicing PM Firms, Developers, Owner’s Representatives, and General Contractors",
+    image: "/services-bim.png",
+    imageAlt:
+      "Exhibium BIM Management Division graphic with BIM word cloud and building systems model",
     summary:
-      "Building information modeling and process management for architecture, engineering, and construction teams. Clarity before capital is committed.",
-    body: "Our BIM Advisory Group aligns A/E/C stakeholders around accurate models, clear process ownership, and strategy that protects ROI. We support modeling, coordination, and development project oversight from concept through delivery.",
-    items: [
-      "BIM coordination & modeling",
-      "A/E/C process management",
-      "Development project oversight",
-      "Strategy & execution alignment",
-      "Cross-discipline collaboration",
-      "Implementation with senior PMs",
+      "BIM/VDC-driven project management for PM firms, developers, owner’s representatives, and general contractors.",
+    paragraphs: [
+      "Exhibium’s BIM team will provide the total BEP execution plan, BIM technical services, and advisory implementation process.",
+      "Implementing a BIM/VDC-driven project management system where BIM serves as the core platform for project controls, coordination, scheduling, design, engineering, cost management, and owner reporting, not merely as a design visualization tool.",
     ],
   },
   {
     slug: "modular",
-    num: "03",
+    num: "02",
     label: "Modular Construction Group",
     title: "Modular Construction Group",
-    image: "/modular.jpg",
-    imageAlt: "Row of modern modular development units with orange-framed storefronts",
+    subtitle: null,
+    image: "/services-modular.png",
+    imageAlt:
+      "Exhibium Modular Development Division graphic with modular building and structural model",
     summary:
-      "Construction pathways built for speed, cost control, and repeatable expansion into new markets.",
-    body: "The Modular Construction Group designs scalable build models for faster deployment and controlled capital costs. We help clients enter markets with modular concepts engineered for repeatability and ROI-led program design, alongside branding, process management, and development project advisory.",
-    items: [
-      "Process management & development projects",
-      "Market-ready deployment",
-      "ROI advisory services",
-      "Strategy and execution",
+      "Modular construction pathways that can deliver projects 20% to 50% faster than traditional methods.",
+    paragraphs: [
+      "Modular construction can deliver projects 20% to 50% faster than traditional methods. Exhibium has identified the following 2 fabrication and erection systems as viable alternatives for the projects being undertaken. A project’s specific requirements will determine the choice of modular system.",
+    ],
+  },
+  {
+    slug: "market-entry",
+    num: "03",
+    label: "Market Entry Group",
+    title: "Market Entry Group",
+    subtitle: null,
+    image: "/services-market-entry.png",
+    imageAlt:
+      "Global Expansion Market Entry Strategies graphic with city skyline and business professionals",
+    summary:
+      "Market Entry advisory for clients expanding across the USA, Latin America, and the Middle East.",
+    paragraphs: [
+      "As a result of Exhibium’s many years of experience working internationally, Exhibium was asked to provide Market Entry services for international expansion plans. Our vast experience working with clients in the USA, Latin America, and the Middle East has provided Exhibium with vast in-country associate partners, which has allowed Exhibium to enter this phase of advisory services.",
+    ],
+    markets: [
+      {
+        title:
+          "USA-based clients and others wishing to enter Latin America and the Middle East",
+        items: [
+          "Retailers, developers, strategic advisory partners, self-storage, specialty building materials manufacturers, non-profit foundations",
+        ],
+      },
+      {
+        title:
+          "Latin America-based clients and others wishing to enter USA markets and/or expand within Latin America",
+        items: ["Retailers"],
+      },
+      {
+        title:
+          "Middle East-based clients and others wishing to enter USA markets",
+        items: ["Retailers"],
+      },
+    ],
+    offerings: [
+      "SWOT analysis reporting",
+      "Marketing and business development services",
+      "Brand positioning and promotional strategy",
+      "Creation of an initial business plan strategy for implementation of roadmaps",
+      "Introduction of potential business leads and partners",
+      "A/E/C services",
     ],
   },
 ] as const;

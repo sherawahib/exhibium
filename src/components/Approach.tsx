@@ -10,7 +10,7 @@ export function Approach() {
           {services.map((s) => (
             <Link
               key={s.slug}
-              href={`/services/${s.slug}`}
+              href={`/services#${s.slug}`}
               className="approach-card"
             >
               <div className="approach-card-media">

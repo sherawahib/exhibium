@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import { PageBanner } from "@/components/PageBanner";
 import { AppointmentForm } from "@/components/AppointmentForm";
-import { pageImages } from "@/lib/site";
+import {
+  contactAddress,
+  contactEmail,
+  contactMailto,
+  contactPhone,
+  contactTel,
+  pageImages,
+} from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Book Appointment",
@@ -28,8 +35,13 @@ export default function AppointmentPage() {
               entry, and ROI advisory.
             </p>
             <ul className="appt-points">
-              <li>Senior-level strategy discussion</li>
-              <li>Confirmation by email after you submit</li>
+              <li>{contactAddress}</li>
+              <li>
+                <a href={contactMailto}>{contactEmail}</a>
+              </li>
+              <li>
+                <a href={contactTel}>{contactPhone}</a>
+              </li>
             </ul>
           </div>
           <div className="appt-card">

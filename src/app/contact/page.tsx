@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { PageBanner } from "@/components/PageBanner";
-import { pageImages, contactEmail, contactMailto } from "@/lib/site";
+import { pageImages, contactAddress, contactEmail, contactMailto, contactPhone, contactTel } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -49,9 +49,10 @@ export default function ContactPage() {
                 exhibium.com
               </a>
             </p>
-            <p className="contact-regions">
-              United States · Latin America · Middle East
-            </p>
+            <p className="contact-address">{contactAddress}</p>
+            <a className="contact-phone" href={contactTel}>
+              {contactPhone}
+            </a>
           </div>
         </div>
       </section>

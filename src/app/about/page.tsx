@@ -1,14 +1,13 @@
 import type { Metadata } from "next";
 import { PageBanner } from "@/components/PageBanner";
 import { Founder } from "@/components/Founder";
-import { Statement } from "@/components/Statement";
 import { Engage } from "@/components/Engage";
 import { pageImages } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "Exhibium Group is led by Fernando Williams, founder, chief strategist, and pioneer of Emotional Commerce across the Americas and Middle East.",
+    "Leadership and experience at Exhibium Group: international perspective and entrepreneurial execution across the Americas and Middle East.",
 };
 
 export default function AboutPage() {
@@ -21,7 +20,6 @@ export default function AboutPage() {
         image={pageImages.about.src}
         imageAlt={pageImages.about.alt}
       />
-      <Statement showMedia={false} />
       <Founder />
       <Engage compact image="/about.jpg" />
     </>

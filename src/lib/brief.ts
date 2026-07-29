@@ -32,14 +32,16 @@ export const executiveSummary = {
 };
 
 export const founderProfile = {
-  intro:
-    "Fernando Williams is the founder and a director of Exhibium Group, a leading retail consulting organization with extensive experience in the United States, Latin America, and the Middle East.",
-  emotional:
-    "Mr. Williams is widely known for his work in Emotional Commerce. He believes the in-store customer experience can be positively influenced by visual motivational factors that increase time spent in store and drive higher spending. This approach has been confirmed across many of today’s most successful retail operations, and the consultancies led by Mr. Williams and his associates include numerous case studies that prove the point.",
-  background:
-    "Mr. Williams received his education and training in architecture. Over the years he has expanded his practice to include store design, visual merchandising, branding and marketing services, and in-store marketing and communications. In the last five years, Mr. Williams has partnered with leading management advisory consultants to deliver fully integrated consulting services. He is an accomplished retail consultant, speaker, and trainer with international experience across many retail formats.",
-  expansion:
-    "Mr. Williams has also expanded his consulting work to include business development within the A/E/C sectors, with a major focus on market entry services for companies seeking to expand internationally.",
+  kicker: "Leadership & experience",
+  headline: "International perspective. Entrepreneurial execution.",
+  paragraphs: [
+    "The Exhibium Group is under the management of an advisory board composed of some of the most creative and experienced A/E/C independent professionals. All project strategic advisories are reviewed by the advisory board and are assigned to senior project managers for all implementation services.",
+    "Fernando Williams is the founder and a director of Exhibium Group, a leading consulting organization with over 30 years’ work experience in the United States, Latin America, and the Middle East.",
+    "Exhibium Group was originally founded as a retail design firm offering comprehensive retail planning and design services. Mr. Williams is widely known for his work in Emotional Commerce. The retail design practice is no longer at the forefront of Exhibium’s services, but has been incorporated into our Market Entry services for retailers wishing to expand their operations internationally.",
+    "Mr. Williams received his education and training in architecture. He is an accomplished consultant, speaker, and strategic advisor trainer with international experience across many A/E/C formats. In the last ten years, Mr. Williams has partnered with leading management, construction, and BIM development consultants to deliver mainline strategic advisory services in the areas of BIM Management, Modular Construction, and Market Entry services.",
+    "Over the years, Exhibium has provided advisory services to multiple companies in the United States, Latin America, and the Middle East.",
+  ],
+  closing: "Decades of executive leadership across international markets.",
 };
 
 export type PartnerRecord = {

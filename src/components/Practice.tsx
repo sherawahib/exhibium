@@ -1,6 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
-import { capabilities, services } from "@/lib/site";
+import { services } from "@/lib/site";
 
 export function Practice() {
   return (
@@ -11,31 +10,70 @@ export function Practice() {
           <h2>Three specialist houses. One delivery standard.</h2>
         </div>
 
-        <div className="service-grid">
-          {services.map((g) => (
-            <Link key={g.slug} href={`/services/${g.slug}`} className="service-card">
-              <div className="service-card-media">
-                <Image
-                  src={g.image}
-                  alt={g.imageAlt}
-                  fill
-                  sizes="(max-width: 900px) 100vw, 33vw"
-                  style={{ objectFit: "cover" }}
-                />
-              </div>
-              <div className="service-card-body">
-                <span className="service-card-num">{g.num}</span>
-                <h3>{g.title}</h3>
-                <span className="service-card-link">View practice →</span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <div className="service-zigzag">
+          {services.map((service, index) => {
+            const reverse = index % 2 === 1;
+            const markets =
+              "markets" in service ? service.markets : undefined;
+            const offerings =
+              "offerings" in service ? service.offerings : undefined;
 
-        <div className="capability-rail" aria-label="Core capabilities">
-          {capabilities.map((c) => (
-            <span key={c}>{c}</span>
-          ))}
+            return (
+              <article
+                key={service.slug}
+                id={service.slug}
+                className={`service-row${reverse ? " service-row-reverse" : ""}`}
+              >
+                <figure className="service-row-media">
+                  <Image
+                    src={service.image}
+                    alt={service.imageAlt}
+                    fill
+                    sizes="(max-width: 900px) 100vw, 50vw"
+                    style={{ objectFit: "cover", objectPosition: "center" }}
+                  />
+                </figure>
+
+                <div className="service-row-copy">
+                  <span className="service-row-num">{service.num}</span>
+                  <h3>{service.title}</h3>
+                  {service.subtitle ? (
+                    <p className="service-row-sub">{service.subtitle}</p>
+                  ) : null}
+                  {service.paragraphs.map((paragraph) => (
+                    <p key={paragraph.slice(0, 40)}>{paragraph}</p>
+                  ))}
+
+                  {markets ? (
+                    <div className="service-row-block">
+                      <h4>Markets / clients served</h4>
+                      {markets.map((market) => (
+                        <div key={market.title} className="service-market">
+                          <p className="service-market-title">{market.title}</p>
+                          <ul>
+                            {market.items.map((item) => (
+                              <li key={item}>{item}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  ) : null}
+
+                  {offerings ? (
+                    <div className="service-row-block">
+                      <h4>Key offerings include</h4>
+                      <ul className="service-offerings">
+                        {offerings.map((item) => (
+                          <li key={item}>{item}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  ) : null}
+                </div>
+              </article>
+            );
+          })}
         </div>
       </div>
     </section>
