@@ -528,6 +528,288 @@ p {
   max-width: min(20ch, 100%);
 }
 
+.practice-client-note {
+  margin: 1rem 0 0;
+  max-width: 42ch;
+  color: var(--ink-soft);
+  line-height: 1.6;
+}
+
+.service-pdf-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.85rem;
+  margin-top: 1.35rem;
+  padding: 0.65rem 1rem 0.65rem 0.65rem;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  color: var(--ink);
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 0.2s ease, transform 0.2s ease;
+}
+
+.service-pdf-trigger:hover,
+.service-pdf-trigger:focus-visible {
+  border-color: rgba(224, 120, 40, 0.45);
+  transform: translateY(-1px);
+}
+
+.service-pdf-trigger strong {
+  display: block;
+  font-size: 0.95rem;
+}
+
+.service-pdf-trigger em {
+  display: block;
+  margin-top: 0.15rem;
+  font-style: normal;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+}
+
+.service-pdf-icon {
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.service-row-pdf {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.75rem;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  width: 3rem;
+  height: 3.35rem;
+  padding: 0.2rem;
+  border: 0;
+  background: rgba(255, 255, 255, 0.92);
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(6, 16, 34, 0.2);
+}
+
+.service-row-pdf:hover,
+.service-row-pdf:focus-visible {
+  background: #fff;
+}
+
+.service-pdf-inline {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin-top: 1.25rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--teal-deep);
+  font-weight: 600;
+  font-size: 0.92rem;
+  cursor: pointer;
+}
+
+.service-pdf-inline:hover,
+.service-pdf-inline:focus-visible {
+  color: var(--ink);
+}
+
+.service-book-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.service-book-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(6, 16, 34, 0.78);
+  cursor: pointer;
+}
+
+.service-book-shell {
+  position: relative;
+  z-index: 1;
+  width: min(960px, 100%);
+  display: grid;
+  gap: 0.85rem;
+  justify-items: center;
+}
+
+.service-book-toolbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: #fff;
+}
+
+.service-book-toolbar-label {
+  margin: 0;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.85;
+}
+
+.service-book-close {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  color: #fff;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+}
+
+.service-book-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.service-book-stage {
+  width: 100%;
+  display: grid;
+  place-items: center;
+  min-height: min(640px, 70vh);
+}
+
+.service-book-flip {
+  margin: 0 auto;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+}
+
+.service-book-page {
+  background: #f7f5f1;
+  color: var(--ink);
+  border: 1px solid rgba(10, 26, 32, 0.08);
+  padding: 1.35rem 1.25rem;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.service-book-cover {
+  background: linear-gradient(145deg, #0b1d3a 0%, #163456 55%, #0a1628 100%);
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 0.65rem;
+}
+
+.service-book-cover .kicker {
+  color: var(--teal-glow);
+}
+
+.service-book-cover h2 {
+  margin: 0;
+  font-size: clamp(1.8rem, 4vw, 2.4rem);
+  color: #fff;
+}
+
+.service-book-hint {
+  margin-top: 0.5rem !important;
+  opacity: 0.7;
+  font-size: 0.85rem !important;
+}
+
+.service-book-page h3 {
+  margin: 0 0 0.75rem;
+  font-size: 1.2rem;
+  line-height: 1.25;
+}
+
+.service-book-page h4 {
+  margin: 1rem 0 0.45rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--teal);
+}
+
+.service-book-page p {
+  margin: 0 0 0.7rem;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  color: inherit;
+}
+
+.service-book-page ul {
+  margin: 0 0 0.6rem;
+  padding-left: 1rem;
+  font-size: 0.82rem;
+  line-height: 1.45;
+  color: var(--ink-soft);
+}
+
+.service-book-num {
+  display: inline-block;
+  margin-bottom: 0.4rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--teal);
+  font-weight: 600;
+}
+
+.service-book-sub {
+  font-weight: 500 !important;
+  color: var(--ink-soft) !important;
+}
+
+.service-book-media-page {
+  padding: 0;
+  display: grid;
+  grid-template-rows: 1fr auto;
+  background: #0b1d3a;
+}
+
+.service-book-media {
+  position: relative;
+  min-height: 0;
+}
+
+.service-book-media-caption {
+  margin: 0 !important;
+  padding: 0.65rem 0.9rem;
+  color: rgba(238, 248, 250, 0.85) !important;
+  font-size: 0.75rem !important;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.service-book-market {
+  margin-bottom: 0.65rem;
+}
+
+.service-book-market strong {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.service-book-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 0.9rem;
+}
+
+.service-book-nav .cta {
+  min-height: 2.4rem;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.service-book-nav .cta:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
 .service-zigzag {
   display: grid;
   gap: clamp(3rem, 7vw, 5.5rem);
