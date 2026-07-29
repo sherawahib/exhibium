@@ -20,13 +20,13 @@ export const services = [
   {
     slug: "market-entry",
     num: "01",
-    label: "Market Entry Strategy",
-    title: "Market Entry Strategy",
+    label: "Market Entry Group",
+    title: "Market Entry Group",
     image: "/retail.jpg",
     imageAlt: "Premium retail boutique interior with suits and merchandise displays",
     summary:
       "Store design, visual merchandising, branding, and Emotional Commerce that shape the in-store experience so customers stay longer and spend more.",
-    body: "Exhibium’s Market Entry Strategy practice advises department stores, specialty retailers, and international roll-outs. We connect branding, process management, development projects, and visual systems, including Emotional Commerce, so the customer experience drives measurable commercial performance and stronger ROI as brands enter and scale in new markets.",
+    body: "Exhibium’s Market Entry Group advises department stores, specialty retailers, and international roll-outs. We connect branding, process management, development projects, and visual systems, including Emotional Commerce, so the customer experience drives measurable commercial performance and stronger ROI as brands enter and scale in new markets.",
     items: [
       "Branding",
       "Process Management",
@@ -41,13 +41,13 @@ export const services = [
   {
     slug: "bim",
     num: "02",
-    label: "BIM Management",
-    title: "BIM Management Group",
+    label: "BIM Advisory Group",
+    title: "BIM Advisory Group",
     image: "/bim.jpg",
     imageAlt: "Modern glass corporate building facade with architectural grid lines",
     summary:
       "Building information modeling and process management for architecture, engineering, and construction teams. Clarity before capital is committed.",
-    body: "Our BIM Management Group aligns A/E/C stakeholders around accurate models, clear process ownership, and strategy that protects ROI. We support modeling, coordination, and development project oversight from concept through delivery.",
+    body: "Our BIM Advisory Group aligns A/E/C stakeholders around accurate models, clear process ownership, and strategy that protects ROI. We support modeling, coordination, and development project oversight from concept through delivery.",
     items: [
       "BIM coordination & modeling",
       "A/E/C process management",
@@ -60,13 +60,13 @@ export const services = [
   {
     slug: "modular",
     num: "03",
-    label: "Modular Development",
-    title: "Modular Development Group",
+    label: "Modular Construction Group",
+    title: "Modular Construction Group",
     image: "/modular.jpg",
     imageAlt: "Row of modern modular development units with orange-framed storefronts",
     summary:
       "Construction pathways built for speed, cost control, and repeatable expansion into new markets.",
-    body: "The Modular Development Group designs scalable build models for faster deployment and controlled capital costs. We help clients enter markets with modular concepts engineered for repeatability and ROI-led program design, alongside branding, process management, and development project advisory.",
+    body: "The Modular Construction Group designs scalable build models for faster deployment and controlled capital costs. We help clients enter markets with modular concepts engineered for repeatability and ROI-led program design, alongside branding, process management, and development project advisory.",
     items: [
       "Process management & development projects",
       "Market-ready deployment",

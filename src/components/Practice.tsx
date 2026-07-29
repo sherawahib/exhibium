@@ -26,7 +26,6 @@ export function Practice() {
               <div className="service-card-body">
                 <span className="service-card-num">{g.num}</span>
                 <h3>{g.title}</h3>
-                <p>{g.summary}</p>
                 <span className="service-card-link">View practice →</span>
               </div>
             </Link>

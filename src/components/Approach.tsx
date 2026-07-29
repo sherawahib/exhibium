@@ -25,7 +25,6 @@ export function Approach() {
               <div className="approach-card-body">
                 <span>{s.num}</span>
                 <h3>{s.label}</h3>
-                <p>{s.summary}</p>
               </div>
             </Link>
           ))}

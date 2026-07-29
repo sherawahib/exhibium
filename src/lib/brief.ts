@@ -7,9 +7,9 @@ export const briefTaglines = [
 ] as const;
 
 export const briefGroups = [
-  "Market Entry Strategy",
-  "BIM Management Group",
-  "Modular Development Group",
+  "Market Entry Group",
+  "BIM Advisory Group",
+  "Modular Construction Group",
 ] as const;
 
 export const briefCapabilities = [
