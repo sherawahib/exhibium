@@ -551,6 +551,8 @@ p {
   color: var(--ink);
   text-decoration: none;
   text-align: left;
+  cursor: pointer;
+  font: inherit;
   transition: border-color 0.2s ease, transform 0.2s ease;
 }
 
@@ -571,6 +573,120 @@ p {
   font-style: normal;
   font-size: 0.78rem;
   color: var(--ink-soft);
+}
+
+.ppt-book-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  display: grid;
+  place-items: center;
+  padding: 1rem;
+}
+
+.ppt-book-backdrop {
+  position: absolute;
+  inset: 0;
+  border: 0;
+  background: rgba(6, 16, 34, 0.82);
+  cursor: pointer;
+}
+
+.ppt-book-shell {
+  position: relative;
+  z-index: 1;
+  width: min(980px, 100%);
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+}
+
+.ppt-book-toolbar {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  color: #fff;
+}
+
+.ppt-book-toolbar-label {
+  margin: 0;
+  font-size: 0.9rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+.ppt-book-close {
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  background: transparent;
+  color: #fff;
+  padding: 0.45rem 0.9rem;
+  cursor: pointer;
+}
+
+.ppt-book-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.ppt-book-stage {
+  width: 100%;
+  display: grid;
+  place-items: center;
+  min-height: min(70vh, 640px);
+}
+
+.ppt-book-flip {
+  margin: 0 auto;
+  box-shadow: 0 28px 70px rgba(0, 0, 0, 0.45);
+}
+
+.ppt-book-page {
+  background: #0b1220;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.ppt-book-slide {
+  padding: 0;
+}
+
+.ppt-book-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  background: #111827;
+  user-select: none;
+  -webkit-user-drag: none;
+  pointer-events: none;
+}
+
+.ppt-book-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  color: rgba(255, 255, 255, 0.9);
+  font-size: 0.9rem;
+}
+
+.ppt-book-nav .cta {
+  min-height: 2.4rem;
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.ppt-book-nav .cta:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.ppt-book-hint {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.8rem;
 }
 
 .service-zigzag {

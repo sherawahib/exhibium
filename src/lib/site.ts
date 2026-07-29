@@ -38,14 +38,22 @@ export const services = [
     ],
     docs: [
       {
+        id: "self-storage",
         label: "Self Storage Experience",
-        href: "/docs/self-storage-experience.pptx",
-        fileName: "Self Storage Experience.pptx",
+        slides: Array.from(
+          { length: 9 },
+          (_, i) =>
+            `/docs/slides/self-storage/slide-${String(i + 1).padStart(2, "0")}.png`,
+        ),
       },
       {
+        id: "modular-master",
         label: "Generic Modular Master",
-        href: "/docs/generic-modular-master.pptx",
-        fileName: "Generic Modular Master 1.pptx",
+        slides: Array.from(
+          { length: 17 },
+          (_, i) =>
+            `/docs/slides/modular-master/slide-${String(i + 1).padStart(2, "0")}.png`,
+        ),
       },
     ],
   },

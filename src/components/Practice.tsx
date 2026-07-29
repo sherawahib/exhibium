@@ -1,7 +1,16 @@
+"use client";
+
 import Image from "next/image";
+import { useState } from "react";
+import {
+  PresentationBook,
+  type PresentationDoc,
+} from "@/components/PresentationBook";
 import { services } from "@/lib/site";
 
 export function Practice() {
+  const [activeDoc, setActiveDoc] = useState<PresentationDoc | null>(null);
+
   return (
     <section className="practice">
       <div className="wrap">
@@ -81,11 +90,17 @@ export function Practice() {
                       <h4>Presentations</h4>
                       <div className="service-doc-list">
                         {docs.map((doc) => (
-                          <a
-                            key={doc.href}
+                          <button
+                            key={doc.id}
+                            type="button"
                             className="service-doc-card"
-                            href={doc.href}
-                            download={doc.fileName}
+                            onClick={() =>
+                              setActiveDoc({
+                                id: doc.id,
+                                label: doc.label,
+                                slides: doc.slides,
+                              })
+                            }
                           >
                             <Image
                               src="/pdf-icon.png"
@@ -95,9 +110,9 @@ export function Practice() {
                             />
                             <span>
                               <strong>{doc.label}</strong>
-                              <em>PowerPoint · Download</em>
+                              <em>Open as book · swipe pages</em>
                             </span>
-                          </a>
+                          </button>
                         ))}
                       </div>
                     </div>
@@ -108,6 +123,12 @@ export function Practice() {
           })}
         </div>
       </div>
+
+      <PresentationBook
+        open={Boolean(activeDoc)}
+        doc={activeDoc}
+        onClose={() => setActiveDoc(null)}
+      />
     </section>
   );
 }
