@@ -15,7 +15,7 @@ export default function AboutPage() {
   return (
     <>
       <PageBanner
-        kicker="Executive summary"
+        kicker="Our approach"
         title="About Exhibium"
         description="Branding, BIM modeling, modular construction, and enhanced ROI-based solutions, led by Fernando Williams for over 25 years."
         image={pageImages.about.src}

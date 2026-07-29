@@ -10,6 +10,7 @@ export function Statement({ showMedia = true }: { showMedia?: boolean }) {
           <p className="kicker">{executiveSummary.kicker}</p>
           <h2>{executiveSummary.headline}</h2>
           <p className="lede">{executiveSummary.primary}</p>
+          <p className="statement-focus">{executiveSummary.focus}</p>
           <p className="lede statement-board">{executiveSummary.board}</p>
         </div>
         {showMedia ? (

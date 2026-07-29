@@ -22,13 +22,13 @@ export const briefCapabilities = [
 ] as const;
 
 export const executiveSummary = {
-  kicker: "Executive summary",
-  headline:
-    "Exhibium Group is a multi-faceted consultancy providing branding, BIM management services, and modular construction development solutions.",
+  kicker: "Our approach",
+  headline: "Senior thinking. Direct advice. Executable deliverables.",
   primary:
-    "Enhanced ROI-based solutions are our primary service offering. The company is led by Fernando Williams, its founder and chief strategist for over 25 years.",
+    "We work closely with leadership teams to frame the real issue, identify the strongest path forward, and translate strategy into focused action. Every engagement is tailored, discreet, and grounded in measurable commercial value.",
+  focus: "Focused expertise for growth and transformation.",
   board:
-    "Each Exhibium service division is guided by an advisory board of experienced professionals. Strategic solutions are reviewed by the board, and senior project managers are assigned to lead implementation.",
+    "From market strategy to project delivery, Exhibium brings together complementary disciplines under our direction to deliver senior advisory services to our clients.",
 };
 
 export const founderProfile = {

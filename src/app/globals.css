@@ -431,7 +431,7 @@ p {
 
 .statement h2 {
   font-size: clamp(1.5rem, 2.5vw, 2.1rem);
-  max-width: 22ch;
+  max-width: 28ch;
   font-weight: 700;
 }
 
@@ -441,6 +441,16 @@ p {
   color: var(--ink-soft);
   font-size: 1.1rem;
   line-height: 1.75;
+}
+
+.statement-focus {
+  margin: 1.5rem 0 0;
+  max-width: 52ch;
+  font-family: var(--body);
+  font-size: 1.12rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink);
 }
 
 .statement-board {
