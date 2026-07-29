@@ -2,49 +2,10 @@ import Image from "next/image";
 import Link from "next/link";
 import { services } from "@/lib/site";
 
-const steps = [
-  {
-    num: "01",
-    title: "Board-level strategy",
-    text: "Every engagement is reviewed by division advisory boards before senior project managers lead implementation.",
-  },
-  {
-    num: "02",
-    title: "Emotional Commerce",
-    text: "Visual and experiential motivators designed to increase dwell time, brand memory, and in-store spending.",
-  },
-  {
-    num: "03",
-    title: "ROI-led delivery",
-    text: "Market entry, branding, BIM, and modular programs measured against commercial performance, not slideshows.",
-  },
-];
-
 export function Approach() {
   return (
     <section className="approach">
       <div className="wrap">
-        <div className="approach-head">
-          <p className="kicker">How we work</p>
-          <h2>Strategy reviewed at the top. Execution owned on the ground.</h2>
-          <p className="approach-lede">
-            Branding, process management, and development projects are delivered
-            through the Advisory Consulting Group, BIM Management Group, and
-            Modular Development Group. Strategy and execution, market entry
-            services, and ROI advisory sit at the center of every engagement.
-          </p>
-        </div>
-
-        <ol className="approach-steps">
-          {steps.map((step) => (
-            <li key={step.num}>
-              <span className="approach-num">{step.num}</span>
-              <h3>{step.title}</h3>
-              <p>{step.text}</p>
-            </li>
-          ))}
-        </ol>
-
         <div className="approach-showcase">
           {services.map((s) => (
             <Link
