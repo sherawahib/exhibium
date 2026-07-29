@@ -153,7 +153,7 @@ export function ServiceBook({ open, onClose, startSlug = null }: Props) {
           >
             <BookPage className="service-book-cover">
               <p className="kicker">Exhibium Group</p>
-              <h2>Services</h2>
+              <h2>EXHIBIUM Advisory Services</h2>
               <p>BIM / VDC · Modular Construction · Market Entry</p>
               <p className="service-book-hint">Swipe or drag to turn pages</p>
             </BookPage>
