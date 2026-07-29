@@ -755,20 +755,27 @@ p {
 
 .founder-parallax {
   position: absolute;
-  inset: -12% 0;
+  inset: -30% 0;
   z-index: 0;
   overflow: hidden;
   pointer-events: none;
 }
 
-.founder-parallax-img {
-  transform: scale(1.16);
+.founder-parallax-layer {
+  position: absolute;
+  inset: 0;
   will-change: transform;
+  transform: translate3d(0, 0, 0) scale(1.22);
+}
+
+.founder-parallax-img {
+  transform: none;
 }
 
 .founder-parallax-shade {
   position: absolute;
   inset: 0;
+  z-index: 1;
   background:
     linear-gradient(
       180deg,
@@ -2707,6 +2714,10 @@ p {
 @media (prefers-reduced-motion: reduce) {
   .engage-parallax-img {
     transform: scale(1.05) !important;
+  }
+
+  .founder-parallax-layer {
+    transform: none !important;
   }
 }
 

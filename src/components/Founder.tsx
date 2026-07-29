@@ -6,7 +6,7 @@ import { founderProfile } from "@/lib/brief";
 
 export function Founder() {
   const sectionRef = useRef<HTMLElement>(null);
-  const imgRef = useRef<HTMLImageElement>(null);
+  const layerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -17,14 +17,14 @@ export function Founder() {
       cancelAnimationFrame(raf);
       raf = requestAnimationFrame(() => {
         const section = sectionRef.current;
-        const img = imgRef.current;
-        if (!section || !img) return;
+        const layer = layerRef.current;
+        if (!section || !layer) return;
 
         const rect = section.getBoundingClientRect();
         const viewH = window.innerHeight || 1;
-        const progress = (viewH - rect.top) / (viewH + rect.height);
-        const offset = (progress - 0.5) * 110;
-        img.style.transform = `scale(1.16) translate3d(0, ${offset}px, 0)`;
+        // Classic parallax: layer moves slower / opposite to scroll
+        const offset = rect.top * -0.38;
+        layer.style.transform = `translate3d(0, ${offset}px, 0) scale(1.22)`;
       });
     };
 
@@ -41,15 +41,17 @@ export function Founder() {
   return (
     <section ref={sectionRef} className="founder">
       <div className="founder-parallax" aria-hidden="true">
-        <Image
-          ref={imgRef}
-          src="/boardroom.png"
-          alt=""
-          fill
-          sizes="100vw"
-          className="founder-parallax-img"
-          style={{ objectFit: "cover", objectPosition: "center 40%" }}
-        />
+        <div ref={layerRef} className="founder-parallax-layer">
+          <Image
+            src="/boardroom.png"
+            alt=""
+            fill
+            sizes="100vw"
+            className="founder-parallax-img"
+            style={{ objectFit: "cover", objectPosition: "center 40%" }}
+            priority
+          />
+        </div>
         <div className="founder-parallax-shade" />
       </div>
 
