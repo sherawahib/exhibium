@@ -1,19 +1,7 @@
-"use client";
-
 import Image from "next/image";
-import { useState } from "react";
-import { ServiceBook } from "@/components/ServiceBook";
-import { services, type ServiceSlug } from "@/lib/site";
+import { services } from "@/lib/site";
 
 export function Practice() {
-  const [bookOpen, setBookOpen] = useState(false);
-  const [startSlug, setStartSlug] = useState<ServiceSlug | null>(null);
-
-  const openBook = (slug: ServiceSlug | null = null) => {
-    setStartSlug(slug);
-    setBookOpen(true);
-  };
-
   return (
     <section className="practice">
       <div className="wrap">
@@ -24,23 +12,6 @@ export function Practice() {
             The core client sector for these services is architects and
             developers.
           </p>
-          <button
-            type="button"
-            className="service-pdf-trigger"
-            onClick={() => openBook(null)}
-          >
-            <Image
-              src="/pdf-icon.png"
-              alt=""
-              width={40}
-              height={48}
-              className="service-pdf-icon"
-            />
-            <span>
-              <strong>Open services brochure</strong>
-              <em>PDF-style book · swipe pages</em>
-            </span>
-          </button>
         </div>
 
         <div className="service-zigzag">
@@ -50,6 +21,7 @@ export function Practice() {
               "markets" in service ? service.markets : undefined;
             const offerings =
               "offerings" in service ? service.offerings : undefined;
+            const docs = "docs" in service ? service.docs : undefined;
 
             return (
               <article
@@ -65,19 +37,6 @@ export function Practice() {
                     sizes="(max-width: 900px) 100vw, 50vw"
                     style={{ objectFit: "cover", objectPosition: "center" }}
                   />
-                  <button
-                    type="button"
-                    className="service-row-pdf"
-                    onClick={() => openBook(service.slug)}
-                    aria-label={`Open ${service.label} in brochure`}
-                  >
-                    <Image
-                      src="/pdf-icon.png"
-                      alt=""
-                      width={36}
-                      height={44}
-                    />
-                  </button>
                 </figure>
 
                 <div className="service-row-copy">
@@ -117,31 +76,38 @@ export function Practice() {
                     </div>
                   ) : null}
 
-                  <button
-                    type="button"
-                    className="service-pdf-inline"
-                    onClick={() => openBook(service.slug)}
-                  >
-                    <Image
-                      src="/pdf-icon.png"
-                      alt=""
-                      width={28}
-                      height={34}
-                    />
-                    View in brochure
-                  </button>
+                  {docs ? (
+                    <div className="service-row-block service-docs">
+                      <h4>Presentations</h4>
+                      <div className="service-doc-list">
+                        {docs.map((doc) => (
+                          <a
+                            key={doc.href}
+                            className="service-doc-card"
+                            href={doc.href}
+                            download={doc.fileName}
+                          >
+                            <Image
+                              src="/pdf-icon.png"
+                              alt=""
+                              width={36}
+                              height={44}
+                            />
+                            <span>
+                              <strong>{doc.label}</strong>
+                              <em>PowerPoint · Download</em>
+                            </span>
+                          </a>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
                 </div>
               </article>
             );
           })}
         </div>
       </div>
-
-      <ServiceBook
-        open={bookOpen}
-        startSlug={startSlug}
-        onClose={() => setBookOpen(false)}
-      />
     </section>
   );
 }
