@@ -21,7 +21,11 @@ export default function AboutPage() {
         imageAlt={pageImages.about.alt}
       />
       <Founder />
-      <Engage compact image="/about.jpg" />
+      <Engage
+        compact
+        image="/about-market-entry.png"
+        imageAlt="Market entry strategy presentation in a corporate boardroom"
+      />
     </>
   );
 }
