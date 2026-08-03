@@ -36,6 +36,22 @@ export const services = [
       "Exhibium’s BIM team will provide the total BEP execution plan, BIM technical services, and advisory implementation process.",
       "Implementing a BIM/VDC-driven project management system where BIM serves as the core platform for project controls, coordination, scheduling, design, engineering, cost management, and owner reporting, not merely as a design visualization tool.",
     ],
+  },
+  {
+    slug: "modular",
+    num: "02",
+    label: "Modular Construction Group",
+    title: "Modular Construction Group",
+    subtitle:
+      "Modular construction can deliver projects 20% to 50% faster than traditional methods.",
+    image: "/services-modular.png",
+    imageAlt:
+      "Exhibium Modular Development Division graphic with modular building and structural model",
+    summary:
+      "Modular construction pathways that can deliver projects 20% to 50% faster than traditional methods.",
+    paragraphs: [
+      "Modular construction can deliver projects 20% to 50% faster than traditional methods. Exhibium has identified the following 2 fabrication and erection systems as viable alternatives for the projects being undertaken. A project’s specific requirements will determine the choice of modular system.",
+    ],
     docs: [
       {
         id: "self-storage",
@@ -55,22 +71,6 @@ export const services = [
             `/docs/slides/modular-master/slide-${String(i + 1).padStart(2, "0")}.png`,
         ),
       },
-    ],
-  },
-  {
-    slug: "modular",
-    num: "02",
-    label: "Modular Construction Group",
-    title: "Modular Construction Group",
-    subtitle:
-      "Modular construction can deliver projects 20% to 50% faster than traditional methods.",
-    image: "/services-modular.png",
-    imageAlt:
-      "Exhibium Modular Development Division graphic with modular building and structural model",
-    summary:
-      "Modular construction pathways that can deliver projects 20% to 50% faster than traditional methods.",
-    paragraphs: [
-      "Modular construction can deliver projects 20% to 50% faster than traditional methods. Exhibium has identified the following 2 fabrication and erection systems as viable alternatives for the projects being undertaken. A project’s specific requirements will determine the choice of modular system.",
     ],
   },
   {

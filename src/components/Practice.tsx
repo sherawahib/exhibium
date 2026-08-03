@@ -87,7 +87,7 @@ export function Practice() {
 
                   {docs ? (
                     <div className="service-row-block service-docs">
-                      <h4>Presentations</h4>
+                      <h4>More information</h4>
                       <div className="service-doc-list">
                         {docs.map((doc) => (
                           <button
