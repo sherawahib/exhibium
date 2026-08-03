@@ -126,6 +126,17 @@ export const services = [
       "Introduction of potential business leads and partners",
       "A/E/C services",
     ],
+    docs: [
+      {
+        id: "market-entry-presentation",
+        label: "Market Entry Presentation",
+        slides: Array.from(
+          { length: 2 },
+          (_, i) =>
+            `/docs/slides/market-entry/slide-${String(i + 1).padStart(2, "0")}.png`,
+        ),
+      },
+    ],
   },
 ] as const;
 
