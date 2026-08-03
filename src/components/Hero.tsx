@@ -76,6 +76,15 @@ export function Hero() {
           </Link>
         </div>
       </div>
+      <div className="splash-partner-logo">
+        <Image
+          src="/ae-advisory-logo.png"
+          alt="AE Advisory"
+          width={150}
+          height={150}
+          priority
+        />
+      </div>
     </section>
   );
 }

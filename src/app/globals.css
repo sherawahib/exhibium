@@ -368,6 +368,23 @@ p {
   margin-top: 1.75rem;
 }
 
+.splash-partner-logo {
+  position: absolute;
+  right: var(--gutter);
+  bottom: calc(3.5rem + var(--safe-bottom, 0px));
+  z-index: 2;
+  width: 150px;
+  height: 150px;
+  pointer-events: none;
+}
+
+.splash-partner-logo img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+  display: block;
+}
+
 .cta {
   display: inline-flex;
   align-items: center;
@@ -3167,6 +3184,10 @@ p {
     min-height: 100svh;
     min-height: 100dvh;
     align-content: end;
+  }
+
+  .splash-partner-logo {
+    bottom: calc(1.25rem + var(--safe-bottom, 0px));
   }
 
   .splash-brand {
