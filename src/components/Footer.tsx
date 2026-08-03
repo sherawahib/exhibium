@@ -22,8 +22,8 @@ export function Footer() {
         <div className="foot-brand-block">
           <BrandLogo className="foot-logo" onDark />
           <p>
-            Exhibium Group is a multi-faceted consultancy providing branding, BIM
-            management, and modular construction development solutions, with
+            Exhibium Group is a multi-faceted consultancy providing market entry
+            group, BIM management, and modular construction development, with
             enhanced ROI-based solutions as our primary offering. Led by Fernando
             Williams across the United States, Latin America, and the Middle East.
           </p>
