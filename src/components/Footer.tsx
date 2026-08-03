@@ -27,14 +27,6 @@ export function Footer() {
             enhanced ROI-based solutions as our primary offering. Led by Fernando
             Williams across the United States, Latin America, and the Middle East.
           </p>
-          <div className="foot-badges">
-            <span>Branding</span>
-            <span>Process Management</span>
-            <span>Development Projects</span>
-            <span>Strategy and Execution</span>
-            <span>Market Entry Services</span>
-            <span>ROI Advisory Services</span>
-          </div>
         </div>
 
         <div className="foot-cols">
