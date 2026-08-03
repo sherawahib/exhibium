@@ -81,7 +81,7 @@ export function Footer() {
         <div className="wrap foot-bottom-row">
           <p>&copy; {year} Exhibium Group. All rights reserved.</p>
           <p className="foot-tagline">
-            Branding · BIM · Modular · ROI Advisory
+            Market Entry Group · BIM · Modular · ROI Advisory
           </p>
           <a
             href="http://exhibium.com/"
