@@ -78,7 +78,8 @@ export const services = [
     num: "03",
     label: "Market Entry Group",
     title: "Market Entry Group",
-    subtitle: null,
+    subtitle:
+      "As a result of Exhibium’s many years of experience working internationally, Exhibium was asked to provide Market Entry services for international expansion plans.",
     image: "/services-market-entry.png",
     imageAlt:
       "Global Expansion Market Entry Strategies graphic with city skyline and business professionals",
