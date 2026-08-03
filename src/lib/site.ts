@@ -36,6 +36,17 @@ export const services = [
       "Exhibium’s BIM team will provide the total BEP execution plan, BIM technical services, and advisory implementation process.",
       "Implementing a BIM/VDC-driven project management system where BIM serves as the core platform for project controls, coordination, scheduling, design, engineering, cost management, and owner reporting, not merely as a design visualization tool.",
     ],
+    docs: [
+      {
+        id: "bim-management",
+        label: "BIM Management Presentation",
+        slides: Array.from(
+          { length: 6 },
+          (_, i) =>
+            `/docs/slides/bim-management/slide-${String(i + 1).padStart(2, "0")}.png`,
+        ),
+      },
+    ],
   },
   {
     slug: "modular",
