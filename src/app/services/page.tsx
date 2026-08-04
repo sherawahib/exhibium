@@ -20,7 +20,11 @@ export default function ServicesPage() {
         imageAlt="Executive boardroom meeting in silhouette"
       />
       <Practice />
-      <Engage compact image="/modular.jpg" />
+      <Engage
+        compact
+        image="/engage-market-entry.png"
+        imageAlt="Market entry strategy presentation in a corporate boardroom"
+      />
     </>
   );
 }
