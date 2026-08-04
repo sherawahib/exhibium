@@ -38,15 +38,50 @@ export function Practice() {
                 id={service.slug}
                 className={`service-row${reverse ? " service-row-reverse" : ""}`}
               >
-                <figure className="service-row-media">
-                  <Image
-                    src={service.image}
-                    alt={service.imageAlt}
-                    fill
-                    sizes="(max-width: 900px) 100vw, 50vw"
-                    style={{ objectFit: "cover", objectPosition: "center" }}
-                  />
-                </figure>
+                <div className="service-row-visual">
+                  <figure className="service-row-media">
+                    <Image
+                      src={service.image}
+                      alt={service.imageAlt}
+                      fill
+                      sizes="(max-width: 900px) 100vw, 50vw"
+                      style={{ objectFit: "cover", objectPosition: "center" }}
+                    />
+                  </figure>
+
+                  {docs ? (
+                    <div className="service-row-block service-docs">
+                      <h4>More information</h4>
+                      <div className="service-doc-list">
+                        {docs.map((doc) => (
+                          <button
+                            key={doc.id}
+                            type="button"
+                            className="service-doc-card"
+                            onClick={() =>
+                              setActiveDoc({
+                                id: doc.id,
+                                label: doc.label,
+                                slides: doc.slides,
+                              })
+                            }
+                          >
+                            <Image
+                              src="/pdf-icon.png"
+                              alt=""
+                              width={36}
+                              height={44}
+                            />
+                            <span>
+                              <strong>{doc.label}</strong>
+                              <em>Open as book · swipe pages</em>
+                            </span>
+                          </button>
+                        ))}
+                      </div>
+                    </div>
+                  ) : null}
+                </div>
 
                 <div className="service-row-copy">
                   <span className="service-row-num">{service.num}</span>
@@ -82,39 +117,6 @@ export function Practice() {
                           <li key={item}>{item}</li>
                         ))}
                       </ul>
-                    </div>
-                  ) : null}
-
-                  {docs ? (
-                    <div className="service-row-block service-docs">
-                      <h4>More information</h4>
-                      <div className="service-doc-list">
-                        {docs.map((doc) => (
-                          <button
-                            key={doc.id}
-                            type="button"
-                            className="service-doc-card"
-                            onClick={() =>
-                              setActiveDoc({
-                                id: doc.id,
-                                label: doc.label,
-                                slides: doc.slides,
-                              })
-                            }
-                          >
-                            <Image
-                              src="/pdf-icon.png"
-                              alt=""
-                              width={36}
-                              height={44}
-                            />
-                            <span>
-                              <strong>{doc.label}</strong>
-                              <em>Open as book · swipe pages</em>
-                            </span>
-                          </button>
-                        ))}
-                      </div>
                     </div>
                   ) : null}
                 </div>
