@@ -93,7 +93,7 @@ export const services = [
       "As a result of Exhibium’s many years of experience working internationally, Exhibium was asked to provide Market Entry services for international expansion plans.",
     image: "/services-market-entry.png",
     imageAlt:
-      "Market entry strategy presentation in a corporate boardroom",
+      "Global Expansion Market Entry Strategies graphic with city skyline and business professionals",
     summary:
       "Market Entry advisory for clients expanding across the USA, Latin America, and the Middle East.",
     paragraphs: [
