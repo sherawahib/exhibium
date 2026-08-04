@@ -1981,11 +1981,20 @@ p {
   background:
     linear-gradient(
       110deg,
-      rgba(6, 16, 34, 0.88) 0%,
-      rgba(11, 29, 58, 0.78) 42%,
-      rgba(19, 45, 82, 0.62) 100%
+      rgba(6, 16, 34, 0.9) 0%,
+      rgba(11, 29, 58, 0.82) 42%,
+      rgba(19, 45, 82, 0.72) 100%
     ),
-    radial-gradient(ellipse at 80% 50%, rgba(224, 120, 40, 0.28), transparent 55%);
+    radial-gradient(ellipse at 80% 50%, rgba(224, 120, 40, 0.22), transparent 55%);
+}
+
+.engage-layout {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(240px, 0.95fr);
+  gap: clamp(1.25rem, 3vw, 2rem);
+  align-items: stretch;
 }
 
 .engage-box {
@@ -1996,6 +2005,18 @@ p {
   background: rgba(6, 16, 34, 0.28);
   backdrop-filter: blur(8px);
   color: var(--splash-ink);
+}
+
+.engage-side {
+  position: relative;
+  margin: 0;
+  min-height: min(360px, 48vw);
+  overflow: hidden;
+  border: 1px solid rgba(255, 179, 102, 0.16);
+}
+
+.engage-side img {
+  object-fit: cover;
 }
 
 .engage-box .kicker {
@@ -2988,7 +3009,8 @@ p {
   .service-detail-grid,
   .approach-split,
   .service-row,
-  .service-row-reverse {
+  .service-row-reverse,
+  .engage-layout {
     grid-template-columns: 1fr;
   }
 
@@ -3054,8 +3076,9 @@ p {
     max-width: none;
   }
 
-  .engage-box {
-    padding: clamp(1.5rem, 4vw, 2.5rem);
+  .engage-side {
+    min-height: 260px;
+    order: -1;
   }
 
   .engage-actions {

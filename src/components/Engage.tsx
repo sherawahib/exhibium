@@ -7,8 +7,8 @@ import { contactEmail, contactMailto } from "@/lib/site";
 
 export function Engage({
   compact = false,
-  image = "/projects.jpg",
-  imageAlt = "Luxury retail atrium with layered architecture and warm light",
+  image = "/engage-market-entry.png",
+  imageAlt = "Market entry strategy presentation in a corporate boardroom",
 }: {
   compact?: boolean;
   image?: string;
@@ -28,10 +28,9 @@ export function Engage({
 
       const rect = section.getBoundingClientRect();
       const viewH = window.innerHeight || 1;
-      // Move image slower than scroll while section is in view
       const progress = (viewH - rect.top) / (viewH + rect.height);
-      const offset = (progress - 0.5) * 120;
-      img.style.transform = `scale(1.18) translate3d(0, ${offset}px, 0)`;
+      const offset = (progress - 0.5) * 80;
+      img.style.transform = `scale(1.12) translate3d(0, ${offset}px, 0)`;
     };
 
     onScroll();
@@ -61,29 +60,40 @@ export function Engage({
         <div className="engage-parallax-shade" />
       </div>
 
-      <div className="wrap engage-box">
-        <p className="kicker">Next step</p>
-        <h2>Bring Exhibium into your next market entry strategy.</h2>
-        <p>
-          Market entry and BIM oversight. Branding for commercial performance.
-          Talk with the team that has delivered across the Americas and the Middle
-          East.
-        </p>
-        <div className="engage-actions">
-          <Link className="cta cta-fill cta-lg" href="/appointment">
-            Book Appointment
-          </Link>
-          {!compact ? (
-            <Link className="cta cta-ghost" href="/contact">
-              Contact page
+      <div className="wrap engage-layout">
+        <div className="engage-box">
+          <p className="kicker">Next step</p>
+          <h2>Bring Exhibium into your next market entry strategy.</h2>
+          <p>
+            Market entry and BIM oversight. Branding for commercial performance.
+            Talk with the team that has delivered across the Americas and the
+            Middle East.
+          </p>
+          <div className="engage-actions">
+            <Link className="cta cta-fill cta-lg" href="/appointment">
+              Book Appointment
             </Link>
-          ) : (
-            <a className="cta cta-ghost" href={contactMailto}>
-              {contactEmail}
-            </a>
-          )}
+            {!compact ? (
+              <Link className="cta cta-ghost" href="/contact">
+                Contact page
+              </Link>
+            ) : (
+              <a className="cta cta-ghost" href={contactMailto}>
+                {contactEmail}
+              </a>
+            )}
+          </div>
         </div>
-        <span className="sr-only">{imageAlt}</span>
+
+        <figure className="engage-side">
+          <Image
+            src={image}
+            alt={imageAlt}
+            fill
+            sizes="(max-width: 900px) 100vw, 46vw"
+            style={{ objectFit: "cover", objectPosition: "center" }}
+          />
+        </figure>
       </div>
     </section>
   );
