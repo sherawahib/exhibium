@@ -4010,7 +4010,7 @@ a.contact-channel:focus-visible {
     grid-template-columns: 1fr 1fr;
   }
 
-  .foot-cta-band {
+  .foot-cta-inner {
     flex-direction: column;
     align-items: flex-start;
   }
