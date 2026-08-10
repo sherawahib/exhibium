@@ -4,12 +4,13 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { headerNavLinks } from "@/lib/site";
+import { contactPhone, contactTel, headerNavLinks } from "@/lib/site";
 
 export function Header() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [solid, setSolid] = useState(!isHome);
+  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -17,14 +18,16 @@ export function Header() {
   }, [pathname]);
 
   useEffect(() => {
-    if (!isHome) {
-      setSolid(true);
-      return;
-    }
-
     const onScroll = () => {
-      setSolid(window.scrollY > window.innerHeight * 0.55);
+      const y = window.scrollY || 0;
+      setScrolled(y > 12);
+      if (!isHome) {
+        setSolid(true);
+        return;
+      }
+      setSolid(y > window.innerHeight * 0.45);
     };
+
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -44,34 +47,43 @@ export function Header() {
 
   return (
     <>
-      <header className={`topbar${solid ? " is-solid" : ""}`}>
-        <BrandLogo className="logo" priority onDark={!solid} />
-        <button
-          className="menu-btn"
-          type="button"
-          aria-expanded={open}
-          aria-controls="drawer"
-          aria-label={open ? "Close menu" : "Open menu"}
-          onClick={() => setOpen((v) => !v)}
-        >
-          <span />
-          <span />
-        </button>
-        <nav className="topnav" aria-label="Primary">
-          {headerNavLinks.map((l) => (
-            <Link
-              key={l.href}
-              href={l.href}
-              className={isActive(l.href) ? "is-active" : undefined}
-              aria-current={isActive(l.href) ? "page" : undefined}
-            >
-              {l.label}
+      <header
+        className={`topbar${solid ? " is-solid" : ""}${scrolled ? " is-scrolled" : ""}${open ? " is-open" : ""}`}
+      >
+        <div className="topbar-inner">
+          <BrandLogo className="logo" priority onDark={!solid} />
+
+          <nav className="topnav" aria-label="Primary">
+            <div className="topnav-links">
+              {headerNavLinks.map((l) => (
+                <Link
+                  key={l.href}
+                  href={l.href}
+                  className={isActive(l.href) ? "is-active" : undefined}
+                  aria-current={isActive(l.href) ? "page" : undefined}
+                >
+                  <span>{l.label}</span>
+                </Link>
+              ))}
+            </div>
+            <Link className="topnav-cta" href="/appointment">
+              <span>Book Appointment</span>
             </Link>
-          ))}
-          <Link className="topnav-cta" href="/appointment">
-            Book Appointment
-          </Link>
-        </nav>
+          </nav>
+
+          <button
+            className="menu-btn"
+            type="button"
+            aria-expanded={open}
+            aria-controls="drawer"
+            aria-label={open ? "Close menu" : "Open menu"}
+            onClick={() => setOpen((v) => !v)}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
+        </div>
       </header>
 
       {open ? (
@@ -85,20 +97,32 @@ export function Header() {
 
       <aside className="drawer" id="drawer" hidden={!open}>
         <nav aria-label="Mobile">
-          {headerNavLinks.map((l) => (
+          {headerNavLinks.map((l, index) => (
             <Link
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
+              className={isActive(l.href) ? "is-active" : undefined}
               aria-current={isActive(l.href) ? "page" : undefined}
+              style={{ ["--i" as string]: index }}
             >
-              {l.label}
+              <span className="drawer-num">0{index + 1}</span>
+              <span className="drawer-label">{l.label}</span>
             </Link>
           ))}
-          <Link href="/appointment" onClick={() => setOpen(false)}>
+          <Link
+            className="drawer-cta"
+            href="/appointment"
+            onClick={() => setOpen(false)}
+            style={{ ["--i" as string]: headerNavLinks.length }}
+          >
             Book Appointment
           </Link>
         </nav>
+        <div className="drawer-meta">
+          <a href={contactTel}>{contactPhone}</a>
+          <p>Exhibium Advisory Services</p>
+        </div>
       </aside>
     </>
   );
