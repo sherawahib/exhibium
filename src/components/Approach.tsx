@@ -16,27 +16,27 @@ export function Approach() {
           </p>
         </div>
 
-        <div className="approach-showcase">
+        <div className="approach-rail">
           {services.map((s) => (
             <Link
               key={s.slug}
               href={`/services#${s.slug}`}
-              className="approach-card"
+              className="approach-feature"
             >
-              <div className="approach-card-media">
+              <div className="approach-feature-media">
                 <Image
                   src={s.image}
                   alt={s.imageAlt}
                   fill
-                  sizes="(max-width: 900px) 100vw, 33vw"
+                  sizes="(max-width: 900px) 100vw, 42vw"
                   style={{ objectFit: "cover" }}
                 />
-                <span className="approach-card-index">{s.num}</span>
               </div>
-              <div className="approach-card-body">
+              <div className="approach-feature-copy">
+                <span className="approach-feature-num">{s.num}</span>
                 <h3>{s.label}</h3>
                 <p>{s.summary}</p>
-                <span className="approach-card-link">Explore practice</span>
+                <span className="approach-feature-cta">Explore practice</span>
               </div>
             </Link>
           ))}

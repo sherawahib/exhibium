@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { useMemo, useState } from "react";
 import { AtlasGlobe } from "@/components/AtlasGlobe";
 import {
@@ -8,18 +9,28 @@ import {
   getProjectsByRegion,
   mapPins,
   projectRegions,
+  type Project,
   type RegionId,
 } from "@/lib/projects";
+import { getProjectImageSrc } from "@/lib/projectImages";
+
+function projectImage(project: Project) {
+  return getProjectImageSrc(project.id);
+}
 
 export function Atlas() {
   const [active, setActive] = useState<RegionId>("usa");
   const [activePin, setActivePin] = useState<string>("usa-fl");
   const [activeProjectId, setActiveProjectId] = useState<string | null>(
-    "usa-united-states-sedanos"
+    "usa-united-states-sedanos",
   );
 
   const current = projectRegions.find((r) => r.id === active)!;
   const regionProjects = useMemo(() => getProjectsByRegion(active), [active]);
+  const activeProject =
+    regionProjects.find((p) => p.id === activeProjectId) ??
+    regionProjects[0] ??
+    null;
 
   const total = getAllProjectCount();
   const regionCount = countProjects(active);
@@ -36,7 +47,7 @@ export function Atlas() {
   const selectProject = (
     projectId: string,
     pinId: string,
-    regionId: RegionId
+    regionId: RegionId,
   ) => {
     setActive(regionId);
     setActivePin(pinId);
@@ -116,6 +127,28 @@ export function Atlas() {
             </ul>
           </aside>
         </div>
+
+        {activeProject ? (
+          <article className="atlas-feature">
+            <div className="atlas-feature-media">
+              <Image
+                src={projectImage(activeProject)}
+                alt={`${activeProject.name} project`}
+                fill
+                sizes="(max-width: 900px) 100vw, 55vw"
+                style={{ objectFit: "cover" }}
+              />
+            </div>
+            <div className="atlas-feature-copy">
+              <p className="kicker">{activeProject.country}</p>
+              <h3>{activeProject.name}</h3>
+              <p>{activeProject.description}</p>
+              <p className="atlas-feature-meta">
+                Region · {current.label}
+              </p>
+            </div>
+          </article>
+        ) : null}
       </div>
     </section>
   );

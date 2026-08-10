@@ -8,6 +8,9 @@ export const headerNavLinks = [
   { href: "/", label: "Home" },
   { href: "/services", label: "Services" },
   { href: "/about", label: "About" },
+  { href: "/projects", label: "Projects" },
+  { href: "/partners", label: "Partners" },
+  { href: "/contact", label: "Contact" },
 ] as const;
 
 export const navLinks = [

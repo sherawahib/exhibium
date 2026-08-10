@@ -1,7 +1,15 @@
 import type { Metadata } from "next";
-import Image from "next/image";
+import Link from "next/link";
 import { PageBanner } from "@/components/PageBanner";
-import { pageImages, contactAddress, contactEmail, contactMailto, contactPhone, contactTel } from "@/lib/site";
+import {
+  pageImages,
+  contactAddress,
+  contactEmail,
+  contactMailto,
+  contactPhone,
+  contactTel,
+  services,
+} from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Contact",
@@ -14,46 +22,69 @@ export default function ContactPage() {
     <>
       <PageBanner
         kicker="Engage"
-        title="Contact"
-        description="Start a conversation about your next project."
+        title="Contact the firm"
+        description="Direct access to senior advisory for your next market move."
         image={pageImages.contact.src}
         imageAlt={pageImages.contact.alt}
       />
       <section className="contact-page">
-        <div className="wrap contact-grid">
-          <div>
-            <figure className="contact-photo">
-              <Image
-                src={pageImages.about.src}
-                alt={pageImages.about.alt}
-                width={960}
-                height={640}
-                sizes="(max-width: 900px) 100vw, 55vw"
-              />
-            </figure>
-            <h2>How we can help</h2>
-            <ul className="contact-list">
-              <li>Market entry strategy for international expansion</li>
-              <li>BIM management and A/E/C process advisory</li>
-              <li>ROI advisory for commercial performance</li>
-            </ul>
+        <div className="wrap contact-advance">
+          <div className="contact-advance-main">
+            <p className="kicker">Start here</p>
+            <h2>Tell us where you are expanding.</h2>
+            <p className="contact-advance-lede">
+              Market entry, BIM/VDC oversight, or modular pathways — we respond
+              with senior attention and a clear next step.
+            </p>
+
+            <div className="contact-channels">
+              <a className="contact-channel" href={contactMailto}>
+                <span>Email</span>
+                <strong>{contactEmail}</strong>
+              </a>
+              <a className="contact-channel" href={contactTel}>
+                <span>Phone</span>
+                <strong>{contactPhone}</strong>
+              </a>
+              <div className="contact-channel">
+                <span>Office</span>
+                <strong>{contactAddress}</strong>
+              </div>
+            </div>
+
+            <div className="contact-advance-actions">
+              <Link className="cta cta-ink" href="/appointment">
+                Book Appointment
+              </Link>
+              <a className="cta cta-text" href={contactMailto}>
+                Email Fernando →
+              </a>
+            </div>
           </div>
-          <div className="contact-panel">
-            <p className="kicker">Direct</p>
-            <a className="contact-email" href={contactMailto}>
-              {contactEmail}
-            </a>
-            <p className="contact-note">
+
+          <aside className="contact-advance-side">
+            <p className="kicker">Practice focus</p>
+            <ul className="contact-practice-list">
+              {services.map((s) => (
+                <li key={s.slug}>
+                  <Link href={`/services#${s.slug}`}>
+                    <em>{s.num}</em>
+                    <span>{s.label}</span>
+                  </Link>
+                </li>
+              ))}
+            </ul>
+            <p className="contact-side-note">
               Domain ·{" "}
-              <a href="http://exhibium.com/" target="_blank" rel="noopener noreferrer">
+              <a
+                href="http://exhibium.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 exhibium.com
               </a>
             </p>
-            <p className="contact-address">{contactAddress}</p>
-            <a className="contact-phone" href={contactTel}>
-              {contactPhone}
-            </a>
-          </div>
+          </aside>
         </div>
       </section>
     </>

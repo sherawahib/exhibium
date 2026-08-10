@@ -16,11 +16,12 @@ export default function AboutPage() {
       <PageBanner
         kicker="Our approach"
         title="About Exhibium"
-        description="Branding, BIM modeling, modular construction, and enhanced ROI-based solutions, led by Fernando Williams for over 25 years."
+        description="International perspective and entrepreneurial execution — led by Fernando Williams for over 25 years."
         image={pageImages.about.src}
         imageAlt={pageImages.about.alt}
       />
       <Founder />
-      <Engage compact image="/engage-market-entry.png" />    </>
+      <Engage compact image="/engage-market-entry.png" />
+    </>
   );
 }

@@ -29,8 +29,8 @@ export function Engage({
       const rect = section.getBoundingClientRect();
       const viewH = window.innerHeight || 1;
       const progress = (viewH - rect.top) / (viewH + rect.height);
-      const offset = (progress - 0.5) * 80;
-      img.style.transform = `scale(1.12) translate3d(0, ${offset}px, 0)`;
+      const offset = (progress - 0.5) * 60;
+      img.style.transform = `scale(1.1) translate3d(0, ${offset}px, 0)`;
     };
 
     onScroll();
@@ -62,12 +62,11 @@ export function Engage({
 
       <div className="wrap engage-layout">
         <div className="engage-box">
-          <p className="kicker">Next step</p>
-          <h2>Bring Exhibium into your next market entry strategy.</h2>
+          <p className="kicker">Next engagement</p>
+          <h2>Ready for senior advisory on your next market move?</h2>
           <p>
-            Market entry and BIM oversight. Branding for commercial performance.
-            Talk with the team that has delivered across the Americas and the
-            Middle East.
+            Book a consultation or write directly — we respond with clear scope,
+            timelines, and the right practice lead.
           </p>
           <div className="engage-actions">
             <Link className="cta cta-fill cta-lg" href="/appointment">
