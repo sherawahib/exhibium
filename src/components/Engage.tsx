@@ -7,8 +7,8 @@ import { contactEmail, contactMailto } from "@/lib/site";
 
 export function Engage({
   compact = false,
-  image = "/engage-market-entry.png",
-  imageAlt = "Market entry strategy presentation in a corporate boardroom",
+  image = "/projects.jpg",
+  imageAlt = "Luxury multi-level shopping atrium with curved balconies and glass dome",
 }: {
   compact?: boolean;
   image?: string;

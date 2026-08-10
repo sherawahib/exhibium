@@ -23,8 +23,8 @@ export default function ServicesPage() {
       <Practice />
       <Engage
         compact
-        image="/engage-market-entry.png"
-        imageAlt="Market entry strategy presentation in a corporate boardroom"
+        image="/projects.jpg"
+        imageAlt="Luxury multi-level shopping atrium with curved balconies and glass dome"
       />
     </>
   );

@@ -21,7 +21,7 @@ export default function AboutPage() {
         imageAlt={pageImages.about.alt}
       />
       <Founder />
-      <Engage compact image="/engage-market-entry.png" />
+      <Engage compact image="/projects.jpg" />
     </>
   );
 }
