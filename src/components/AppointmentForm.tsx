@@ -4,11 +4,11 @@ import { useState, type FormEvent } from "react";
 import { contactEmail, contactMailto } from "@/lib/site";
 
 const meetingTypes = [
-  "Strategy consultation",
-  "Retail / branding review",
-  "BIM advisory",
-  "Modular development",
   "Market entry discussion",
+  "BIM / VDC advisory",
+  "Modular construction",
+  "ROI / commercial strategy",
+  "General consultation",
 ] as const;
 
 export function AppointmentForm() {
@@ -18,6 +18,7 @@ export function AppointmentForm() {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const name = String(data.get("name") || "").trim();
+    const company = String(data.get("company") || "").trim();
     const email = String(data.get("email") || "").trim();
     const date = String(data.get("date") || "").trim();
     const time = String(data.get("time") || "").trim();
@@ -28,6 +29,7 @@ export function AppointmentForm() {
     const body = encodeURIComponent(
       [
         `Name: ${name}`,
+        company ? `Company: ${company}` : "",
         `Email: ${email}`,
         `Preferred date: ${date}`,
         `Preferred time: ${time}`,
@@ -35,7 +37,7 @@ export function AppointmentForm() {
         notes ? `Notes: ${notes}` : "",
       ]
         .filter(Boolean)
-        .join("\n")
+        .join("\n"),
     );
 
     window.location.href = `${contactMailto}?subject=${subject}&body=${body}`;
@@ -45,10 +47,11 @@ export function AppointmentForm() {
   if (status === "sent") {
     return (
       <div className="appt-success" role="status">
-        <h3>Request ready</h3>
+        <p className="kicker">Submitted</p>
+        <h3>Request ready in your email app</h3>
         <p>
-          Your email app should open with the appointment details. If it doesn’t,
-          write to{" "}
+          Your mail client should open with the appointment details. If it
+          doesn’t, write directly to{" "}
           <a href={contactMailto}>{contactEmail}</a>.
         </p>
         <button
@@ -67,10 +70,25 @@ export function AppointmentForm() {
       <div className="appt-grid">
         <label className="appt-field">
           <span>Full name</span>
-          <input name="name" type="text" required autoComplete="name" placeholder="Your name" />
+          <input
+            name="name"
+            type="text"
+            required
+            autoComplete="name"
+            placeholder="Your name"
+          />
         </label>
         <label className="appt-field">
-          <span>Email</span>
+          <span>Company</span>
+          <input
+            name="company"
+            type="text"
+            autoComplete="organization"
+            placeholder="Organization"
+          />
+        </label>
+        <label className="appt-field appt-field-wide">
+          <span>Work email</span>
           <input
             name="email"
             type="email"
@@ -90,7 +108,7 @@ export function AppointmentForm() {
       </div>
 
       <label className="appt-field">
-        <span>Meeting type</span>
+        <span>Meeting focus</span>
         <select name="type" required defaultValue="">
           <option value="" disabled>
             Select one
@@ -104,18 +122,23 @@ export function AppointmentForm() {
       </label>
 
       <label className="appt-field">
-        <span>Brief note (optional)</span>
+        <span>Brief context (optional)</span>
         <textarea
           name="notes"
-          rows={3}
-          maxLength={280}
-          placeholder="What would you like to discuss?"
+          rows={4}
+          maxLength={400}
+          placeholder="Market, project stage, or decision you need support with"
         />
       </label>
 
-      <button type="submit" className="cta cta-fill cta-lg appt-submit">
-        Confirm appointment request
-      </button>
+      <div className="appt-form-foot">
+        <p className="appt-form-note">
+          Submitting opens your email app with a prefilled request to Exhibium.
+        </p>
+        <button type="submit" className="cta cta-fill cta-lg appt-submit">
+          Confirm appointment request
+        </button>
+      </div>
     </form>
   );
 }
