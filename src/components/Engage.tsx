@@ -8,11 +8,13 @@ import { contactEmail, contactMailto } from "@/lib/site";
 export function Engage({
   compact = false,
   image = "/projects.jpg",
-  imageAlt = "Luxury multi-level shopping atrium with curved balconies and glass dome",
+  sideImage = "/engage-side.png",
+  sideImageAlt = "Market entry strategy presentation in a corporate boardroom",
 }: {
   compact?: boolean;
   image?: string;
-  imageAlt?: string;
+  sideImage?: string;
+  sideImageAlt?: string;
 }) {
   const sectionRef = useRef<HTMLElement>(null);
   const imgRef = useRef<HTMLImageElement>(null);
@@ -86,8 +88,8 @@ export function Engage({
 
         <figure className="engage-side">
           <Image
-            src={image}
-            alt={imageAlt}
+            src={sideImage}
+            alt={sideImageAlt}
             fill
             sizes="(max-width: 900px) 100vw, 46vw"
             style={{ objectFit: "cover", objectPosition: "center" }}
