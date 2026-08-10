@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { PageBanner } from "@/components/PageBanner";
 import { Founder } from "@/components/Founder";
 import { Engage } from "@/components/Engage";
-import { pageImages } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "About",
@@ -17,8 +16,8 @@ export default function AboutPage() {
         kicker="Our approach"
         title="About Exhibium"
         description="International perspective and entrepreneurial execution — led by Fernando Williams for over 25 years."
-        image={pageImages.about.src}
-        imageAlt={pageImages.about.alt}
+        image="/about-banner-v2.png"
+        imageAlt="Executive boardroom meeting in silhouette against a city skyline"
       />
       <Founder />
       <Engage compact image="/projects.jpg" />
