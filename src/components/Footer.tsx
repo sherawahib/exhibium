@@ -1,4 +1,3 @@
-import Image from "next/image";
 import Link from "next/link";
 import { BrandLogo } from "@/components/BrandLogo";
 import {
@@ -100,15 +99,6 @@ export function Footer() {
                 <span className="foot-contact-value">{contactAddress}</span>
               </div>
             </div>
-            <figure className="foot-thumb">
-              <Image
-                src="/engage-market-entry.png"
-                alt="Market entry strategy presentation"
-                width={320}
-                height={160}
-                sizes="280px"
-              />
-            </figure>
           </div>
         </div>
       </div>

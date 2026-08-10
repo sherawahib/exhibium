@@ -4,13 +4,18 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
-import { contactPhone, contactTel, headerNavLinks } from "@/lib/site";
+import {
+  contactEmail,
+  contactMailto,
+  contactPhone,
+  contactTel,
+  headerNavLinks,
+} from "@/lib/site";
 
 export function Header() {
   const pathname = usePathname();
   const isHome = pathname === "/";
   const [solid, setSolid] = useState(!isHome);
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
 
   useEffect(() => {
@@ -19,13 +24,11 @@ export function Header() {
 
   useEffect(() => {
     const onScroll = () => {
-      const y = window.scrollY || 0;
-      setScrolled(y > 12);
       if (!isHome) {
         setSolid(true);
         return;
       }
-      setSolid(y > window.innerHeight * 0.45);
+      setSolid(window.scrollY > 48);
     };
 
     onScroll();
@@ -47,27 +50,34 @@ export function Header() {
 
   return (
     <>
-      <header
-        className={`topbar${solid ? " is-solid" : ""}${scrolled ? " is-scrolled" : ""}${open ? " is-open" : ""}`}
-      >
+      <header className={`topbar${solid ? " is-solid" : ""}${open ? " is-open" : ""}`}>
+        <div className="topbar-utility">
+          <div className="wrap topbar-utility-inner">
+            <p>Exhibium Advisory Services</p>
+            <div className="topbar-utility-links">
+              <a href={contactTel}>{contactPhone}</a>
+              <span aria-hidden="true">·</span>
+              <a href={contactMailto}>{contactEmail}</a>
+            </div>
+          </div>
+        </div>
+
         <div className="topbar-inner">
           <BrandLogo className="logo" priority onDark={!solid} />
 
           <nav className="topnav" aria-label="Primary">
-            <div className="topnav-links">
-              {headerNavLinks.map((l) => (
-                <Link
-                  key={l.href}
-                  href={l.href}
-                  className={isActive(l.href) ? "is-active" : undefined}
-                  aria-current={isActive(l.href) ? "page" : undefined}
-                >
-                  <span>{l.label}</span>
-                </Link>
-              ))}
-            </div>
+            {headerNavLinks.map((l) => (
+              <Link
+                key={l.href}
+                href={l.href}
+                className={isActive(l.href) ? "is-active" : undefined}
+                aria-current={isActive(l.href) ? "page" : undefined}
+              >
+                {l.label}
+              </Link>
+            ))}
             <Link className="topnav-cta" href="/appointment">
-              <span>Book Appointment</span>
+              Book Appointment
             </Link>
           </nav>
 
@@ -97,31 +107,28 @@ export function Header() {
 
       <aside className="drawer" id="drawer" hidden={!open}>
         <nav aria-label="Mobile">
-          {headerNavLinks.map((l, index) => (
+          {headerNavLinks.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
               className={isActive(l.href) ? "is-active" : undefined}
               aria-current={isActive(l.href) ? "page" : undefined}
-              style={{ ["--i" as string]: index }}
             >
-              <span className="drawer-num">0{index + 1}</span>
-              <span className="drawer-label">{l.label}</span>
+              {l.label}
             </Link>
           ))}
           <Link
             className="drawer-cta"
             href="/appointment"
             onClick={() => setOpen(false)}
-            style={{ ["--i" as string]: headerNavLinks.length }}
           >
             Book Appointment
           </Link>
         </nav>
         <div className="drawer-meta">
           <a href={contactTel}>{contactPhone}</a>
-          <p>Exhibium Advisory Services</p>
+          <a href={contactMailto}>{contactEmail}</a>
         </div>
       </aside>
     </>
