@@ -17,16 +17,39 @@ export function Footer() {
   return (
     <footer className="foot">
       <div className="foot-glow" aria-hidden="true" />
+      <div className="foot-grid-lines" aria-hidden="true" />
+
+      <div className="wrap foot-cta-band">
+        <div className="foot-cta-copy">
+          <p className="foot-cta-kicker">Next engagement</p>
+          <h2>Ready for senior advisory on your next market move?</h2>
+        </div>
+        <div className="foot-cta-actions">
+          <Link className="foot-cta-primary" href="/appointment">
+            Book Appointment
+          </Link>
+          <a className="foot-cta-secondary" href={contactMailto}>
+            {contactEmail}
+          </a>
+        </div>
+      </div>
 
       <div className="wrap foot-main">
         <div className="foot-brand-block">
           <BrandLogo className="foot-logo" onDark />
-          <p>
+          <p className="foot-lead">
             Exhibium Group is a multi-faceted consultancy providing market entry
             group, BIM management, and modular construction development, with
             enhanced ROI-based solutions as our primary offering. Led by Fernando
             Williams across the United States, Latin America, and the Middle East.
           </p>
+          <div className="foot-practice-pills" aria-label="Practice groups">
+            {services.map((s) => (
+              <Link key={s.slug} href={`/services#${s.slug}`}>
+                {s.label}
+              </Link>
+            ))}
+          </div>
         </div>
 
         <div className="foot-cols">
@@ -35,7 +58,9 @@ export function Footer() {
             <ul>
               {navLinks.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href}>{l.label}</Link>
+                  <Link href={l.href}>
+                    <span>{l.label}</span>
+                  </Link>
                 </li>
               ))}
             </ul>
@@ -46,33 +71,44 @@ export function Footer() {
             <ul>
               {services.map((s) => (
                 <li key={s.slug}>
-                  <Link href={`/services#${s.slug}`}>{s.label}</Link>
+                  <Link href={`/services#${s.slug}`}>
+                    <span>{s.label}</span>
+                  </Link>
                 </li>
               ))}
               <li>
-                <Link href="/services">All services</Link>
+                <Link href="/services">
+                  <span>All services</span>
+                </Link>
               </li>
             </ul>
           </nav>
 
           <div className="foot-col foot-contact">
             <h3>Contact</h3>
-            <a className="foot-email" href={contactMailto}>
-              {contactEmail}
-            </a>
-            <p className="foot-address">{contactAddress}</p>
-            <a className="foot-phone" href={contactTel}>
-              {contactPhone}
-            </a>
-            <div className="foot-thumb">
+            <div className="foot-contact-list">
+              <a className="foot-contact-item" href={contactMailto}>
+                <span className="foot-contact-label">Email</span>
+                <span className="foot-contact-value">{contactEmail}</span>
+              </a>
+              <a className="foot-contact-item" href={contactTel}>
+                <span className="foot-contact-label">Phone</span>
+                <span className="foot-contact-value">{contactPhone}</span>
+              </a>
+              <div className="foot-contact-item">
+                <span className="foot-contact-label">Office</span>
+                <span className="foot-contact-value">{contactAddress}</span>
+              </div>
+            </div>
+            <figure className="foot-thumb">
               <Image
-                src="/boardroom.png"
-                alt=""
-                width={280}
-                height={120}
+                src="/engage-market-entry.png"
+                alt="Market entry strategy presentation"
+                width={320}
+                height={160}
                 sizes="280px"
               />
-            </div>
+            </figure>
           </div>
         </div>
       </div>
