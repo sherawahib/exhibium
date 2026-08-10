@@ -1,18 +1,41 @@
 "use client";
 
-import { useState, type FormEvent } from "react";
-import { contactEmail, contactMailto } from "@/lib/site";
+import { useMemo, useState, type FormEvent } from "react";
+import { contactEmail, contactMailto, contactPhone, contactTel } from "@/lib/site";
 
 const meetingTypes = [
-  "Market entry discussion",
-  "BIM / VDC advisory",
-  "Modular construction",
-  "ROI / commercial strategy",
-  "General consultation",
+  { id: "market-entry", label: "Market entry" },
+  { id: "bim", label: "BIM / VDC" },
+  { id: "modular", label: "Modular" },
+  { id: "roi", label: "ROI / commercial" },
+  { id: "general", label: "General consult" },
 ] as const;
+
+const meetingFormats = [
+  { id: "video", label: "Video call" },
+  { id: "phone", label: "Phone" },
+  { id: "in-person", label: "In person" },
+] as const;
+
+const durations = ["30 min", "45 min", "60 min"] as const;
 
 export function AppointmentForm() {
   const [status, setStatus] = useState<"idle" | "sent">("idle");
+  const [type, setType] = useState<(typeof meetingTypes)[number]["id"] | "">(
+    "",
+  );
+  const [format, setFormat] = useState<(typeof meetingFormats)[number]["id"]>(
+    "video",
+  );
+  const [duration, setDuration] =
+    useState<(typeof durations)[number]>("45 min");
+  const [notes, setNotes] = useState("");
+
+  const minDate = useMemo(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 1);
+    return d.toISOString().slice(0, 10);
+  }, []);
 
   const onSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -20,21 +43,31 @@ export function AppointmentForm() {
     const name = String(data.get("name") || "").trim();
     const company = String(data.get("company") || "").trim();
     const email = String(data.get("email") || "").trim();
+    const phone = String(data.get("phone") || "").trim();
     const date = String(data.get("date") || "").trim();
     const time = String(data.get("time") || "").trim();
-    const type = String(data.get("type") || "").trim();
-    const notes = String(data.get("notes") || "").trim();
+    const selectedType =
+      meetingTypes.find((t) => t.id === type)?.label || type;
+    const selectedFormat =
+      meetingFormats.find((f) => f.id === format)?.label || format;
 
-    const subject = encodeURIComponent(`Appointment request: ${name}`);
+    if (!type) return;
+
+    const subject = encodeURIComponent(
+      `Appointment request · ${selectedType} · ${name}`,
+    );
     const body = encodeURIComponent(
       [
         `Name: ${name}`,
         company ? `Company: ${company}` : "",
         `Email: ${email}`,
+        phone ? `Phone: ${phone}` : "",
         `Preferred date: ${date}`,
         `Preferred time: ${time}`,
-        `Meeting type: ${type}`,
-        notes ? `Notes: ${notes}` : "",
+        `Duration: ${duration}`,
+        `Format: ${selectedFormat}`,
+        `Meeting focus: ${selectedType}`,
+        notes ? `Context: ${notes}` : "",
       ]
         .filter(Boolean)
         .join("\n"),
@@ -47,96 +80,182 @@ export function AppointmentForm() {
   if (status === "sent") {
     return (
       <div className="appt-success" role="status">
-        <p className="kicker">Submitted</p>
-        <h3>Request ready in your email app</h3>
+        <p className="kicker">Request prepared</p>
+        <h3>Your email app should open next.</h3>
         <p>
-          Your mail client should open with the appointment details. If it
-          doesn’t, write directly to{" "}
-          <a href={contactMailto}>{contactEmail}</a>.
+          Confirm and send the prefilled message. If nothing opens, email{" "}
+          <a href={contactMailto}>{contactEmail}</a> or call{" "}
+          <a href={contactTel}>{contactPhone}</a>.
         </p>
-        <button
-          type="button"
-          className="cta cta-ink"
-          onClick={() => setStatus("idle")}
-        >
-          Book another time
-        </button>
+        <div className="appt-success-actions">
+          <button
+            type="button"
+            className="cta cta-ink"
+            onClick={() => setStatus("idle")}
+          >
+            Submit another request
+          </button>
+          <a className="cta cta-text" href={contactMailto}>
+            Email directly →
+          </a>
+        </div>
       </div>
     );
   }
 
   return (
-    <form className="appt-form" onSubmit={onSubmit} noValidate>
-      <div className="appt-grid">
-        <label className="appt-field">
-          <span>Full name</span>
-          <input
-            name="name"
-            type="text"
-            required
-            autoComplete="name"
-            placeholder="Your name"
-          />
-        </label>
-        <label className="appt-field">
-          <span>Company</span>
-          <input
-            name="company"
-            type="text"
-            autoComplete="organization"
-            placeholder="Organization"
-          />
-        </label>
-        <label className="appt-field appt-field-wide">
-          <span>Work email</span>
-          <input
-            name="email"
-            type="email"
-            required
-            autoComplete="email"
-            placeholder="you@company.com"
-          />
-        </label>
-        <label className="appt-field">
-          <span>Preferred date</span>
-          <input name="date" type="date" required />
-        </label>
-        <label className="appt-field">
-          <span>Preferred time</span>
-          <input name="time" type="time" required />
-        </label>
-      </div>
+    <form className="appt-form" onSubmit={onSubmit}>
+      <section className="appt-section">
+        <div className="appt-section-head">
+          <span>01</span>
+          <h4>Your details</h4>
+        </div>
+        <div className="appt-grid">
+          <label className="appt-field">
+            <span>Full name *</span>
+            <input
+              name="name"
+              type="text"
+              required
+              autoComplete="name"
+              placeholder="Fernando Williams"
+            />
+          </label>
+          <label className="appt-field">
+            <span>Company</span>
+            <input
+              name="company"
+              type="text"
+              autoComplete="organization"
+              placeholder="Organization"
+            />
+          </label>
+          <label className="appt-field">
+            <span>Work email *</span>
+            <input
+              name="email"
+              type="email"
+              required
+              autoComplete="email"
+              placeholder="you@company.com"
+            />
+          </label>
+          <label className="appt-field">
+            <span>Phone</span>
+            <input
+              name="phone"
+              type="tel"
+              autoComplete="tel"
+              placeholder="+1 (786) 000-0000"
+            />
+          </label>
+        </div>
+      </section>
 
-      <label className="appt-field">
-        <span>Meeting focus</span>
-        <select name="type" required defaultValue="">
-          <option value="" disabled>
-            Select one
-          </option>
-          {meetingTypes.map((t) => (
-            <option key={t} value={t}>
-              {t}
-            </option>
-          ))}
-        </select>
-      </label>
+      <section className="appt-section">
+        <div className="appt-section-head">
+          <span>02</span>
+          <h4>Schedule</h4>
+        </div>
+        <div className="appt-grid">
+          <label className="appt-field">
+            <span>Preferred date *</span>
+            <input name="date" type="date" required min={minDate} />
+          </label>
+          <label className="appt-field">
+            <span>Preferred time *</span>
+            <input name="time" type="time" required />
+          </label>
+        </div>
 
-      <label className="appt-field">
-        <span>Brief context (optional)</span>
-        <textarea
-          name="notes"
-          rows={4}
-          maxLength={400}
-          placeholder="Market, project stage, or decision you need support with"
-        />
-      </label>
+        <div className="appt-field">
+          <span>Duration</span>
+          <div className="appt-chips" role="group" aria-label="Duration">
+            {durations.map((d) => (
+              <button
+                key={d}
+                type="button"
+                className={`appt-chip${duration === d ? " is-on" : ""}`}
+                aria-pressed={duration === d}
+                onClick={() => setDuration(d)}
+              >
+                {d}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div className="appt-field">
+          <span>Meeting format</span>
+          <div className="appt-chips" role="group" aria-label="Meeting format">
+            {meetingFormats.map((f) => (
+              <button
+                key={f.id}
+                type="button"
+                className={`appt-chip${format === f.id ? " is-on" : ""}`}
+                aria-pressed={format === f.id}
+                onClick={() => setFormat(f.id)}
+              >
+                {f.label}
+              </button>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="appt-section">
+        <div className="appt-section-head">
+          <span>03</span>
+          <h4>Focus area</h4>
+        </div>
+
+        <div className="appt-field">
+          <span>What should we discuss? *</span>
+          <div className="appt-chips appt-chips-wrap" role="group" aria-label="Meeting focus">
+            {meetingTypes.map((t) => (
+              <button
+                key={t.id}
+                type="button"
+                className={`appt-chip${type === t.id ? " is-on" : ""}`}
+                aria-pressed={type === t.id}
+                onClick={() => setType(t.id)}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+          {!type ? (
+            <em className="appt-field-hint">Select one focus area to continue.</em>
+          ) : null}
+        </div>
+
+        <label className="appt-field">
+          <span>Brief context (optional)</span>
+          <textarea
+            name="notes"
+            rows={4}
+            maxLength={400}
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+            placeholder="Market, project stage, timeline, or decision you need support with"
+          />
+          <em className="appt-field-hint appt-field-count">
+            {notes.length}/400
+          </em>
+        </label>
+      </section>
 
       <div className="appt-form-foot">
         <p className="appt-form-note">
-          Submitting opens your email app with a prefilled request to Exhibium.
+          Submitting opens your email with a prefilled request. We confirm
+          availability by reply.
         </p>
-        <button type="submit" className="cta cta-fill cta-lg appt-submit">
-          Confirm appointment request
+        <button
+          type="submit"
+          className="cta cta-fill cta-lg appt-submit"
+          disabled={!type}
+        >
+          Send appointment request
         </button>
       </div>
     </form>

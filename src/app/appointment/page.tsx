@@ -25,13 +25,13 @@ const assurances = [
   },
   {
     num: "02",
-    title: "Clear next steps",
-    text: "We confirm timing by email and outline the most useful agenda for your goals.",
+    title: "Confirmed by email",
+    text: "We reply to lock timing and share a focused agenda for the session.",
   },
   {
     num: "03",
-    title: "Focused advisory scope",
-    text: "Market entry, BIM/VDC, modular delivery, and commercial performance.",
+    title: "Clear advisory scope",
+    text: "Market entry, BIM/VDC, modular pathways, and commercial performance.",
   },
 ] as const;
 
@@ -42,7 +42,7 @@ export default function AppointmentPage() {
         kicker="Schedule"
         title="Book an appointment"
         crumbLabel="Appointment"
-        description="Request a focused consultation with Exhibium. Share your preferred time and we will follow up to confirm."
+        description="Request a focused consultation. Share timing and focus — we confirm by email."
         image={pageImages.contact.src}
         imageAlt={pageImages.contact.alt}
       />
@@ -72,7 +72,7 @@ export default function AppointmentPage() {
             </ul>
 
             <div className="appt-contact-panel">
-              <h3>Direct contact</h3>
+              <h3>Prefer direct contact?</h3>
               <div className="appt-contact-list">
                 <a className="appt-contact-item" href={contactMailto}>
                   <span>Email</span>
@@ -96,10 +96,10 @@ export default function AppointmentPage() {
           <div className="appt-card">
             <div className="appt-card-head">
               <p className="kicker">Request form</p>
-              <h3>Tell us when to meet</h3>
+              <h3>Book your consultation</h3>
               <p>
-                Submit your preferred date and focus area. We will reply to
-                confirm availability.
+                Three short steps — details, schedule, and focus. We reply to
+                confirm.
               </p>
             </div>
             <AppointmentForm />
