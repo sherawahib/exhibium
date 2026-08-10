@@ -4,13 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { BrandLogo } from "@/components/BrandLogo";
-import {
-  contactEmail,
-  contactMailto,
-  contactPhone,
-  contactTel,
-  headerNavLinks,
-} from "@/lib/site";
+import { headerNavLinks } from "@/lib/site";
 
 export function Header() {
   const pathname = usePathname();
@@ -23,14 +17,14 @@ export function Header() {
   }, [pathname]);
 
   useEffect(() => {
-    const onScroll = () => {
-      if (!isHome) {
-        setSolid(true);
-        return;
-      }
-      setSolid(window.scrollY > 48);
-    };
+    if (!isHome) {
+      setSolid(true);
+      return;
+    }
 
+    const onScroll = () => {
+      setSolid(window.scrollY > window.innerHeight * 0.55);
+    };
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => window.removeEventListener("scroll", onScroll);
@@ -50,50 +44,34 @@ export function Header() {
 
   return (
     <>
-      <header className={`topbar${solid ? " is-solid" : ""}${open ? " is-open" : ""}`}>
-        <div className="topbar-utility">
-          <div className="wrap topbar-utility-inner">
-            <p>Exhibium Advisory Services</p>
-            <div className="topbar-utility-links">
-              <a href={contactTel}>{contactPhone}</a>
-              <span aria-hidden="true">·</span>
-              <a href={contactMailto}>{contactEmail}</a>
-            </div>
-          </div>
-        </div>
-
-        <div className="topbar-inner">
-          <BrandLogo className="logo" priority onDark={!solid} />
-
-          <nav className="topnav" aria-label="Primary">
-            {headerNavLinks.map((l) => (
-              <Link
-                key={l.href}
-                href={l.href}
-                className={isActive(l.href) ? "is-active" : undefined}
-                aria-current={isActive(l.href) ? "page" : undefined}
-              >
-                {l.label}
-              </Link>
-            ))}
-            <Link className="topnav-cta" href="/appointment">
-              Book Appointment
+      <header className={`topbar${solid ? " is-solid" : ""}`}>
+        <BrandLogo className="logo" priority onDark={!solid} />
+        <button
+          className="menu-btn"
+          type="button"
+          aria-expanded={open}
+          aria-controls="drawer"
+          aria-label={open ? "Close menu" : "Open menu"}
+          onClick={() => setOpen((v) => !v)}
+        >
+          <span />
+          <span />
+        </button>
+        <nav className="topnav" aria-label="Primary">
+          {headerNavLinks.map((l) => (
+            <Link
+              key={l.href}
+              href={l.href}
+              className={isActive(l.href) ? "is-active" : undefined}
+              aria-current={isActive(l.href) ? "page" : undefined}
+            >
+              {l.label}
             </Link>
-          </nav>
-
-          <button
-            className="menu-btn"
-            type="button"
-            aria-expanded={open}
-            aria-controls="drawer"
-            aria-label={open ? "Close menu" : "Open menu"}
-            onClick={() => setOpen((v) => !v)}
-          >
-            <span />
-            <span />
-            <span />
-          </button>
-        </div>
+          ))}
+          <Link className="topnav-cta" href="/appointment">
+            Book Appointment
+          </Link>
+        </nav>
       </header>
 
       {open ? (
@@ -112,24 +90,15 @@ export function Header() {
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className={isActive(l.href) ? "is-active" : undefined}
               aria-current={isActive(l.href) ? "page" : undefined}
             >
               {l.label}
             </Link>
           ))}
-          <Link
-            className="drawer-cta"
-            href="/appointment"
-            onClick={() => setOpen(false)}
-          >
+          <Link href="/appointment" onClick={() => setOpen(false)}>
             Book Appointment
           </Link>
         </nav>
-        <div className="drawer-meta">
-          <a href={contactTel}>{contactPhone}</a>
-          <a href={contactMailto}>{contactEmail}</a>
-        </div>
       </aside>
     </>
   );
