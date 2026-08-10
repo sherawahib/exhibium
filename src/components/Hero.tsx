@@ -34,12 +34,12 @@ export function Hero() {
       <div className="splash-visual">
         <Image
           ref={imgRef}
-          src="/hero.png"
+          src="/about-banner-v2.png"
           alt="Executive boardroom meeting in silhouette against a city skyline"
           fill
           priority
           sizes="100vw"
-          style={{ objectFit: "cover", objectPosition: "center 42%" }}
+          style={{ objectFit: "cover", objectPosition: "center 45%" }}
         />
         <div className="splash-shade" aria-hidden="true" />
       </div>
