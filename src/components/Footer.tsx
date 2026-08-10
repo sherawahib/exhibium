@@ -15,21 +15,20 @@ export function Footer() {
 
   return (
     <footer className="foot">
-      <div className="foot-glow" aria-hidden="true" />
-      <div className="foot-grid-lines" aria-hidden="true" />
-
-      <div className="wrap foot-cta-band">
-        <div className="foot-cta-copy">
-          <p className="foot-cta-kicker">Next engagement</p>
-          <h2>Ready for senior advisory on your next market move?</h2>
-        </div>
-        <div className="foot-cta-actions">
-          <Link className="foot-cta-primary" href="/appointment">
-            Book Appointment
-          </Link>
-          <a className="foot-cta-secondary" href={contactMailto}>
-            {contactEmail}
-          </a>
+      <div className="foot-cta-band">
+        <div className="wrap foot-cta-inner">
+          <div className="foot-cta-copy">
+            <p className="foot-cta-kicker">Next engagement</p>
+            <h2>Ready for senior advisory on your next market move?</h2>
+          </div>
+          <div className="foot-cta-actions">
+            <Link className="foot-cta-primary" href="/appointment">
+              Book Appointment
+            </Link>
+            <a className="foot-cta-secondary" href={contactMailto}>
+              Email the firm
+            </a>
+          </div>
         </div>
       </div>
 
@@ -37,18 +36,10 @@ export function Footer() {
         <div className="foot-brand-block">
           <BrandLogo className="foot-logo" onDark />
           <p className="foot-lead">
-            Exhibium Group is a multi-faceted consultancy providing market entry
-            group, BIM management, and modular construction development, with
-            enhanced ROI-based solutions as our primary offering. Led by Fernando
-            Williams across the United States, Latin America, and the Middle East.
+            Market entry, BIM/VDC, and modular advisory for A/E/C firms,
+            developers, and investors — led by Fernando Williams across the
+            Americas and the Middle East.
           </p>
-          <div className="foot-practice-pills" aria-label="Practice groups">
-            {services.map((s) => (
-              <Link key={s.slug} href={`/services#${s.slug}`}>
-                {s.label}
-              </Link>
-            ))}
-          </div>
         </div>
 
         <div className="foot-cols">
@@ -57,28 +48,22 @@ export function Footer() {
             <ul>
               {navLinks.map((l) => (
                 <li key={l.href}>
-                  <Link href={l.href}>
-                    <span>{l.label}</span>
-                  </Link>
+                  <Link href={l.href}>{l.label}</Link>
                 </li>
               ))}
             </ul>
           </nav>
 
           <nav className="foot-col" aria-label="Practice groups">
-            <h3>Practice groups</h3>
+            <h3>Practices</h3>
             <ul>
               {services.map((s) => (
                 <li key={s.slug}>
-                  <Link href={`/services#${s.slug}`}>
-                    <span>{s.label}</span>
-                  </Link>
+                  <Link href={`/services#${s.slug}`}>{s.label}</Link>
                 </li>
               ))}
               <li>
-                <Link href="/services">
-                  <span>All services</span>
-                </Link>
+                <Link href="/services">All services</Link>
               </li>
             </ul>
           </nav>
@@ -107,7 +92,7 @@ export function Footer() {
         <div className="wrap foot-bottom-row">
           <p>&copy; {year} Exhibium Group. All rights reserved.</p>
           <p className="foot-tagline">
-            Market Entry Group · BIM · Modular · ROI Advisory
+            Market Entry · BIM · Modular · ROI Advisory
           </p>
           <a
             href="http://exhibium.com/"
