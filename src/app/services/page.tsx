@@ -21,11 +21,7 @@ export default function ServicesPage() {
         imageAlt="Executive boardroom meeting in silhouette against a city skyline"
       />
       <Practice />
-      <Engage
-        compact
-        image="/projects.jpg"
-        imageAlt="Luxury multi-level shopping atrium with curved balconies and glass dome"
-      />
+      <Engage compact image="/projects.jpg" />
     </>
   );
 }
