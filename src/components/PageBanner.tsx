@@ -7,6 +7,7 @@ type Props = {
   description?: string;
   image?: string;
   imageAlt?: string;
+  crumbLabel?: string;
 };
 
 export function PageBanner({
@@ -15,6 +16,7 @@ export function PageBanner({
   description,
   image,
   imageAlt = "",
+  crumbLabel,
 }: Props) {
   return (
     <header className={`page-banner${image ? " page-banner-media" : ""}`}>
@@ -26,21 +28,35 @@ export function PageBanner({
             fill
             priority
             sizes="100vw"
+            className="page-banner-img"
             style={{ objectFit: "cover", objectPosition: "center" }}
           />
           <div className="page-banner-shade" />
+          <div className="page-banner-grain" aria-hidden="true" />
         </div>
-      ) : null}
+      ) : (
+        <div className="page-banner-fallback" aria-hidden="true" />
+      )}
+
       <div className="wrap page-banner-inner">
-        <p className="kicker">{kicker}</p>
-        <h1>{title}</h1>
-        {description ? <p className="page-banner-desc">{description}</p> : null}
         <nav className="page-crumb" aria-label="Breadcrumb">
           <Link href="/">Home</Link>
-          <span aria-hidden="true">/</span>
-          <span>{title}</span>
+          <span className="page-crumb-sep" aria-hidden="true" />
+          <span>{crumbLabel ?? title}</span>
         </nav>
+
+        <div className="page-banner-copy">
+          <p className="kicker page-banner-kicker">
+            <span>{kicker}</span>
+          </p>
+          <h1>{title}</h1>
+          {description ? (
+            <p className="page-banner-desc">{description}</p>
+          ) : null}
+        </div>
       </div>
+
+      <div className="page-banner-edge" aria-hidden="true" />
     </header>
   );
 }
