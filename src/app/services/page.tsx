@@ -17,8 +17,8 @@ export default function ServicesPage() {
         title="Advisory Services"
         crumbLabel="Services"
         description="Technology-driven advisory for A/E/C — BIM, Modular, and Market Entry across the USA, Latin America, and the Middle East."
-        image="/boardroom.png"
-        imageAlt="Executive boardroom meeting in silhouette"
+        image="/about-banner-v2.png"
+        imageAlt="Executive boardroom meeting in silhouette against a city skyline"
       />
       <Practice />
       <Engage
