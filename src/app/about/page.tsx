@@ -16,7 +16,7 @@ export default function AboutPage() {
         kicker="Our approach"
         title="About Exhibium"
         description="International perspective and entrepreneurial execution — led by Fernando Williams for over 25 years."
-        image="/about-banner.png"
+        image="/about-banner-v2.png"
         imageAlt="Executive team in silhouette around a boardroom table against a city skyline"
       />
       <Founder />
