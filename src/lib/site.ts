@@ -28,6 +28,7 @@ export const services = [
     subtitle:
       "Servicing PM Firms, Developers, Owner’s Representatives, and General Contractors",
     image: "/services-bim-v2.png",
+    detailImage: "/services-page-bim.png",
     imageAlt:
       "Exhibium BIM Management Division graphic with BIM word cloud and building systems model",
     summary:
@@ -56,6 +57,7 @@ export const services = [
     subtitle:
       "Modular construction can deliver projects 20% to 50% faster than traditional methods.",
     image: "/services-modular-v2.png",
+    detailImage: "/services-page-modular.png",
     imageAlt:
       "Exhibium Global modular construction graphic — the better way to build",
     summary:
@@ -92,6 +94,7 @@ export const services = [
     subtitle:
       "As a result of Exhibium’s many years of experience working internationally, Exhibium was asked to provide Market Entry services for international expansion plans.",
     image: "/services-market-entry-v2.png",
+    detailImage: "/services-page-market-entry.png",
     imageAlt:
       "Global Expansion Market Entry Strategies graphic with city skyline and business professionals",
     summary:

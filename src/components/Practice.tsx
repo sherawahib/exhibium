@@ -41,7 +41,11 @@ export function Practice() {
                 <div className="service-row-visual">
                   <figure className="service-row-media">
                     <Image
-                      src={service.image}
+                      src={
+                        "detailImage" in service && service.detailImage
+                          ? service.detailImage
+                          : service.image
+                      }
                       alt={service.imageAlt}
                       fill
                       sizes="(max-width: 900px) 100vw, 50vw"
