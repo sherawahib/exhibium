@@ -27,7 +27,7 @@ export const services = [
     title: "BIM/VDC-Driven Project Management Services",
     subtitle:
       "Servicing PM Firms, Developers, Owner’s Representatives, and General Contractors",
-    image: "/services-bim.png",
+    image: "/services-bim-v2.png",
     imageAlt:
       "Exhibium BIM Management Division graphic with BIM word cloud and building systems model",
     summary:
