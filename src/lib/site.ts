@@ -55,9 +55,9 @@ export const services = [
     title: "Modular Construction Group",
     subtitle:
       "Modular construction can deliver projects 20% to 50% faster than traditional methods.",
-    image: "/services-modular.png",
+    image: "/services-modular-v2.png",
     imageAlt:
-      "Exhibium Modular Development Division graphic with modular building and structural model",
+      "Exhibium Global modular construction graphic — the better way to build",
     summary:
       "Modular construction pathways that can deliver projects 20% to 50% faster than traditional methods.",
     paragraphs: [
