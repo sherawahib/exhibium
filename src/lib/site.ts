@@ -156,8 +156,8 @@ export const capabilities = [
 
 export const pageImages = {
   about: {
-    src: "/about-bim-workstation.png",
-    alt: "Engineer reviewing colorful BIM piping models on dual monitors",
+    src: "/about-bim-workstation-v2.png",
+    alt: "Engineer reviewing colorful BIM piping models on dual Exhibium monitors",
   },
   projects: {
     src: "/projects.jpg",
