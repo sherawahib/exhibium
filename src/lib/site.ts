@@ -55,15 +55,15 @@ export const services = [
     label: "Modular Construction Group",
     title: "Modular Construction Group",
     subtitle:
-      "Modular construction can deliver projects 20% to 50% faster than traditional methods.",
+      "Modular construction pathways for faster delivery than traditional methods.",
     image: "/services-modular-v2.png",
     detailImage: "/services-page-modular.png",
     imageAlt:
       "Exhibium Global modular construction graphic — the better way to build",
     summary:
-      "Modular construction pathways that can deliver projects 20% to 50% faster than traditional methods.",
+      "Modular construction pathways that can deliver projects faster than traditional methods.",
     paragraphs: [
-      "Modular construction can deliver projects 20% to 50% faster than traditional methods. Exhibium has identified the following 2 fabrication and erection systems as viable alternatives for the projects being undertaken. A project’s specific requirements will determine the choice of modular system.",
+      "Exhibium has identified the following 2 fabrication and erection systems as viable alternatives for the projects being undertaken. A project’s specific requirements will determine the choice of modular system.",
     ],
     docs: [
       {
