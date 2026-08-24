@@ -8,7 +8,6 @@ import {
 } from "@/lib/chatbot";
 import {
   contactEmail,
-  contactMailto,
   whatsappHref,
 } from "@/lib/site";
 
@@ -111,7 +110,7 @@ export function HelpChatbot() {
     ]);
   };
 
-  const onEmailSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onEmailSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget);
     const name = String(data.get("name") || "").trim();
@@ -119,27 +118,32 @@ export function HelpChatbot() {
     const topic = String(data.get("topic") || "").trim();
     const message = String(data.get("message") || "").trim();
 
-    const subject = encodeURIComponent(
-      `Website chatbot · ${topic || "Help request"} · ${name}`,
-    );
-    const body = encodeURIComponent(
-      [
-        `Name: ${name}`,
-        `Email: ${email}`,
-        `Topic: ${topic || "General"}`,
-        "",
-        message,
-        "",
-        "(Sent via Exhibium site chatbot)",
-      ].join("\n"),
-    );
-
-    window.location.href = `${contactMailto}?subject=${subject}&body=${body}`;
-    setEmailSent(true);
-    push(
-      "bot",
-      "Your email draft should open now. If it didn’t, write us at fwilliams@exhibium.com.",
-    );
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, topic, message }),
+      });
+      const payload = (await res.json()) as { error?: string };
+      if (!res.ok) {
+        push(
+          "bot",
+          payload.error ||
+            `Could not send. Please email ${contactEmail} directly.`,
+        );
+        return;
+      }
+      setEmailSent(true);
+      push(
+        "bot",
+        `Thanks — your message was sent to ${contactEmail}. We’ll follow up soon.`,
+      );
+    } catch {
+      push(
+        "bot",
+        `Network error. Please email ${contactEmail} directly.`,
+      );
+    }
   };
 
   return (
@@ -244,7 +248,7 @@ export function HelpChatbot() {
                 />
               </label>
               <button type="submit" className="help-chat-email-submit">
-                Open email draft
+                Send message
               </button>
             </form>
           )}

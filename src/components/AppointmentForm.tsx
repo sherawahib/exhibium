@@ -4,7 +4,6 @@ import { useMemo, useState, type FormEvent } from "react";
 import {
   Recaptcha,
   isRecaptchaConfigured,
-  verifyRecaptchaToken,
 } from "@/components/Recaptcha";
 import { contactEmail, contactMailto, contactPhone, contactTel } from "@/lib/site";
 
@@ -53,19 +52,9 @@ export function AppointmentForm() {
 
     if (!type) return;
 
-    if (captchaRequired) {
-      if (!captchaToken) {
-        setCaptchaError("Please complete the reCAPTCHA check.");
-        return;
-      }
-      setSubmitting(true);
-      const ok = await verifyRecaptchaToken(captchaToken);
-      setSubmitting(false);
-      if (!ok) {
-        setCaptchaToken(null);
-        setCaptchaError("reCAPTCHA failed. Please try again.");
-        return;
-      }
+    if (captchaRequired && !captchaToken) {
+      setCaptchaError("Please complete the reCAPTCHA check.");
+      return;
     }
 
     const data = new FormData(e.currentTarget);
@@ -80,38 +69,49 @@ export function AppointmentForm() {
     const selectedFormat =
       meetingFormats.find((f) => f.id === format)?.label || format;
 
-    const subject = encodeURIComponent(
-      `Appointment request · ${selectedType} · ${name}`,
-    );
-    const body = encodeURIComponent(
-      [
-        `Name: ${name}`,
-        company ? `Company: ${company}` : "",
-        `Email: ${email}`,
-        phone ? `Phone: ${phone}` : "",
-        `Preferred date: ${date}`,
-        `Preferred time: ${time}`,
-        `Duration: ${duration}`,
-        `Format: ${selectedFormat}`,
-        `Meeting focus: ${selectedType}`,
-        notes ? `Context: ${notes}` : "",
-      ]
-        .filter(Boolean)
-        .join("\n"),
-    );
-
-    window.location.href = `${contactMailto}?subject=${subject}&body=${body}`;
-    setStatus("sent");
+    setSubmitting(true);
+    try {
+      const res = await fetch("/api/appointment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          captchaToken: captchaToken || "",
+          name,
+          company,
+          email,
+          phone,
+          date,
+          time,
+          duration,
+          format: selectedFormat,
+          type: selectedType,
+          notes,
+        }),
+      });
+      const payload = (await res.json()) as { error?: string };
+      if (!res.ok) {
+        setCaptchaToken(null);
+        setCaptchaError(
+          payload.error || "Could not send request. Please try again.",
+        );
+        return;
+      }
+      setStatus("sent");
+    } catch {
+      setCaptchaError("Network error. Please try again.");
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   if (status === "sent") {
     return (
       <div className="appt-success" role="status">
-        <p className="kicker">Request prepared</p>
-        <h3>Your email app should open next.</h3>
+        <p className="kicker">Request received</p>
+        <h3>Your appointment request was sent.</h3>
         <p>
-          Confirm and send the prefilled message. If nothing opens, email{" "}
-          <a href={contactMailto}>{contactEmail}</a> or call{" "}
+          We received your details at {contactEmail}. Expect a reply to confirm
+          availability. For urgent matters call{" "}
           <a href={contactTel}>{contactPhone}</a>.
         </p>
         <div className="appt-success-actions">
@@ -302,7 +302,7 @@ export function AppointmentForm() {
 
       <div className="appt-form-foot">
         <p className="appt-form-note">
-          Submitting opens your email with a prefilled request. We confirm
+          Submitting sends your request to {contactEmail}. We confirm
           availability by reply.
         </p>
         <button
@@ -310,7 +310,7 @@ export function AppointmentForm() {
           className="cta cta-fill cta-lg appt-submit"
           disabled={!canSubmit}
         >
-          {submitting ? "Verifying…" : "Send appointment request"}
+          {submitting ? "Sending…" : "Send appointment request"}
         </button>
       </div>
     </form>
