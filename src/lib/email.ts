@@ -1,61 +1,77 @@
 import { contactEmail, contactPhone } from "@/lib/site";
 
 export type OutboundEmail = {
-  to?: string | string[];
+  /** Client / reply address (also receives thank-you autoresponse when set) */
+  replyTo?: string;
   subject: string;
   text: string;
-  replyTo?: string;
   html?: string;
+  /** Extra fields shown in the notification email */
+  fields?: Record<string, string>;
+  /** Thank-you body emailed to the client */
+  autoresponse?: string;
 };
-
-/** Sender shown to recipients — website inbox address. */
-export function getEmailFrom() {
-  return (
-    process.env.EMAIL_FROM?.trim() || `Exhibium <${contactEmail}>`
-  );
-}
 
 export function getInboxTo() {
   return process.env.EMAIL_TO?.trim() || contactEmail;
 }
 
+/**
+ * Sends via FormSubmit (no Resend / domain setup).
+ * First submission: confirm the activation email at EMAIL_TO / contactEmail.
+ */
 export async function sendSiteEmail(
   mail: OutboundEmail,
 ): Promise<{ ok: boolean; error?: string }> {
-  const apiKey = process.env.RESEND_API_KEY?.trim();
-  if (!apiKey) {
-    return {
-      ok: false,
-      error: "Email service is not configured (RESEND_API_KEY).",
-    };
+  const inbox = getInboxTo();
+  const endpoint = `https://formsubmit.co/ajax/${encodeURIComponent(inbox)}`;
+
+  const payload: Record<string, string> = {
+    _subject: mail.subject,
+    _template: "box",
+    _captcha: "false",
+    message: mail.text,
+    ...(mail.fields || {}),
+  };
+
+  if (mail.replyTo) {
+    payload.email = mail.replyTo;
+    payload._replyto = mail.replyTo;
   }
 
-  const to = mail.to ?? getInboxTo();
-  const recipients = Array.isArray(to) ? to : [to];
-  const from = getEmailFrom();
+  if (mail.autoresponse) {
+    payload._autoresponse = mail.autoresponse;
+  }
 
-  const res = await fetch("https://api.resend.com/emails", {
+  const res = await fetch(endpoint, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${apiKey}`,
       "Content-Type": "application/json",
+      Accept: "application/json",
     },
-    body: JSON.stringify({
-      from,
-      to: recipients,
-      subject: mail.subject,
-      text: mail.text,
-      html: mail.html,
-      reply_to: mail.replyTo || contactEmail,
-    }),
+    body: JSON.stringify(payload),
   });
 
-  if (!res.ok) {
-    const detail = await res.text();
-    console.error("Resend error:", res.status, detail);
+  const raw = await res.text();
+  let parsed: { success?: string | boolean; message?: string } = {};
+  try {
+    parsed = JSON.parse(raw) as typeof parsed;
+  } catch {
+    /* non-JSON error page */
+  }
+
+  const ok =
+    res.ok &&
+    (parsed.success === true ||
+      parsed.success === "true" ||
+      /success|thank/i.test(raw));
+
+  if (!ok) {
+    console.error("FormSubmit error:", res.status, raw.slice(0, 500));
     return {
       ok: false,
-      error: "Failed to send email. Please try again or email us directly.",
+      error:
+        "Could not send email. If this is the first submit, check the inbox for a FormSubmit activation link, then try again.",
     };
   }
 
@@ -70,7 +86,7 @@ export function escapeHtml(value: string) {
     .replaceAll('"', "&quot;");
 }
 
-export function appointmentThankYouEmail(input: {
+export function appointmentThankYouText(input: {
   name: string;
   type: string;
   date: string;
@@ -79,71 +95,37 @@ export function appointmentThankYouEmail(input: {
   format: string;
 }) {
   const first = input.name.split(/\s+/)[0] || input.name;
-  const subject = "Thank you — we received your Exhibium appointment request";
-  const text = [
+  return [
     `Hi ${first},`,
     "",
-    "Thank you for contacting Exhibium Group. We have received your appointment request and will confirm availability by reply.",
+    "Thank you for contacting Exhibium Group. We received your appointment request and will confirm availability by reply.",
     "",
     "Summary:",
-    `• Focus: ${input.type}`,
-    `• Preferred date: ${input.date}`,
-    `• Preferred time: ${input.time}`,
-    `• Duration: ${input.duration}`,
-    `• Format: ${input.format}`,
+    `- Focus: ${input.type}`,
+    `- Preferred date: ${input.date}`,
+    `- Preferred time: ${input.time}`,
+    `- Duration: ${input.duration}`,
+    `- Format: ${input.format}`,
     "",
-    `If you need to reach us sooner, email ${contactEmail} or call ${contactPhone}.`,
+    `Reply to this email or write ${contactEmail} · ${contactPhone}`,
     "",
     "— Exhibium Group",
+    `(${contactEmail})`,
   ].join("\n");
-
-  const html = `
-    <div style="font-family:sans-serif;font-size:15px;line-height:1.55;color:#0b1d3a">
-      <p>Hi ${escapeHtml(first)},</p>
-      <p>Thank you for contacting <strong>Exhibium Group</strong>. We have received your appointment request and will confirm availability by reply.</p>
-      <p><strong>Summary</strong></p>
-      <ul>
-        <li>Focus: ${escapeHtml(input.type)}</li>
-        <li>Preferred date: ${escapeHtml(input.date)}</li>
-        <li>Preferred time: ${escapeHtml(input.time)}</li>
-        <li>Duration: ${escapeHtml(input.duration)}</li>
-        <li>Format: ${escapeHtml(input.format)}</li>
-      </ul>
-      <p>If you need to reach us sooner, email <a href="mailto:${escapeHtml(contactEmail)}">${escapeHtml(contactEmail)}</a> or call ${escapeHtml(contactPhone)}.</p>
-      <p>— Exhibium Group</p>
-    </div>
-  `;
-
-  return { subject, text, html };
 }
 
-export function contactThankYouEmail(input: {
-  name: string;
-  topic: string;
-}) {
+export function contactThankYouText(input: { name: string; topic: string }) {
   const first = input.name.split(/\s+/)[0] || input.name;
-  const subject = "Thank you — we received your message to Exhibium";
-  const text = [
+  return [
     `Hi ${first},`,
     "",
     "Thank you for writing to Exhibium Group. We received your message and will follow up soon.",
     "",
     `Topic: ${input.topic}`,
     "",
-    `You can also reach us at ${contactEmail} or ${contactPhone}.`,
+    `Contact: ${contactEmail} · ${contactPhone}`,
     "",
     "— Exhibium Group",
+    `(${contactEmail})`,
   ].join("\n");
-
-  const html = `
-    <div style="font-family:sans-serif;font-size:15px;line-height:1.55;color:#0b1d3a">
-      <p>Hi ${escapeHtml(first)},</p>
-      <p>Thank you for writing to <strong>Exhibium Group</strong>. We received your message and will follow up soon.</p>
-      <p><strong>Topic:</strong> ${escapeHtml(input.topic)}</p>
-      <p>You can also reach us at <a href="mailto:${escapeHtml(contactEmail)}">${escapeHtml(contactEmail)}</a> or ${escapeHtml(contactPhone)}.</p>
-      <p>— Exhibium Group</p>
-    </div>
-  `;
-
-  return { subject, text, html };
 }

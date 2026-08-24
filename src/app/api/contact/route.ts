@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import {
-  contactThankYouEmail,
+  contactThankYouText,
   escapeHtml,
   sendSiteEmail,
 } from "@/lib/email";
-import { contactEmail } from "@/lib/site";
 
 type ContactBody = {
   name?: string;
@@ -48,19 +47,19 @@ export async function POST(request: Request) {
     message,
   ].join("\n");
 
-  const html = `
-    <h2>Chatbot message</h2>
-    <p><strong>Name:</strong> ${escapeHtml(name)}<br/>
-    <strong>Email:</strong> ${escapeHtml(email)}<br/>
-    <strong>Topic:</strong> ${escapeHtml(topic)}</p>
-    <p>${escapeHtml(message).replaceAll("\n", "<br/>")}</p>
-  `;
-
   const sent = await sendSiteEmail({
     subject,
     text,
-    html,
+    html: `
+      <h2>Chatbot message</h2>
+      <p><strong>Name:</strong> ${escapeHtml(name)}<br/>
+      <strong>Email:</strong> ${escapeHtml(email)}<br/>
+      <strong>Topic:</strong> ${escapeHtml(topic)}</p>
+      <p>${escapeHtml(message).replaceAll("\n", "<br/>")}</p>
+    `,
     replyTo: email,
+    fields: { name, email, topic, message },
+    autoresponse: contactThankYouText({ name, topic }),
   });
 
   if (!sent.ok) {
@@ -68,18 +67,6 @@ export async function POST(request: Request) {
       { error: sent.error || "Could not send email." },
       { status: 503 },
     );
-  }
-
-  const thanks = contactThankYouEmail({ name, topic });
-  const thanksSent = await sendSiteEmail({
-    to: email,
-    subject: thanks.subject,
-    text: thanks.text,
-    html: thanks.html,
-    replyTo: contactEmail,
-  });
-  if (!thanksSent.ok) {
-    console.error("Contact thank-you email failed:", thanksSent.error);
   }
 
   return NextResponse.json({ ok: true });

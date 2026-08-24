@@ -1,10 +1,9 @@
 import { NextResponse } from "next/server";
 import {
-  appointmentThankYouEmail,
+  appointmentThankYouText,
   escapeHtml,
   sendSiteEmail,
 } from "@/lib/email";
-import { contactEmail } from "@/lib/site";
 import { verifyRecaptchaServer } from "@/lib/recaptcha";
 
 type AppointmentBody = {
@@ -94,11 +93,33 @@ export async function POST(request: Request) {
       </table>
     `;
 
+    const fields: Record<string, string> = {
+      name,
+      email,
+      date,
+      time,
+      duration,
+      format,
+      type,
+    };
+    if (company) fields.company = company;
+    if (phone) fields.phone = phone;
+    if (notes) fields.notes = notes;
+
     const sent = await sendSiteEmail({
       subject,
       text: lines.join("\n"),
       html,
       replyTo: email,
+      fields,
+      autoresponse: appointmentThankYouText({
+        name,
+        type,
+        date,
+        time,
+        duration,
+        format,
+      }),
     });
 
     if (!sent.ok) {
@@ -106,25 +127,6 @@ export async function POST(request: Request) {
         { error: sent.error || "Could not send email." },
         { status: 503 },
       );
-    }
-
-    const thanks = appointmentThankYouEmail({
-      name,
-      type,
-      date,
-      time,
-      duration,
-      format,
-    });
-    const thanksSent = await sendSiteEmail({
-      to: email,
-      subject: thanks.subject,
-      text: thanks.text,
-      html: thanks.html,
-      replyTo: contactEmail,
-    });
-    if (!thanksSent.ok) {
-      console.error("Appointment thank-you email failed:", thanksSent.error);
     }
 
     return NextResponse.json({ ok: true });
