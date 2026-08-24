@@ -110,9 +110,9 @@ export function AppointmentForm() {
         <p className="kicker">Request received</p>
         <h3>Your appointment request was sent.</h3>
         <p>
-          We received your details at {contactEmail}. Expect a reply to confirm
-          availability. For urgent matters call{" "}
-          <a href={contactTel}>{contactPhone}</a>.
+          We received your details at {contactEmail}. A thank-you confirmation
+          was also sent to your email. Expect a reply to confirm availability.
+          For urgent matters call <a href={contactTel}>{contactPhone}</a>.
         </p>
         <div className="appt-success-actions">
           <button

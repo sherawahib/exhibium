@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { escapeHtml, sendSiteEmail } from "@/lib/email";
+import {
+  appointmentThankYouEmail,
+  escapeHtml,
+  sendSiteEmail,
+} from "@/lib/email";
+import { contactEmail } from "@/lib/site";
 import { verifyRecaptchaServer } from "@/lib/recaptcha";
 
 type AppointmentBody = {
@@ -101,6 +106,25 @@ export async function POST(request: Request) {
         { error: sent.error || "Could not send email." },
         { status: 503 },
       );
+    }
+
+    const thanks = appointmentThankYouEmail({
+      name,
+      type,
+      date,
+      time,
+      duration,
+      format,
+    });
+    const thanksSent = await sendSiteEmail({
+      to: email,
+      subject: thanks.subject,
+      text: thanks.text,
+      html: thanks.html,
+      replyTo: contactEmail,
+    });
+    if (!thanksSent.ok) {
+      console.error("Appointment thank-you email failed:", thanksSent.error);
     }
 
     return NextResponse.json({ ok: true });

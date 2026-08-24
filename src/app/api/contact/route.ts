@@ -1,5 +1,10 @@
 import { NextResponse } from "next/server";
-import { escapeHtml, sendSiteEmail } from "@/lib/email";
+import {
+  contactThankYouEmail,
+  escapeHtml,
+  sendSiteEmail,
+} from "@/lib/email";
+import { contactEmail } from "@/lib/site";
 
 type ContactBody = {
   name?: string;
@@ -63,6 +68,18 @@ export async function POST(request: Request) {
       { error: sent.error || "Could not send email." },
       { status: 503 },
     );
+  }
+
+  const thanks = contactThankYouEmail({ name, topic });
+  const thanksSent = await sendSiteEmail({
+    to: email,
+    subject: thanks.subject,
+    text: thanks.text,
+    html: thanks.html,
+    replyTo: contactEmail,
+  });
+  if (!thanksSent.ok) {
+    console.error("Contact thank-you email failed:", thanksSent.error);
   }
 
   return NextResponse.json({ ok: true });
