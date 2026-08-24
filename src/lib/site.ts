@@ -3,6 +3,8 @@ export const contactMailto = `mailto:${contactEmail}`;
 export const contactAddress = "1200 Brickell Avenue, Suite 800, Miami, FL 33131";
 export const contactPhone = "(786) 301-0677";
 export const contactTel = "tel:+17863010677";
+export const whatsappNumber = "17863010677";
+export const whatsappHref = `https://wa.me/${whatsappNumber}`;
 
 export const headerNavLinks = [
   { href: "/", label: "Home" },

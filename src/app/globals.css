@@ -4492,6 +4492,45 @@ a.contact-channel:focus-visible {
   }
 }
 
+.wa-float {
+  position: fixed;
+  right: max(1.15rem, var(--safe-right));
+  bottom: max(1.15rem, var(--safe-bottom));
+  z-index: 120;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.5rem;
+  height: 3.5rem;
+  border-radius: 999px;
+  background: #25d366;
+  color: #fff;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.22);
+  transition: transform 0.2s var(--ease), box-shadow 0.2s var(--ease);
+}
+
+.wa-float svg {
+  width: 1.75rem;
+  height: 1.75rem;
+  display: block;
+}
+
+.wa-float:hover,
+.wa-float:focus-visible {
+  transform: translateY(-2px) scale(1.04);
+  box-shadow: 0 16px 34px rgba(37, 211, 102, 0.35);
+  outline: none;
+}
+
+@media (max-width: 560px) {
+  .wa-float {
+    width: 3.25rem;
+    height: 3.25rem;
+    right: max(0.9rem, var(--safe-right));
+    bottom: max(0.9rem, var(--safe-bottom));
+  }
+}
+
 /* ——— Very wide desktops ——— */
 @media (min-width: 1440px) {
   :root {
