@@ -1,6 +1,11 @@
 "use client";
 
 import { useMemo, useState, type FormEvent } from "react";
+import {
+  Recaptcha,
+  isRecaptchaConfigured,
+  verifyRecaptchaToken,
+} from "@/components/Recaptcha";
 import { contactEmail, contactMailto, contactPhone, contactTel } from "@/lib/site";
 
 const meetingTypes = [
@@ -30,6 +35,11 @@ export function AppointmentForm() {
   const [duration, setDuration] =
     useState<(typeof durations)[number]>("45 min");
   const [notes, setNotes] = useState("");
+  const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+  const [captchaError, setCaptchaError] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+
+  const captchaRequired = isRecaptchaConfigured();
 
   const minDate = useMemo(() => {
     const d = new Date();
@@ -37,8 +47,27 @@ export function AppointmentForm() {
     return d.toISOString().slice(0, 10);
   }, []);
 
-  const onSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const onSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setCaptchaError("");
+
+    if (!type) return;
+
+    if (captchaRequired) {
+      if (!captchaToken) {
+        setCaptchaError("Please complete the reCAPTCHA check.");
+        return;
+      }
+      setSubmitting(true);
+      const ok = await verifyRecaptchaToken(captchaToken);
+      setSubmitting(false);
+      if (!ok) {
+        setCaptchaToken(null);
+        setCaptchaError("reCAPTCHA failed. Please try again.");
+        return;
+      }
+    }
+
     const data = new FormData(e.currentTarget);
     const name = String(data.get("name") || "").trim();
     const company = String(data.get("company") || "").trim();
@@ -50,8 +79,6 @@ export function AppointmentForm() {
       meetingTypes.find((t) => t.id === type)?.label || type;
     const selectedFormat =
       meetingFormats.find((f) => f.id === format)?.label || format;
-
-    if (!type) return;
 
     const subject = encodeURIComponent(
       `Appointment request · ${selectedType} · ${name}`,
@@ -91,7 +118,11 @@ export function AppointmentForm() {
           <button
             type="button"
             className="cta cta-ink"
-            onClick={() => setStatus("idle")}
+            onClick={() => {
+              setStatus("idle");
+              setCaptchaToken(null);
+              setCaptchaError("");
+            }}
           >
             Submit another request
           </button>
@@ -102,6 +133,9 @@ export function AppointmentForm() {
       </div>
     );
   }
+
+  const canSubmit =
+    Boolean(type) && (!captchaRequired || Boolean(captchaToken)) && !submitting;
 
   return (
     <form className="appt-form" onSubmit={onSubmit}>
@@ -245,6 +279,27 @@ export function AppointmentForm() {
         </label>
       </section>
 
+      <section className="appt-section">
+        <div className="appt-section-head">
+          <span>04</span>
+          <h4>Verification</h4>
+        </div>
+        <div className="appt-field">
+          <span>Confirm you are human *</span>
+          <Recaptcha
+            onChange={(token) => {
+              setCaptchaToken(token);
+              setCaptchaError("");
+            }}
+          />
+          {captchaError ? (
+            <em className="appt-field-hint appt-captcha-error" role="alert">
+              {captchaError}
+            </em>
+          ) : null}
+        </div>
+      </section>
+
       <div className="appt-form-foot">
         <p className="appt-form-note">
           Submitting opens your email with a prefilled request. We confirm
@@ -253,9 +308,9 @@ export function AppointmentForm() {
         <button
           type="submit"
           className="cta cta-fill cta-lg appt-submit"
-          disabled={!type}
+          disabled={!canSubmit}
         >
-          Send appointment request
+          {submitting ? "Verifying…" : "Send appointment request"}
         </button>
       </div>
     </form>
