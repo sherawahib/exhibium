@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import {
-  contactThankYouText,
+  contactThankYouEmail,
   escapeHtml,
+  getInboxTo,
+  getWebsiteFromAddress,
   sendSiteEmail,
 } from "@/lib/email";
 
@@ -36,6 +38,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid email." }, { status: 400 });
   }
 
+  const websiteFrom = getWebsiteFromAddress();
+  const adminTo = getInboxTo();
   const subject = `Website chatbot · ${topic} · ${name}`;
   const text = [
     "New message from the Exhibium help chatbot.",
@@ -47,26 +51,44 @@ export async function POST(request: Request) {
     message,
   ].join("\n");
 
-  const sent = await sendSiteEmail({
+  const html = `
+    <h2>Chatbot message</h2>
+    <p><strong>Name:</strong> ${escapeHtml(name)}<br/>
+    <strong>Email:</strong> ${escapeHtml(email)}<br/>
+    <strong>Topic:</strong> ${escapeHtml(topic)}</p>
+    <p>${escapeHtml(message).replaceAll("\n", "<br/>")}</p>
+    <p style="color:#5a6b82;font-size:13px">Reply to this email to contact the client directly (${escapeHtml(email)}).</p>
+  `;
+
+  const adminSent = await sendSiteEmail({
+    to: adminTo,
     subject,
     text,
-    html: `
-      <h2>Chatbot message</h2>
-      <p><strong>Name:</strong> ${escapeHtml(name)}<br/>
-      <strong>Email:</strong> ${escapeHtml(email)}<br/>
-      <strong>Topic:</strong> ${escapeHtml(topic)}</p>
-      <p>${escapeHtml(message).replaceAll("\n", "<br/>")}</p>
-    `,
+    html,
+    fromAddress: websiteFrom,
+    fromName: name,
     replyTo: email,
-    fields: { name, email, topic, message },
-    autoresponse: contactThankYouText({ name, topic }),
   });
 
-  if (!sent.ok) {
+  if (!adminSent.ok) {
     return NextResponse.json(
-      { error: sent.error || "Could not send email." },
+      { error: adminSent.error || "Could not send email." },
       { status: 503 },
     );
+  }
+
+  const thanks = contactThankYouEmail({ name, topic });
+  const thanksSent = await sendSiteEmail({
+    to: email,
+    subject: thanks.subject,
+    text: thanks.text,
+    html: thanks.html,
+    fromAddress: websiteFrom,
+    fromName: "Exhibium",
+    replyTo: websiteFrom,
+  });
+  if (!thanksSent.ok) {
+    console.error("Contact thank-you failed:", thanksSent.error);
   }
 
   return NextResponse.json({ ok: true });

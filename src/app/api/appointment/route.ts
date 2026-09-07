@@ -1,7 +1,9 @@
 import { NextResponse } from "next/server";
 import {
-  appointmentThankYouText,
+  appointmentThankYouEmail,
   escapeHtml,
+  getInboxTo,
+  getWebsiteFromAddress,
   sendSiteEmail,
 } from "@/lib/email";
 import { verifyRecaptchaServer } from "@/lib/recaptcha";
@@ -60,6 +62,9 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: "Invalid email." }, { status: 400 });
     }
 
+    const websiteFrom = getWebsiteFromAddress();
+    const adminTo = getInboxTo();
+
     const lines = [
       "New appointment request from the Exhibium website.",
       "",
@@ -91,42 +96,47 @@ export async function POST(request: Request) {
         <tr><td><strong>Focus</strong></td><td>${escapeHtml(type)}</td></tr>
         ${notes ? `<tr><td><strong>Context</strong></td><td>${escapeHtml(notes)}</td></tr>` : ""}
       </table>
+      <p style="color:#5a6b82;font-size:13px">Reply to this email to contact the client directly (${escapeHtml(email)}).</p>
     `;
 
-    const fields: Record<string, string> = {
+    // Admin: From = website email; Reply-To = customer (so reply goes to client)
+    const adminSent = await sendSiteEmail({
+      to: adminTo,
+      subject,
+      text: lines.join("\n"),
+      html,
+      fromAddress: websiteFrom,
+      fromName: name,
+      replyTo: email,
+    });
+
+    if (!adminSent.ok) {
+      return NextResponse.json(
+        { error: adminSent.error || "Could not send email." },
+        { status: 503 },
+      );
+    }
+
+    // Customer thank-you: From = website email
+    const thanks = appointmentThankYouEmail({
       name,
-      email,
+      type,
       date,
       time,
       duration,
       format,
-      type,
-    };
-    if (company) fields.company = company;
-    if (phone) fields.phone = phone;
-    if (notes) fields.notes = notes;
-
-    const sent = await sendSiteEmail({
-      subject,
-      text: lines.join("\n"),
-      html,
-      replyTo: email,
-      fields,
-      autoresponse: appointmentThankYouText({
-        name,
-        type,
-        date,
-        time,
-        duration,
-        format,
-      }),
     });
-
-    if (!sent.ok) {
-      return NextResponse.json(
-        { error: sent.error || "Could not send email." },
-        { status: 503 },
-      );
+    const thanksSent = await sendSiteEmail({
+      to: email,
+      subject: thanks.subject,
+      text: thanks.text,
+      html: thanks.html,
+      fromAddress: websiteFrom,
+      fromName: "Exhibium",
+      replyTo: websiteFrom,
+    });
+    if (!thanksSent.ok) {
+      console.error("Appointment thank-you failed:", thanksSent.error);
     }
 
     return NextResponse.json({ ok: true });
