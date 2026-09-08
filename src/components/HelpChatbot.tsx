@@ -119,10 +119,20 @@ export function HelpChatbot() {
     const message = String(data.get("message") || "").trim();
 
     try {
+      const visitorId = Number(localStorage.getItem("exhibium_vid") || "");
+      if (email) {
+        localStorage.setItem("exhibium_visitor_email", email.toLowerCase());
+      }
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, email, topic, message }),
+        body: JSON.stringify({
+          name,
+          email,
+          topic,
+          message,
+          visitorId: Number.isFinite(visitorId) ? visitorId : undefined,
+        }),
       });
       const payload = (await res.json()) as { error?: string };
       if (!res.ok) {

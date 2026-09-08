@@ -71,6 +71,10 @@ export function AppointmentForm() {
 
     setSubmitting(true);
     try {
+      const visitorId = Number(localStorage.getItem("exhibium_vid") || "");
+      if (email) {
+        localStorage.setItem("exhibium_visitor_email", email.toLowerCase());
+      }
       const res = await fetch("/api/appointment", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -86,6 +90,7 @@ export function AppointmentForm() {
           format: selectedFormat,
           type: selectedType,
           notes,
+          visitorId: Number.isFinite(visitorId) ? visitorId : undefined,
         }),
       });
       const payload = (await res.json()) as { error?: string };

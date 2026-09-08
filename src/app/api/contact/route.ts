@@ -13,6 +13,7 @@ type ContactBody = {
   email?: string;
   topic?: string;
   message?: string;
+  visitorId?: number;
 };
 
 export async function POST(request: Request) {
@@ -65,6 +66,7 @@ export async function POST(request: Request) {
     formType: "chatbot",
     name,
     email,
+    visitorId: Number(body.visitorId) || undefined,
     payload: { name, email, topic, message },
   });
 

@@ -10,12 +10,14 @@ type Msg = {
 };
 
 const THREAD_KEY = "exhibium_chat_thread";
+const EMAIL_KEY = "exhibium_visitor_email";
 
 export function LiveChat() {
   const [open, setOpen] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
   const [messages, setMessages] = useState<Msg[]>([]);
   const [text, setText] = useState("");
+  const [email, setEmail] = useState("");
   const [starting, setStarting] = useState(false);
   const [sending, setSending] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -23,7 +25,32 @@ export function LiveChat() {
   useEffect(() => {
     const saved = localStorage.getItem(THREAD_KEY);
     if (saved) setThreadId(saved);
+    const savedEmail = localStorage.getItem(EMAIL_KEY);
+    if (savedEmail) setEmail(savedEmail);
   }, []);
+
+  // Try browser autofill / saved credentials for THIS site only
+  useEffect(() => {
+    if (!open || email) return;
+    const creds = (
+      navigator as Navigator & {
+        credentials?: {
+          get: (opts: object) => Promise<{ id?: string } | null>;
+        };
+      }
+    ).credentials;
+    if (!creds?.get) return;
+    void creds
+      .get({ password: true, mediation: "silent" } as object)
+      .then((cred) => {
+        const id = cred?.id?.trim();
+        if (id && id.includes("@")) {
+          setEmail(id);
+          localStorage.setItem(EMAIL_KEY, id);
+        }
+      })
+      .catch(() => undefined);
+  }, [open, email]);
 
   useEffect(() => {
     if (!open || !threadId) return;
@@ -50,6 +77,22 @@ export function LiveChat() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, open]);
+
+  const syncEmail = async (value: string) => {
+    const cleaned = value.trim().toLowerCase();
+    if (!cleaned) return;
+    localStorage.setItem(EMAIL_KEY, cleaned);
+    const vid = localStorage.getItem("exhibium_vid");
+    await fetch("/api/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        path: window.location.pathname,
+        visitorId: vid ? Number(vid) : undefined,
+        email: cleaned,
+      }),
+    }).catch(() => undefined);
+  };
 
   const ensureThread = async () => {
     if (threadId) return threadId;
@@ -78,9 +121,13 @@ export function LiveChat() {
     e.preventDefault();
     const body = text.trim();
     if (!body) return;
+    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      return;
+    }
     setSending(true);
     setText("");
     try {
+      await syncEmail(email);
       const id = await ensureThread();
       await fetch("/api/chat", {
         method: "POST",
@@ -122,8 +169,8 @@ export function LiveChat() {
           <div className="live-chat-log">
             {!threadId && messages.length === 0 ? (
               <p className="live-chat-hint">
-                Ask about BIM, modular, market entry, or appointments. An
-                advisor will reply here.
+                Enter your email, then ask about BIM, modular, market entry, or
+                appointments.
               </p>
             ) : null}
             {messages.map((m) => (
@@ -137,17 +184,33 @@ export function LiveChat() {
             <div ref={bottomRef} />
           </div>
 
-          <form className="live-chat-compose" onSubmit={onSubmit}>
+          <form className="live-chat-compose live-chat-compose-stack" onSubmit={onSubmit}>
             <input
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              placeholder="Type your message…"
-              maxLength={2000}
+              type="email"
+              name="email"
+              autoComplete="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              onBlur={() => void syncEmail(email)}
+              placeholder="Your email"
+              required
               disabled={starting || sending}
             />
-            <button type="submit" disabled={starting || sending || !text.trim()}>
-              Send
-            </button>
+            <div className="live-chat-compose-row">
+              <input
+                value={text}
+                onChange={(e) => setText(e.target.value)}
+                placeholder="Type your message…"
+                maxLength={2000}
+                disabled={starting || sending}
+              />
+              <button
+                type="submit"
+                disabled={starting || sending || !text.trim() || !email.trim()}
+              >
+                Send
+              </button>
+            </div>
           </form>
         </div>
       ) : null}

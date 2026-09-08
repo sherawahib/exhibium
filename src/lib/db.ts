@@ -45,6 +45,7 @@ export async function ensureDb() {
           id INTEGER PRIMARY KEY AUTOINCREMENT,
           label TEXT NOT NULL,
           ip TEXT NOT NULL,
+          email TEXT,
           country TEXT,
           region TEXT,
           city TEXT,
@@ -84,6 +85,12 @@ export async function ensureDb() {
         CREATE INDEX IF NOT EXISTS idx_forms_created ON form_submissions(created_at);
         CREATE INDEX IF NOT EXISTS idx_messages_thread ON chat_messages(thread_id, created_at);
       `);
+      // Migrations for existing DBs
+      try {
+        await db.execute(`ALTER TABLE visitors ADD COLUMN email TEXT`);
+      } catch {
+        /* column already exists */
+      }
     })();
   }
   await ready;
@@ -110,6 +117,7 @@ export type VisitorRow = {
   id: number;
   label: string;
   ip: string;
+  email: string | null;
   country: string | null;
   region: string | null;
   city: string | null;

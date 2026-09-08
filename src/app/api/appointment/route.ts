@@ -21,6 +21,7 @@ type AppointmentBody = {
   format?: string;
   type?: string;
   notes?: string;
+  visitorId?: number;
 };
 
 function required(value: unknown, label: string) {
@@ -106,6 +107,7 @@ export async function POST(request: Request) {
       name,
       email,
       phone,
+      visitorId: Number(body.visitorId) || undefined,
       payload: {
         name,
         company,

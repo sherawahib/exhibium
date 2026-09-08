@@ -5,6 +5,7 @@ export async function saveFormSubmission(input: {
   name?: string;
   email?: string;
   phone?: string;
+  visitorId?: number;
   payload: Record<string, unknown>;
 }) {
   await ensureDb();
@@ -21,4 +22,15 @@ export async function saveFormSubmission(input: {
       new Date().toISOString(),
     ],
   });
+
+  // Attach submitted email to the tracked visitor session
+  const email = String(input.email || "")
+    .trim()
+    .toLowerCase();
+  if (email && input.visitorId) {
+    await db.execute({
+      sql: `UPDATE visitors SET email = ?, last_seen_at = ? WHERE id = ?`,
+      args: [email, new Date().toISOString(), input.visitorId],
+    });
+  }
 }

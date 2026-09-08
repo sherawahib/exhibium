@@ -18,6 +18,7 @@ export async function GET() {
     id: Number(r.id),
     label: String(r.label),
     ip: String(r.ip),
+    email: (r.email as string) || null,
     country: (r.country as string) || null,
     region: (r.region as string) || null,
     city: (r.city as string) || null,
@@ -30,4 +31,31 @@ export async function GET() {
   })) satisfies VisitorRow[];
 
   return NextResponse.json({ visitors });
+}
+
+export async function DELETE(request: Request) {
+  if (!(await isAdminAuthenticated())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const body = (await request.json().catch(() => ({}))) as {
+    ids?: number[];
+  };
+  const ids = (body.ids || [])
+    .map((id) => Number(id))
+    .filter((id) => Number.isFinite(id) && id > 0);
+
+  if (!ids.length) {
+    return NextResponse.json({ error: "No visitors selected" }, { status: 400 });
+  }
+
+  await ensureDb();
+  const db = getDb();
+  const placeholders = ids.map(() => "?").join(",");
+  await db.execute({
+    sql: `DELETE FROM visitors WHERE id IN (${placeholders})`,
+    args: ids,
+  });
+
+  return NextResponse.json({ ok: true, deleted: ids.length });
 }

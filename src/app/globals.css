@@ -5130,3 +5130,34 @@ a.contact-channel:focus-visible {
   .admin-nav { flex-direction: row; flex-wrap: wrap; }
   .admin-grid-2, .admin-chat, .admin-stats { grid-template-columns: 1fr; }
 }
+
+.admin-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+.admin-danger-btn {
+  border: 0;
+  border-radius: 0.5rem;
+  padding: 0.4rem 0.7rem;
+  background: #b42318;
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.admin-danger-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+.admin-check-col {
+  width: 2.2rem;
+}
+.live-chat-compose-stack {
+  flex-direction: column;
+  align-items: stretch;
+}
+.live-chat-compose-row {
+  display: flex;
+  gap: 0.4rem;
+}
