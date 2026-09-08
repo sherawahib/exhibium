@@ -4,6 +4,9 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { WhatsAppFloat } from "@/components/WhatsAppFloat";
 import { HelpChatbot } from "@/components/HelpChatbot";
+import { LiveChat } from "@/components/LiveChat";
+import { VisitorTracker } from "@/components/VisitorTracker";
+import { SiteOnly } from "@/components/SiteOnly";
 import "./globals.css";
 
 const display = Fraunces({
@@ -47,11 +50,17 @@ export default function RootLayout({
         <a className="skip" href="#main">
           Skip to content
         </a>
-        <Header />
+        <SiteOnly>
+          <Header />
+        </SiteOnly>
         <main id="main">{children}</main>
-        <Footer />
-        <HelpChatbot />
-        <WhatsAppFloat />
+        <SiteOnly>
+          <Footer />
+          <VisitorTracker />
+          <HelpChatbot />
+          <LiveChat />
+          <WhatsAppFloat />
+        </SiteOnly>
       </body>
     </html>
   );

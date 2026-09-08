@@ -7,6 +7,7 @@ import {
   sendSiteEmail,
 } from "@/lib/email";
 import { verifyRecaptchaServer } from "@/lib/recaptcha";
+import { saveFormSubmission } from "@/lib/forms-store";
 
 type AppointmentBody = {
   captchaToken?: string;
@@ -98,6 +99,26 @@ export async function POST(request: Request) {
       </table>
       <p style="color:#5a6b82;font-size:13px">Reply to this email to contact the client directly (${escapeHtml(email)}).</p>
     `;
+
+    // Persist for admin dashboard (even if email delivery fails later)
+    await saveFormSubmission({
+      formType: "appointment",
+      name,
+      email,
+      phone,
+      payload: {
+        name,
+        company,
+        email,
+        phone,
+        date,
+        time,
+        duration,
+        format,
+        type,
+        notes,
+      },
+    });
 
     // Admin: From = website email; Reply-To = customer (so reply goes to client)
     const adminSent = await sendSiteEmail({

@@ -6,6 +6,7 @@ import {
   getWebsiteFromAddress,
   sendSiteEmail,
 } from "@/lib/email";
+import { saveFormSubmission } from "@/lib/forms-store";
 
 type ContactBody = {
   name?: string;
@@ -59,6 +60,13 @@ export async function POST(request: Request) {
     <p>${escapeHtml(message).replaceAll("\n", "<br/>")}</p>
     <p style="color:#5a6b82;font-size:13px">Reply to this email to contact the client directly (${escapeHtml(email)}).</p>
   `;
+
+  await saveFormSubmission({
+    formType: "chatbot",
+    name,
+    email,
+    payload: { name, email, topic, message },
+  });
 
   const adminSent = await sendSiteEmail({
     to: adminTo,
