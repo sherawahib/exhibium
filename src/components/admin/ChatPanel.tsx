@@ -36,22 +36,31 @@ export function ChatPanel() {
   const [text, setText] = useState("");
   const [visitorTyping, setVisitorTyping] = useState(false);
   const [sending, setSending] = useState(false);
+  const [checked, setChecked] = useState<string[]>([]);
+  const [deleting, setDeleting] = useState(false);
   const bottomRef = useRef<HTMLDivElement>(null);
   const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const loadThreads = async () => {
+    const res = await fetch("/api/admin/chat", { cache: "no-store" });
+    if (res.status === 401) {
+      window.location.href = "/admin/login";
+      return;
+    }
+    const data = (await res.json()) as { threads?: Thread[] };
+    const list = data.threads || [];
+    setThreads(list);
+    setChecked((prev) => prev.filter((id) => list.some((t) => t.id === id)));
+  };
+
   useEffect(() => {
     let alive = true;
-    const load = async () => {
-      const res = await fetch("/api/admin/chat", { cache: "no-store" });
-      if (res.status === 401) {
-        window.location.href = "/admin/login";
-        return;
-      }
-      const data = (await res.json()) as { threads?: Thread[] };
-      if (alive) setThreads(data.threads || []);
+    const tick = async () => {
+      if (!alive) return;
+      await loadThreads();
     };
-    void load();
-    const t = setInterval(load, 2000);
+    void tick();
+    const t = setInterval(tick, 2000);
     return () => {
       alive = false;
       clearInterval(t);
@@ -65,6 +74,13 @@ export function ChatPanel() {
       const res = await fetch(`/api/admin/chat?threadId=${activeId}`, {
         cache: "no-store",
       });
+      if (res.status === 404) {
+        if (alive) {
+          setActiveId(null);
+          setMessages([]);
+        }
+        return;
+      }
       const data = (await res.json()) as {
         messages?: Msg[];
         typing?: { visitor?: boolean };
@@ -110,6 +126,34 @@ export function ChatPanel() {
     }, 1800);
   };
 
+  const deleteChats = async (ids: string[]) => {
+    if (!ids.length) return;
+    if (
+      !window.confirm(
+        `Delete ${ids.length} chat${ids.length > 1 ? "s" : ""} permanently?`,
+      )
+    ) {
+      return;
+    }
+    setDeleting(true);
+    try {
+      const res = await fetch("/api/admin/chat", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ ids }),
+      });
+      if (!res.ok) return;
+      if (activeId && ids.includes(activeId)) {
+        setActiveId(null);
+        setMessages([]);
+      }
+      setChecked((prev) => prev.filter((id) => !ids.includes(id)));
+      await loadThreads();
+    } finally {
+      setDeleting(false);
+    }
+  };
+
   const send = async (e: FormEvent) => {
     e.preventDefault();
     if (!activeId || !text.trim()) return;
@@ -143,33 +187,82 @@ export function ChatPanel() {
   };
 
   const active = threads.find((t) => t.id === activeId) || null;
+  const allChecked =
+    threads.length > 0 && checked.length === threads.length;
 
   return (
     <div className="admin-chat admin-chat-pro">
       <aside className="admin-chat-list admin-card admin-card-flush">
         <div className="admin-card-head">
           <h2>Inbox</h2>
-          <span>{threads.length} chats</span>
+          <div className="admin-card-actions">
+            <span>{threads.length} chats</span>
+            <button
+              type="button"
+              className="admin-danger-btn"
+              disabled={!checked.length || deleting}
+              onClick={() => void deleteChats(checked)}
+            >
+              {deleting
+                ? "Deleting…"
+                : `Delete${checked.length ? ` (${checked.length})` : ""}`}
+            </button>
+          </div>
+        </div>
+        <div className="admin-chat-select-all">
+          <label>
+            <input
+              type="checkbox"
+              checked={allChecked}
+              onChange={() =>
+                setChecked(allChecked ? [] : threads.map((t) => t.id))
+              }
+            />
+            Select all
+          </label>
         </div>
         <ul>
           {threads.map((t) => (
             <li key={t.id}>
-              <button
-                type="button"
-                className={activeId === t.id ? "is-active" : undefined}
-                onClick={() => setActiveId(t.id)}
-              >
-                <span className="admin-chat-avatar" aria-hidden="true">
-                  {t.visitorLabel.replace(/\D/g, "").slice(-2) || "V"}
-                </span>
-                <span className="admin-chat-meta">
-                  <strong>{t.visitorLabel}</strong>
-                  <em>{t.lastMessage || "No messages yet"}</em>
-                </span>
-                <span className={`admin-chat-pill is-${t.status}`}>
-                  {t.status}
-                </span>
-              </button>
+              <div className="admin-chat-row">
+                <input
+                  type="checkbox"
+                  checked={checked.includes(t.id)}
+                  onChange={() =>
+                    setChecked((prev) =>
+                      prev.includes(t.id)
+                        ? prev.filter((id) => id !== t.id)
+                        : [...prev, t.id],
+                    )
+                  }
+                  aria-label={`Select ${t.visitorLabel}`}
+                />
+                <button
+                  type="button"
+                  className={activeId === t.id ? "is-active" : undefined}
+                  onClick={() => setActiveId(t.id)}
+                >
+                  <span className="admin-chat-avatar" aria-hidden="true">
+                    {t.visitorLabel.replace(/\D/g, "").slice(-2) || "V"}
+                  </span>
+                  <span className="admin-chat-meta">
+                    <strong>{t.visitorLabel}</strong>
+                    <em>{t.lastMessage || "No messages yet"}</em>
+                  </span>
+                  <span className={`admin-chat-pill is-${t.status}`}>
+                    {t.status}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  className="admin-chat-delete-one"
+                  title="Delete chat"
+                  disabled={deleting}
+                  onClick={() => void deleteChats([t.id])}
+                >
+                  Delete
+                </button>
+              </div>
             </li>
           ))}
           {!threads.length ? (
@@ -191,7 +284,17 @@ export function ChatPanel() {
                   {new Date(active.updatedAt).toLocaleString()}
                 </p>
               </div>
-              <span className="admin-chat-live">Live</span>
+              <div className="admin-chat-room-actions">
+                <span className="admin-chat-live">Live</span>
+                <button
+                  type="button"
+                  className="admin-danger-btn"
+                  disabled={deleting}
+                  onClick={() => void deleteChats([activeId])}
+                >
+                  Delete chat
+                </button>
+              </div>
             </div>
             <div className="admin-chat-log admin-chat-log-pro">
               {messages.map((m) => (
@@ -213,7 +316,10 @@ export function ChatPanel() {
               ) : null}
               <div ref={bottomRef} />
             </div>
-            <form className="admin-chat-compose admin-chat-compose-pro" onSubmit={send}>
+            <form
+              className="admin-chat-compose admin-chat-compose-pro"
+              onSubmit={send}
+            >
               <textarea
                 value={text}
                 rows={2}

@@ -5556,3 +5556,45 @@ a.contact-channel:focus-visible {
 
 /* Hide legacy live-chat class if any remnants */
 .live-chat { display: none !important; }
+
+.admin-chat-select-all {
+  padding: 0.55rem 1rem;
+  border-bottom: 1px solid var(--line);
+  font-size: 0.8rem;
+  color: var(--ink-soft);
+}
+.admin-chat-select-all label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  cursor: pointer;
+}
+.admin-chat-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 0.35rem;
+  align-items: center;
+  padding: 0.35rem 0.55rem 0.35rem 0.75rem;
+  border-bottom: 1px solid var(--line);
+}
+.admin-chat-row > button:nth-child(2) {
+  border: 0;
+  border-bottom: 0;
+  padding: 0.5rem 0.35rem;
+  background: transparent;
+}
+.admin-chat-delete-one {
+  border: 0;
+  background: transparent;
+  color: #b42318;
+  font-size: 0.72rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 0.35rem 0.4rem;
+}
+.admin-chat-delete-one:hover { text-decoration: underline; }
+.admin-chat-room-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+}

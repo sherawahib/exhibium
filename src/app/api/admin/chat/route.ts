@@ -145,3 +145,44 @@ export async function POST(request: Request) {
     typing: await getTyping(threadId),
   });
 }
+
+export async function DELETE(request: Request) {
+  if (!(await isAdminAuthenticated())) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const body = (await request.json().catch(() => ({}))) as {
+    ids?: string[];
+    id?: string;
+  };
+
+  const ids = [
+    ...(body.ids || []),
+    ...(body.id ? [body.id] : []),
+  ]
+    .map((id) => String(id || "").trim())
+    .filter(Boolean);
+
+  if (!ids.length) {
+    return NextResponse.json({ error: "No chats selected" }, { status: 400 });
+  }
+
+  await ensureDb();
+  const db = getDb();
+  const placeholders = ids.map(() => "?").join(",");
+
+  await db.execute({
+    sql: `DELETE FROM chat_messages WHERE thread_id IN (${placeholders})`,
+    args: ids,
+  });
+  await db.execute({
+    sql: `DELETE FROM chat_typing WHERE thread_id IN (${placeholders})`,
+    args: ids,
+  });
+  await db.execute({
+    sql: `DELETE FROM chat_threads WHERE id IN (${placeholders})`,
+    args: ids,
+  });
+
+  return NextResponse.json({ ok: true, deleted: ids.length });
+}
