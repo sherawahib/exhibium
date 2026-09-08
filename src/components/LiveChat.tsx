@@ -12,6 +12,33 @@ type Msg = {
 const THREAD_KEY = "exhibium_chat_thread";
 const EMAIL_KEY = "exhibium_visitor_email";
 
+function fmtTime(iso: string) {
+  try {
+    return new Date(iso).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  } catch {
+    return "";
+  }
+}
+
+function TypingDots({ label }: { label: string }) {
+  return (
+    <div className="lc-typing" aria-live="polite">
+      <span className="lc-typing-avatar" aria-hidden="true">
+        E
+      </span>
+      <div className="lc-typing-bubble">
+        <span className="lc-dot" />
+        <span className="lc-dot" />
+        <span className="lc-dot" />
+      </div>
+      <em className="lc-typing-label">{label}</em>
+    </div>
+  );
+}
+
 export function LiveChat() {
   const [open, setOpen] = useState(false);
   const [threadId, setThreadId] = useState<string | null>(null);
@@ -20,7 +47,11 @@ export function LiveChat() {
   const [email, setEmail] = useState("");
   const [starting, setStarting] = useState(false);
   const [sending, setSending] = useState(false);
+  const [peerTyping, setPeerTyping] = useState(false);
+  const [unread, setUnread] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const lastMsgCount = useRef(0);
 
   useEffect(() => {
     const saved = localStorage.getItem(THREAD_KEY);
@@ -29,7 +60,6 @@ export function LiveChat() {
     if (savedEmail) setEmail(savedEmail);
   }, []);
 
-  // Try browser autofill / saved credentials for THIS site only
   useEffect(() => {
     if (!open || email) return;
     const creds = (
@@ -53,30 +83,51 @@ export function LiveChat() {
   }, [open, email]);
 
   useEffect(() => {
-    if (!open || !threadId) return;
+    if (!threadId) return;
     let alive = true;
 
     const load = async () => {
       try {
-        const res = await fetch(`/api/chat?threadId=${threadId}`);
-        const data = (await res.json()) as { messages?: Msg[] };
-        if (alive && data.messages) setMessages(data.messages);
+        const res = await fetch(`/api/chat?threadId=${threadId}`, {
+          cache: "no-store",
+        });
+        const data = (await res.json()) as {
+          messages?: Msg[];
+          typing?: { admin?: boolean };
+        };
+        if (!alive) return;
+        if (data.messages) {
+          setMessages(data.messages);
+          if (!open && data.messages.length > lastMsgCount.current) {
+            const gained = data.messages.length - lastMsgCount.current;
+            const last = data.messages[data.messages.length - 1];
+            if (last?.sender === "admin") {
+              setUnread((u) => u + Math.max(gained, 1));
+            }
+          }
+          lastMsgCount.current = data.messages.length;
+        }
+        setPeerTyping(Boolean(data.typing?.admin));
       } catch {
         /* ignore */
       }
     };
 
     void load();
-    const t = setInterval(load, 2500);
+    const t = setInterval(load, 900);
     return () => {
       alive = false;
       clearInterval(t);
     };
-  }, [open, threadId]);
+  }, [threadId, open]);
+
+  useEffect(() => {
+    if (open) setUnread(0);
+  }, [open]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages, open]);
+  }, [messages, peerTyping, open]);
 
   const syncEmail = async (value: string) => {
     const cleaned = value.trim().toLowerCase();
@@ -94,6 +145,26 @@ export function LiveChat() {
     }).catch(() => undefined);
   };
 
+  const pulseTyping = (id: string) => {
+    void fetch("/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "typing", threadId: id, typing: true }),
+    }).catch(() => undefined);
+    if (typingTimer.current) clearTimeout(typingTimer.current);
+    typingTimer.current = setTimeout(() => {
+      void fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          action: "typing",
+          threadId: id,
+          typing: false,
+        }),
+      }).catch(() => undefined);
+    }, 1800);
+  };
+
   const ensureThread = async () => {
     if (threadId) return threadId;
     setStarting(true);
@@ -107,10 +178,17 @@ export function LiveChat() {
           visitorLabel: vid ? `User ${vid}` : "Visitor",
         }),
       });
-      const data = (await res.json()) as { threadId?: string };
+      const data = (await res.json()) as {
+        threadId?: string;
+        messages?: Msg[];
+      };
       if (!data.threadId) throw new Error("failed");
       localStorage.setItem(THREAD_KEY, data.threadId);
       setThreadId(data.threadId);
+      if (data.messages) {
+        setMessages(data.messages);
+        lastMsgCount.current = data.messages.length;
+      }
       return data.threadId;
     } finally {
       setStarting(false);
@@ -126,89 +204,165 @@ export function LiveChat() {
     }
     setSending(true);
     setText("");
+    const optimistic: Msg = {
+      id: -Date.now(),
+      sender: "visitor",
+      body,
+      createdAt: new Date().toISOString(),
+    };
+    setMessages((prev) => [...prev, optimistic]);
     try {
       await syncEmail(email);
       const id = await ensureThread();
-      await fetch("/api/chat", {
+      const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ action: "send", threadId: id, message: body }),
       });
-      const res = await fetch(`/api/chat?threadId=${id}`);
-      const data = (await res.json()) as { messages?: Msg[] };
-      if (data.messages) setMessages(data.messages);
+      const data = (await res.json()) as {
+        messages?: Msg[];
+        typing?: { admin?: boolean };
+      };
+      if (data.messages) {
+        setMessages(data.messages);
+        lastMsgCount.current = data.messages.length;
+      }
+      setPeerTyping(Boolean(data.typing?.admin));
     } finally {
       setSending(false);
     }
   };
 
   return (
-    <div className={`live-chat${open ? " is-open" : ""}`}>
+    <div className={`lc-root${open ? " is-open" : ""}`}>
       <button
         type="button"
-        className="live-chat-toggle"
+        className="lc-fab"
         aria-expanded={open}
+        aria-label="Open live chat"
         onClick={() => setOpen((v) => !v)}
       >
-        <span aria-hidden="true">{open ? "×" : "💬"}</span>
-        <span className="live-chat-toggle-label">
-          {open ? "Close" : "Live chat"}
-        </span>
+        {open ? (
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M18.3 5.71 12 12.01 5.7 5.7 4.29 7.11 10.59 13.4 4.29 19.7 5.7 21.11 12 14.82l6.3 6.29 1.41-1.41-6.29-6.3 6.29-6.29z"
+            />
+          </svg>
+        ) : (
+          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
+            <path
+              fill="currentColor"
+              d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"
+            />
+          </svg>
+        )}
+        {!open && unread > 0 ? (
+          <span className="lc-fab-badge">{unread > 9 ? "9+" : unread}</span>
+        ) : null}
       </button>
 
       {open ? (
-        <div className="live-chat-panel" role="dialog" aria-label="Live chat">
-          <header className="live-chat-head">
-            <div>
-              <p className="live-chat-kicker">Exhibium Support</p>
-              <h2>Live chat</h2>
+        <div className="lc-panel" role="dialog" aria-label="Exhibium live chat">
+          <header className="lc-head">
+            <div className="lc-head-user">
+              <span className="lc-avatar" aria-hidden="true">
+                E
+              </span>
+              <div>
+                <p className="lc-head-title">Exhibium Advisory</p>
+                <p className="lc-head-sub">
+                  <span className="lc-pulse" /> Live · typically replies instantly
+                </p>
+              </div>
             </div>
-            <span className="live-chat-online">Online</span>
+            <button
+              type="button"
+              className="lc-head-close"
+              aria-label="Close chat"
+              onClick={() => setOpen(false)}
+            >
+              ×
+            </button>
           </header>
 
-          <div className="live-chat-log">
-            {!threadId && messages.length === 0 ? (
-              <p className="live-chat-hint">
-                Enter your email, then ask about BIM, modular, market entry, or
-                appointments.
-              </p>
+          <div className="lc-body">
+            {!messages.length ? (
+              <div className="lc-welcome">
+                <p className="lc-welcome-kicker">Conversation</p>
+                <h3>How can we help?</h3>
+                <p>
+                  Ask about BIM/VDC, modular delivery, market entry, or book a
+                  consult. Share your email below to start.
+                </p>
+              </div>
             ) : null}
+
             {messages.map((m) => (
               <div
                 key={m.id}
-                className={`live-chat-bubble live-chat-bubble--${m.sender}`}
+                className={`lc-row lc-row--${m.sender}`}
               >
-                {m.body}
+                {m.sender === "admin" ? (
+                  <span className="lc-mini-avatar" aria-hidden="true">
+                    E
+                  </span>
+                ) : null}
+                <div className="lc-msg">
+                  <p>{m.body}</p>
+                  <time>{fmtTime(m.createdAt)}</time>
+                </div>
               </div>
             ))}
+
+            {peerTyping ? <TypingDots label="Advisor is typing" /> : null}
             <div ref={bottomRef} />
           </div>
 
-          <form className="live-chat-compose live-chat-compose-stack" onSubmit={onSubmit}>
-            <input
-              type="email"
-              name="email"
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              onBlur={() => void syncEmail(email)}
-              placeholder="Your email"
-              required
-              disabled={starting || sending}
-            />
-            <div className="live-chat-compose-row">
+          <form className="lc-compose" onSubmit={onSubmit}>
+            <label className="lc-email-field">
+              <span>Email</span>
               <input
+                type="email"
+                name="email"
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                onBlur={() => void syncEmail(email)}
+                placeholder="you@company.com"
+                required
+                disabled={starting || sending}
+              />
+            </label>
+            <div className="lc-input-row">
+              <textarea
                 value={text}
-                onChange={(e) => setText(e.target.value)}
-                placeholder="Type your message…"
+                rows={1}
+                onChange={(e) => {
+                  setText(e.target.value);
+                  if (threadId && e.target.value.trim()) {
+                    pulseTyping(threadId);
+                  }
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    e.currentTarget.form?.requestSubmit();
+                  }
+                }}
+                placeholder="Write a message…"
                 maxLength={2000}
                 disabled={starting || sending}
               />
               <button
                 type="submit"
-                disabled={starting || sending || !text.trim() || !email.trim()}
+                className="lc-send"
+                disabled={
+                  starting || sending || !text.trim() || !email.trim()
+                }
+                aria-label="Send message"
               >
-                Send
+                {sending ? "…" : "→"}
               </button>
             </div>
           </form>

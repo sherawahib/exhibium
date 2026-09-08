@@ -3,7 +3,38 @@ import { randomUUID } from "crypto";
 import { ensureDb, getDb } from "@/lib/db";
 import { clientIp } from "@/lib/geo";
 
-/** Visitor: create thread / send message / poll messages */
+async function getMessages(threadId: string) {
+  const db = getDb();
+  const result = await db.execute({
+    sql: `SELECT id, thread_id, sender, body, created_at FROM chat_messages
+          WHERE thread_id = ? ORDER BY created_at ASC, id ASC`,
+    args: [threadId],
+  });
+  return result.rows.map((r) => ({
+    id: Number(r.id),
+    threadId: String(r.thread_id),
+    sender: String(r.sender) as "visitor" | "admin",
+    body: String(r.body),
+    createdAt: String(r.created_at),
+  }));
+}
+
+async function getTyping(threadId: string) {
+  const db = getDb();
+  const cutoff = new Date(Date.now() - 3000).toISOString();
+  const result = await db.execute({
+    sql: `SELECT sender FROM chat_typing
+          WHERE thread_id = ? AND updated_at > ?`,
+    args: [threadId, cutoff],
+  });
+  const senders = new Set(result.rows.map((r) => String(r.sender)));
+  return {
+    visitor: senders.has("visitor"),
+    admin: senders.has("admin"),
+  };
+}
+
+/** Visitor: create thread / send / typing / poll */
 export async function POST(request: Request) {
   await ensureDb();
   const db = getDb();
@@ -12,6 +43,7 @@ export async function POST(request: Request) {
     threadId?: string;
     message?: string;
     visitorLabel?: string;
+    typing?: boolean;
   };
 
   const action = body.action || "send";
@@ -31,11 +63,32 @@ export async function POST(request: Request) {
             VALUES (?, 'admin', ?, ?)`,
       args: [
         id,
-        "Welcome to Exhibium live chat. An advisor will respond shortly.",
+        "Hi — welcome to Exhibium. How can we help with BIM, modular, or market entry today?",
         now,
       ],
     });
-    return NextResponse.json({ threadId: id });
+    const messages = await getMessages(id);
+    return NextResponse.json({ threadId: id, messages });
+  }
+
+  if (action === "typing") {
+    const threadId = String(body.threadId || "");
+    if (!threadId) {
+      return NextResponse.json({ error: "Missing thread" }, { status: 400 });
+    }
+    if (body.typing) {
+      await db.execute({
+        sql: `INSERT INTO chat_typing (thread_id, sender, updated_at) VALUES (?, 'visitor', ?)
+              ON CONFLICT(thread_id, sender) DO UPDATE SET updated_at = excluded.updated_at`,
+        args: [threadId, now],
+      });
+    } else {
+      await db.execute({
+        sql: `DELETE FROM chat_typing WHERE thread_id = ? AND sender = 'visitor'`,
+        args: [threadId],
+      });
+    }
+    return NextResponse.json({ ok: true });
   }
 
   if (action === "send") {
@@ -51,7 +104,7 @@ export async function POST(request: Request) {
     if (!thread.rows.length) {
       return NextResponse.json({ error: "Thread not found" }, { status: 404 });
     }
-    await db.execute({
+    const inserted = await db.execute({
       sql: `INSERT INTO chat_messages (thread_id, sender, body, created_at) VALUES (?, 'visitor', ?, ?)`,
       args: [threadId, message, now],
     });
@@ -59,7 +112,23 @@ export async function POST(request: Request) {
       sql: `UPDATE chat_threads SET updated_at = ?, status = 'open' WHERE id = ?`,
       args: [now, threadId],
     });
-    return NextResponse.json({ ok: true });
+    await db.execute({
+      sql: `DELETE FROM chat_typing WHERE thread_id = ? AND sender = 'visitor'`,
+      args: [threadId],
+    });
+    const msg = {
+      id: Number(inserted.lastInsertRowid),
+      threadId,
+      sender: "visitor" as const,
+      body: message,
+      createdAt: now,
+    };
+    return NextResponse.json({
+      ok: true,
+      message: msg,
+      messages: await getMessages(threadId),
+      typing: await getTyping(threadId),
+    });
   }
 
   return NextResponse.json({ error: "Unknown action" }, { status: 400 });
@@ -67,26 +136,14 @@ export async function POST(request: Request) {
 
 export async function GET(request: Request) {
   await ensureDb();
-  const db = getDb();
   const { searchParams } = new URL(request.url);
   const threadId = searchParams.get("threadId");
   if (!threadId) {
     return NextResponse.json({ error: "threadId required" }, { status: 400 });
   }
 
-  const result = await db.execute({
-    sql: `SELECT id, thread_id, sender, body, created_at FROM chat_messages
-          WHERE thread_id = ? ORDER BY created_at ASC, id ASC`,
-    args: [threadId],
+  return NextResponse.json({
+    messages: await getMessages(threadId),
+    typing: await getTyping(threadId),
   });
-
-  const messages = result.rows.map((r) => ({
-    id: Number(r.id),
-    threadId: String(r.thread_id),
-    sender: String(r.sender) as "visitor" | "admin",
-    body: String(r.body),
-    createdAt: String(r.created_at),
-  }));
-
-  return NextResponse.json({ messages });
 }

@@ -81,6 +81,12 @@ export async function ensureDb() {
           created_at TEXT NOT NULL,
           FOREIGN KEY (thread_id) REFERENCES chat_threads(id)
         );
+        CREATE TABLE IF NOT EXISTS chat_typing (
+          thread_id TEXT NOT NULL,
+          sender TEXT NOT NULL,
+          updated_at TEXT NOT NULL,
+          PRIMARY KEY (thread_id, sender)
+        );
         CREATE INDEX IF NOT EXISTS idx_visitors_last ON visitors(last_seen_at);
         CREATE INDEX IF NOT EXISTS idx_forms_created ON form_submissions(created_at);
         CREATE INDEX IF NOT EXISTS idx_messages_thread ON chat_messages(thread_id, created_at);

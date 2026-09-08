@@ -2,6 +2,37 @@ import { NextResponse } from "next/server";
 import { isAdminAuthenticated } from "@/lib/admin-auth";
 import { ensureDb, getDb } from "@/lib/db";
 
+async function getMessages(threadId: string) {
+  const db = getDb();
+  const messages = await db.execute({
+    sql: `SELECT id, thread_id, sender, body, created_at FROM chat_messages
+          WHERE thread_id = ? ORDER BY created_at ASC, id ASC`,
+    args: [threadId],
+  });
+  return messages.rows.map((r) => ({
+    id: Number(r.id),
+    threadId: String(r.thread_id),
+    sender: String(r.sender),
+    body: String(r.body),
+    createdAt: String(r.created_at),
+  }));
+}
+
+async function getTyping(threadId: string) {
+  const db = getDb();
+  const cutoff = new Date(Date.now() - 3000).toISOString();
+  const result = await db.execute({
+    sql: `SELECT sender FROM chat_typing
+          WHERE thread_id = ? AND updated_at > ?`,
+    args: [threadId, cutoff],
+  });
+  const senders = new Set(result.rows.map((r) => String(r.sender)));
+  return {
+    visitor: senders.has("visitor"),
+    admin: senders.has("admin"),
+  };
+}
+
 export async function GET(request: Request) {
   if (!(await isAdminAuthenticated())) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -13,19 +44,9 @@ export async function GET(request: Request) {
   const threadId = searchParams.get("threadId");
 
   if (threadId) {
-    const messages = await db.execute({
-      sql: `SELECT id, thread_id, sender, body, created_at FROM chat_messages
-            WHERE thread_id = ? ORDER BY created_at ASC, id ASC`,
-      args: [threadId],
-    });
     return NextResponse.json({
-      messages: messages.rows.map((r) => ({
-        id: Number(r.id),
-        threadId: String(r.thread_id),
-        sender: String(r.sender),
-        body: String(r.body),
-        createdAt: String(r.created_at),
-      })),
+      messages: await getMessages(threadId),
+      typing: await getTyping(threadId),
     });
   }
 
@@ -62,10 +83,28 @@ export async function POST(request: Request) {
     threadId?: string;
     message?: string;
     status?: string;
+    action?: string;
+    typing?: boolean;
   };
 
   const threadId = String(body.threadId || "");
   const now = new Date().toISOString();
+
+  if (body.action === "typing" && threadId) {
+    if (body.typing) {
+      await db.execute({
+        sql: `INSERT INTO chat_typing (thread_id, sender, updated_at) VALUES (?, 'admin', ?)
+              ON CONFLICT(thread_id, sender) DO UPDATE SET updated_at = excluded.updated_at`,
+        args: [threadId, now],
+      });
+    } else {
+      await db.execute({
+        sql: `DELETE FROM chat_typing WHERE thread_id = ? AND sender = 'admin'`,
+        args: [threadId],
+      });
+    }
+    return NextResponse.json({ ok: true });
+  }
 
   if (body.status && threadId) {
     await db.execute({
@@ -80,7 +119,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Missing fields" }, { status: 400 });
   }
 
-  await db.execute({
+  const inserted = await db.execute({
     sql: `INSERT INTO chat_messages (thread_id, sender, body, created_at) VALUES (?, 'admin', ?, ?)`,
     args: [threadId, message, now],
   });
@@ -88,6 +127,21 @@ export async function POST(request: Request) {
     sql: `UPDATE chat_threads SET updated_at = ?, status = 'open' WHERE id = ?`,
     args: [now, threadId],
   });
+  await db.execute({
+    sql: `DELETE FROM chat_typing WHERE thread_id = ? AND sender = 'admin'`,
+    args: [threadId],
+  });
 
-  return NextResponse.json({ ok: true });
+  return NextResponse.json({
+    ok: true,
+    message: {
+      id: Number(inserted.lastInsertRowid),
+      threadId,
+      sender: "admin",
+      body: message,
+      createdAt: now,
+    },
+    messages: await getMessages(threadId),
+    typing: await getTyping(threadId),
+  });
 }
