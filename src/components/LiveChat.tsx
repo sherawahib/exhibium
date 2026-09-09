@@ -153,8 +153,17 @@ export function LiveChat() {
           typing?: { admin?: boolean };
         };
         if (!alive) return;
-        if (data.messages) {
-          setMessages(data.messages);
+        if (Array.isArray(data.messages)) {
+          // Don't wipe local messages if a transient empty read comes back
+          setMessages((prev) => {
+            if (data.messages!.length === 0 && prev.length > 0) return prev;
+            return data.messages!.map((m) => ({
+              id: m.id,
+              sender: m.sender as "visitor" | "admin",
+              body: m.body,
+              createdAt: m.createdAt,
+            }));
+          });
           if (!open && data.messages.length > lastMsgCount.current) {
             const gained = data.messages.length - lastMsgCount.current;
             const last = data.messages[data.messages.length - 1];
@@ -162,7 +171,9 @@ export function LiveChat() {
               setUnread((u) => u + Math.max(gained, 1));
             }
           }
-          lastMsgCount.current = data.messages.length;
+          if (data.messages.length > 0) {
+            lastMsgCount.current = data.messages.length;
+          }
         }
         setPeerTyping(Boolean(data.typing?.admin));
       } catch {
@@ -206,7 +217,7 @@ export function LiveChat() {
     }, 1800);
   };
 
-  const ensureThread = async () => {
+  const ensureThread = async (firstMessage?: string) => {
     if (threadId) return threadId;
     setStarting(true);
     try {
@@ -217,17 +228,28 @@ export function LiveChat() {
         body: JSON.stringify({
           action: "start",
           visitorLabel: vid ? `User ${vid}` : "Visitor",
+          message: firstMessage || undefined,
         }),
       });
       const data = (await res.json()) as {
         threadId?: string;
         messages?: Msg[];
+        error?: string;
       };
-      if (!data.threadId) throw new Error("failed");
+      if (!res.ok || !data.threadId) {
+        throw new Error(data.error || "failed to start chat");
+      }
       localStorage.setItem(THREAD_KEY, data.threadId);
       setThreadId(data.threadId);
-      if (data.messages) {
-        setMessages(data.messages);
+      if (data.messages?.length) {
+        setMessages(
+          data.messages.map((m) => ({
+            id: m.id,
+            sender: m.sender as "visitor" | "admin",
+            body: m.body,
+            createdAt: m.createdAt,
+          })),
+        );
         lastMsgCount.current = data.messages.length;
       }
       return data.threadId;
@@ -251,7 +273,17 @@ export function LiveChat() {
     setMessages((prev) => [...prev, optimistic]);
     try {
       if (email) await applyEmail(email, googleName);
-      const id = await ensureThread();
+
+      // First message: create thread + save message in one request
+      if (!threadId && !localStorage.getItem(THREAD_KEY)) {
+        await ensureThread(body);
+        return;
+      }
+
+      const id =
+        threadId ||
+        localStorage.getItem(THREAD_KEY) ||
+        (await ensureThread());
       const res = await fetch("/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -260,12 +292,26 @@ export function LiveChat() {
       const data = (await res.json()) as {
         messages?: Msg[];
         typing?: { admin?: boolean };
+        error?: string;
       };
-      if (data.messages) {
-        setMessages(data.messages);
+      if (!res.ok) {
+        console.error("send failed", data.error);
+        return;
+      }
+      if (data.messages?.length) {
+        setMessages(
+          data.messages.map((m) => ({
+            id: m.id,
+            sender: m.sender as "visitor" | "admin",
+            body: m.body,
+            createdAt: m.createdAt,
+          })),
+        );
         lastMsgCount.current = data.messages.length;
       }
       setPeerTyping(Boolean(data.typing?.admin));
+    } catch (err) {
+      console.error(err);
     } finally {
       setSending(false);
     }
