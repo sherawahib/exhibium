@@ -235,32 +235,25 @@ export function LiveChat() {
 
   return (
     <div className={`lc-root${open ? " is-open" : ""}`}>
-      <button
-        type="button"
-        className="lc-fab"
-        aria-expanded={open}
-        aria-label="Open live chat"
-        onClick={() => setOpen((v) => !v)}
-      >
-        {open ? (
-          <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-            <path
-              fill="currentColor"
-              d="M18.3 5.71 12 12.01 5.7 5.7 4.29 7.11 10.59 13.4 4.29 19.7 5.7 21.11 12 14.82l6.3 6.29 1.41-1.41-6.29-6.3 6.29-6.29z"
-            />
-          </svg>
-        ) : (
+      {!open ? (
+        <button
+          type="button"
+          className="lc-fab"
+          aria-expanded={false}
+          aria-label="Open live chat"
+          onClick={() => setOpen(true)}
+        >
           <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
             <path
               fill="currentColor"
               d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 14H5.17L4 17.17V4h16v12z"
             />
           </svg>
-        )}
-        {!open && unread > 0 ? (
-          <span className="lc-fab-badge">{unread > 9 ? "9+" : unread}</span>
-        ) : null}
-      </button>
+          {unread > 0 ? (
+            <span className="lc-fab-badge">{unread > 9 ? "9+" : unread}</span>
+          ) : null}
+        </button>
+      ) : null}
 
       {open ? (
         <div className="lc-panel" role="dialog" aria-label="Exhibium live chat">
