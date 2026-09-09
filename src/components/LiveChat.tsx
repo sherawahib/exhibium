@@ -1,6 +1,12 @@
 "use client";
 
 import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  decodeGoogleCredential,
+  googleClientId,
+  isGoogleSignInConfigured,
+  loadGoogleIdentityScript,
+} from "@/lib/google-identity";
 
 type Msg = {
   id: number;
@@ -45,13 +51,16 @@ export function LiveChat() {
   const [messages, setMessages] = useState<Msg[]>([]);
   const [text, setText] = useState("");
   const [email, setEmail] = useState("");
+  const [googleName, setGoogleName] = useState<string | null>(null);
   const [starting, setStarting] = useState(false);
   const [sending, setSending] = useState(false);
   const [peerTyping, setPeerTyping] = useState(false);
   const [unread, setUnread] = useState(0);
   const bottomRef = useRef<HTMLDivElement>(null);
+  const googleBtnRef = useRef<HTMLDivElement>(null);
   const typingTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const lastMsgCount = useRef(0);
+  const googleReady = isGoogleSignInConfigured();
 
   useEffect(() => {
     const saved = localStorage.getItem(THREAD_KEY);
@@ -60,27 +69,75 @@ export function LiveChat() {
     if (savedEmail) setEmail(savedEmail);
   }, []);
 
+  const applyEmail = async (value: string, name?: string | null) => {
+    const cleaned = value.trim().toLowerCase();
+    if (!cleaned.includes("@")) return;
+    setEmail(cleaned);
+    if (name) setGoogleName(name);
+    localStorage.setItem(EMAIL_KEY, cleaned);
+    const vid = localStorage.getItem("exhibium_vid");
+    await fetch("/api/track", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        path: window.location.pathname,
+        visitorId: vid ? Number(vid) : undefined,
+        email: cleaned,
+      }),
+    }).catch(() => undefined);
+  };
+
+  // Google One Tap / Sign-In — only way browsers allow reading Google account email
   useEffect(() => {
-    if (!open || email) return;
-    const creds = (
-      navigator as Navigator & {
-        credentials?: {
-          get: (opts: object) => Promise<{ id?: string } | null>;
-        };
-      }
-    ).credentials;
-    if (!creds?.get) return;
-    void creds
-      .get({ password: true, mediation: "silent" } as object)
-      .then((cred) => {
-        const id = cred?.id?.trim();
-        if (id && id.includes("@")) {
-          setEmail(id);
-          localStorage.setItem(EMAIL_KEY, id);
+    if (!open || !googleReady || email) return;
+    let cancelled = false;
+
+    void (async () => {
+      try {
+        await loadGoogleIdentityScript();
+        if (cancelled || !window.google?.accounts?.id) return;
+
+        window.google.accounts.id.initialize({
+          client_id: googleClientId,
+          auto_select: true,
+          cancel_on_tap_outside: true,
+          context: "signin",
+          callback: (response) => {
+            const cred = response.credential;
+            if (!cred) return;
+            const profile = decodeGoogleCredential(cred);
+            if (profile?.email) {
+              void applyEmail(profile.email, profile.name);
+            }
+          },
+        });
+
+        window.google.accounts.id.prompt();
+
+        if (googleBtnRef.current) {
+          googleBtnRef.current.innerHTML = "";
+          window.google.accounts.id.renderButton(googleBtnRef.current, {
+            theme: "outline",
+            size: "large",
+            text: "continue_with",
+            shape: "pill",
+            width: 280,
+          });
         }
-      })
-      .catch(() => undefined);
-  }, [open, email]);
+      } catch {
+        /* GIS unavailable */
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+      try {
+        window.google?.accounts?.id?.cancel();
+      } catch {
+        /* ignore */
+      }
+    };
+  }, [open, googleReady, email]);
 
   useEffect(() => {
     if (!threadId) return;
@@ -128,22 +185,6 @@ export function LiveChat() {
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, peerTyping, open]);
-
-  const syncEmail = async (value: string) => {
-    const cleaned = value.trim().toLowerCase();
-    if (!cleaned) return;
-    localStorage.setItem(EMAIL_KEY, cleaned);
-    const vid = localStorage.getItem("exhibium_vid");
-    await fetch("/api/track", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        path: window.location.pathname,
-        visitorId: vid ? Number(vid) : undefined,
-        email: cleaned,
-      }),
-    }).catch(() => undefined);
-  };
 
   const pulseTyping = (id: string) => {
     void fetch("/api/chat", {
@@ -199,9 +240,6 @@ export function LiveChat() {
     e.preventDefault();
     const body = text.trim();
     if (!body) return;
-    if (!email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
-      return;
-    }
     setSending(true);
     setText("");
     const optimistic: Msg = {
@@ -212,7 +250,7 @@ export function LiveChat() {
     };
     setMessages((prev) => [...prev, optimistic]);
     try {
-      await syncEmail(email);
+      if (email) await applyEmail(email, googleName);
       const id = await ensureThread();
       const res = await fetch("/api/chat", {
         method: "POST",
@@ -286,16 +324,13 @@ export function LiveChat() {
                 <h3>How can we help?</h3>
                 <p>
                   Ask about BIM/VDC, modular delivery, market entry, or book a
-                  consult. Share your email below to start.
+                  consult. Start typing anytime.
                 </p>
               </div>
             ) : null}
 
             {messages.map((m) => (
-              <div
-                key={m.id}
-                className={`lc-row lc-row--${m.sender}`}
-              >
+              <div key={m.id} className={`lc-row lc-row--${m.sender}`}>
                 {m.sender === "admin" ? (
                   <span className="lc-mini-avatar" aria-hidden="true">
                     E
@@ -313,20 +348,20 @@ export function LiveChat() {
           </div>
 
           <form className="lc-compose" onSubmit={onSubmit}>
-            <label className="lc-email-field">
-              <span>Email</span>
-              <input
-                type="email"
-                name="email"
-                autoComplete="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                onBlur={() => void syncEmail(email)}
-                placeholder="you@company.com"
-                required
-                disabled={starting || sending}
-              />
-            </label>
+            {email ? (
+              <p className="lc-identity">
+                Signed in as <strong>{email}</strong>
+                {googleName ? ` · ${googleName}` : ""}
+              </p>
+            ) : googleReady ? (
+              <div className="lc-google-wrap">
+                <p className="lc-google-hint">
+                  Optional: continue with Google to attach your account email
+                </p>
+                <div ref={googleBtnRef} className="lc-google-btn" />
+              </div>
+            ) : null}
+
             <div className="lc-input-row">
               <textarea
                 value={text}
@@ -350,9 +385,7 @@ export function LiveChat() {
               <button
                 type="submit"
                 className="lc-send"
-                disabled={
-                  starting || sending || !text.trim() || !email.trim()
-                }
+                disabled={starting || sending || !text.trim()}
                 aria-label="Send message"
               >
                 {sending ? "…" : "→"}

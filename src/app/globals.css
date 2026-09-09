@@ -5598,3 +5598,25 @@ a.contact-channel:focus-visible {
   align-items: center;
   gap: 0.55rem;
 }
+
+.lc-identity {
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--ink-soft);
+  line-height: 1.35;
+}
+.lc-identity strong { color: var(--ink); font-weight: 700; }
+.lc-google-wrap {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: start;
+}
+.lc-google-hint {
+  margin: 0;
+  font-size: 0.75rem;
+  color: var(--ink-soft);
+}
+.lc-google-btn {
+  min-height: 2.5rem;
+}
+.lc-email-field { display: none !important; }
